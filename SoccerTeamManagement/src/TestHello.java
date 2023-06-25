@@ -4,5 +4,6 @@ public class TestHello {
 		System.out.println("브랜치 추가함");
 		System.out.println("브랜치 하나 더 테스트");
 		System.out.println("욱진 집에서 테스트 해봤습니다.");
+		System.out.println("제가 만든 브렌치에 올렸습니다.");
 	}
 }
