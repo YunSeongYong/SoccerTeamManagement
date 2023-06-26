@@ -1,4 +1,5 @@
 
+
 public class PlayerCondition {
 
 	public static void main(String[] args) {
