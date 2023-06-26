@@ -1,4 +1,5 @@
-public class patient {
+package Database;
+public class Player {
 	public static void main(String[] args) {
 
 	}
