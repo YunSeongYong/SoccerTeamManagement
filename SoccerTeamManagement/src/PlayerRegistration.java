@@ -21,6 +21,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import dbutil.DBUtil;
+
 
 public class PlayerRegistration extends JFrame implements ChangeListener{
 
@@ -52,7 +54,7 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
         PreparedStatement stmt = null;
         
         try {
-            conn = SoccerDBUtil.getConnection();
+            conn = DBUtil.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, Integer.valueOf(등번호텍스트필드.getText()));
             stmt.setString(2, 이름텍스트필드.getText());
@@ -74,8 +76,8 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            SoccerDBUtil.close(stmt);
-            SoccerDBUtil.close(conn);
+            DBUtil.close(stmt);
+            DBUtil.close(conn);
         }
 	}
 	
@@ -86,7 +88,7 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
         PreparedStatement stmt = null;
         
         try {
-            conn = SoccerDBUtil.getConnection();
+            conn = DBUtil.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, Integer.valueOf(no1텍스트필드.getText()));
             stmt.setString(2, 아이디텍스트필드.getText());
@@ -102,8 +104,8 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
-            SoccerDBUtil.close(stmt);
-            SoccerDBUtil.close(conn);
+            DBUtil.close(stmt);
+            DBUtil.close(conn);
         }
 	}
 	
