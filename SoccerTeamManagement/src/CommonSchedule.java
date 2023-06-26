@@ -1,5 +1,5 @@
-package Database;
-public class Staff {
+
+public class CommonSchedule {
 	public static void main(String[] args) {
 
 	}

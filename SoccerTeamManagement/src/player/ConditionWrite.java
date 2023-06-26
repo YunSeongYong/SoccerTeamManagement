@@ -1,5 +1,6 @@
+package player;
 
-public class PersonalSchedule {
+public class ConditionWrite {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

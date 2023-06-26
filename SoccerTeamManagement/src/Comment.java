@@ -1,5 +1,5 @@
-package Database;
-public class Condition {
+
+public class Comment {
 	public static void main(String[] args) {
 
 	}

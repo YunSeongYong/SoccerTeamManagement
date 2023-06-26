@@ -1,5 +1,6 @@
-package Database;
-public class Schedule {
+package director;
+
+public class Staff {
 	public static void main(String[] args) {
 
 	}

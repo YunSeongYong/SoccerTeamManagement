@@ -1,5 +1,6 @@
-package Database;
-public class CommonSchedule {
+package player;
+
+public class Player {
 	public static void main(String[] args) {
 
 	}

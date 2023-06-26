@@ -1,5 +1,6 @@
-package Database;
-public class Player {
+package staff;
+
+public class patient {
 	public static void main(String[] args) {
 
 	}

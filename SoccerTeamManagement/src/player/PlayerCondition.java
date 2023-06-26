@@ -1,5 +1,6 @@
+package player;
 
-public class PlayerRegistration {
+public class PlayerCondition {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

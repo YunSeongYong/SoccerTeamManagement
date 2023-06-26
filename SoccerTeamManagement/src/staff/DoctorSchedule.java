@@ -1,5 +1,6 @@
+package staff;
 
-public class PlayerCondition {
+public class DoctorSchedule {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

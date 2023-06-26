@@ -1,5 +1,6 @@
+package player;
 
-public class DoctorSchedule {
+public class PlayerRegistration {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
