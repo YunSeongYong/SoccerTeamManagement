@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 import dbutil.DBUtil;
 
 import javax.swing.JButton;
-import javax.swing.JTabbedPane;
 
 public class Login {
 
@@ -77,11 +76,17 @@ public class Login {
 				String id = textField.getText();
 				String password = textField_1.getText();
 				
+				
 				int check = checkIdentity(id, password);
 
 				if (check == 1) {
 					String role = getRole(textField.getText());
-					lblNewLabel_2.setText(role);
+//					lblNewLabel_2.setText(role);
+					
+					if (role.equals("감독")) {
+						System.out.println("같다");
+						new PlayerRegistration();
+					}
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");
 				}
