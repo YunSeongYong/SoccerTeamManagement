@@ -44,7 +44,6 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 	private JTextField 담당의사텍스트필드;
 	private JTextField 아이디텍스트필드;
 	private JTextField 비밀번호텍스트필드;
-	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	private JTabbedPane tabbedPane_1;
 	private JTabbedPane tabbedPane_2;
 	private JButton 이미지등록버튼;
@@ -280,10 +279,6 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 		비밀번호텍스트필드.setBounds(403, 232, 116, 21);
 		frame.getContentPane().add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
-		
-		tabbedPane.setToolTipText("선수등록");
-		tabbedPane.setBounds(0, 0, 108, 28);
-		frame.getContentPane().add(tabbedPane);
 		
 		tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_1.setToolTipText("asdads");
