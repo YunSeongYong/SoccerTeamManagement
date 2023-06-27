@@ -1,108 +1,108 @@
+	import java.awt.Image;
+	
 public class Player {
 	private int backNumber;
 	private String name;
-	private double heigh;
+	private double height;
 	private double weight;
 	private int age;
 	private String position;
 	private String coach;
 	private String doctor;
-	
-	
-	public Player(int backNumber, String name, double heigh, double weight, int age, String position, String coach,
-			String doctor) {
-		super();
+	private Image image;
+
+	public Player(int backNumber, String name, double height, double weight, int age, String position, String coach,
+			String doctor, Image image) {
 		this.backNumber = backNumber;
 		this.name = name;
-		this.heigh = heigh;
+		this.height = height;
 		this.weight = weight;
 		this.age = age;
 		this.position = position;
 		this.coach = coach;
 		this.doctor = doctor;
+		this.image = image;
 	}
 
-	
 	public int getBackNumber() {
 		return backNumber;
 	}
-
 
 	public void setBackNumber(int backNumber) {
 		this.backNumber = backNumber;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
-	public double getHeigh() {
-		return heigh;
+	public double getHeight() {
+		return height;
 	}
 
-
-	public void setHeigh(double heigh) {
-		this.heigh = heigh;
+	public void setHeight(double height) {
+		this.height = height;
 	}
-
 
 	public double getWeight() {
 		return weight;
 	}
 
-
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-
 
 	public int getAge() {
 		return age;
 	}
 
-
 	public void setAge(int age) {
 		this.age = age;
 	}
-
 
 	public String getPosition() {
 		return position;
 	}
 
-
 	public void setPosition(String position) {
 		this.position = position;
 	}
-
 
 	public String getCoach() {
 		return coach;
 	}
 
-
 	public void setCoach(String coach) {
 		this.coach = coach;
 	}
-
 
 	public String getDoctor() {
 		return doctor;
 	}
 
-
 	public void setDoctor(String doctor) {
 		this.doctor = doctor;
 	}
 
-	
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	@Override
+	public String toString() {
+		return "Player [backNumber=" + backNumber + ", name=" + name + ", height=" + height + ", weight=" + weight
+				+ ", age=" + age + ", position=" + position + ", coach=" + coach + ", doctor=" + doctor + ", image="
+				+ image + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,8 +112,9 @@ public class Player {
 		result = prime * result + ((coach == null) ? 0 : coach.hashCode());
 		result = prime * result + ((doctor == null) ? 0 : doctor.hashCode());
 		long temp;
-		temp = Double.doubleToLongBits(heigh);
+		temp = Double.doubleToLongBits(height);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((position == null) ? 0 : position.hashCode());
 		temp = Double.doubleToLongBits(weight);
@@ -121,14 +122,11 @@ public class Player {
 		return result;
 	}
 
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Player))
 			return false;
 		Player other = (Player) obj;
 		if (age != other.age)
@@ -145,7 +143,12 @@ public class Player {
 				return false;
 		} else if (!doctor.equals(other.doctor))
 			return false;
-		if (Double.doubleToLongBits(heigh) != Double.doubleToLongBits(other.heigh))
+		if (Double.doubleToLongBits(height) != Double.doubleToLongBits(other.height))
+			return false;
+		if (image == null) {
+			if (other.image != null)
+				return false;
+		} else if (!image.equals(other.image))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -161,14 +164,6 @@ public class Player {
 			return false;
 		return true;
 	}
-
-	
-	@Override
-	public String toString() {
-		return "Player [backNumber=" + backNumber + ", name=" + name + ", heigh=" + heigh + ", weight=" + weight
-				+ ", age=" + age + ", position=" + position + ", coach=" + coach + ", doctor=" + doctor + "]";
-	}
-
 
 	public static void main(String[] args) {
 

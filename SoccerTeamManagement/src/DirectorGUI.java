@@ -7,11 +7,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -57,12 +60,35 @@ public class DirectorGUI extends JFrame implements ChangeListener {
    private JPanel panel;
    private JLabel lblNewLabel_7;
    private JLabel 사용가능유무라벨;
-   private JPanel 개인정보창;
    private JPanel 일정창;
    private JPanel 컨디션창;
    private JPanel 의사소견창;
 private JComboBox 선수정보콤보박스;
 private int backnumber;
+private JPanel 개인정보창;
+private JLabel 이름수정라벨;
+private JLabel 신장수정라벨;
+private JLabel 몸무게수정라벨;
+private JLabel 나이수정라벨;
+private JLabel 포지션수정라벨;
+private JLabel 담당코치수정라벨;
+private JLabel 담당의사수정라벨;
+private JTextField 이름수정텍스트필드;
+private JTextField 신장수정텍스트필드;
+private JTextField 몸무게수정텍스트필드;
+private JTextField 나이수정텍스트필드;
+private JTextField 포지션수정텍스트필드;
+private JTextField 담당코치수정텍스트필드;
+private JButton 이미지수정버튼;
+private JButton 수정버튼;
+private JLabel 등번호수정라벨;
+private JTextField 등번호수정텍스트필드;
+private JPanel 이미지등록수정창;
+private JLabel 선수정보수정라벨;
+private JLabel lbl_1;
+private JLabel lblNewLabel_8;
+private List<Player> list;
+private JTextField 담당의사수정텍스트필드;
 
    public void insertStaff() {
 	   Connection conn = null;
@@ -376,7 +402,7 @@ private int backnumber;
 	            try (ResultSet rs = stmt.executeQuery()) {
 	                // 결과를 콤보박스에 추가
 	                while (rs.next()) {
-	                    backnumber = rs.getInt("backnumber");
+	                    int backnumber = rs.getInt("backnumber");
 	                    String name = rs.getString("name");
 	                    String item = backnumber + " - " + name;
 	                    선수정보콤보박스.addItem(item);
@@ -387,7 +413,6 @@ private int backnumber;
 	        e.printStackTrace();
 	    }
 	}
-
 	
 	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
 	    Connection conn = null;
@@ -417,6 +442,108 @@ private int backnumber;
 	        DBUtil.close(conn);
 	    }
 	}
+	
+	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    list = new ArrayList<>();
+	    
+	    try {
+	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	        String sql = "SELECT * from players where backnumber = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, backnumber);
+	        rs = stmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            int backnumber1 = rs.getInt("backnumber");
+	            String name = rs.getString("name");
+	            double height = rs.getDouble("height");
+	            double weight = rs.getDouble("weight");
+	            int age = rs.getInt("age");
+	            String position = rs.getString("position");
+	            String coach = rs.getString("coach");
+	            String doctor = rs.getString("doctor");
+	            Blob imagePath = rs.getBlob("image");
+	            Image image = ImageIO.read(imagePath.getBinaryStream());
+	         
+	            
+	            list.add(new Player(backnumber1, name, height, weight, age, position, coach, doctor, image));
+	            System.out.println(list);
+	        }
+	        
+	    } catch (SQLException | IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 사용한 자원을 닫아주어야 합니다.
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	    return list;
+	}
+	
+	public void 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(List<Player> playerList) {
+	    if (!playerList.isEmpty()) {
+	        Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
+
+	        등번호수정텍스트필드.setText(String.valueOf(player.getBackNumber()));
+	        이름수정텍스트필드.setText(player.getName());
+	        신장수정텍스트필드.setText(String.valueOf(player.getHeight()));
+	        몸무게수정텍스트필드.setText(String.valueOf(player.getWeight()));
+	        나이수정텍스트필드.setText(String.valueOf(player.getAge()));
+	        포지션수정텍스트필드.setText(player.getPosition());
+	        담당코치수정텍스트필드.setText(player.getCoach());
+	        담당의사수정텍스트필드.setText(player.getDoctor());
+
+	        // 이미지 표시를 위한 JLabel 생성
+	        Image image = player.getImage();
+	        JLabel imageLabel = new JLabel(new ImageIcon(image));
+	        SwingUtilities.invokeLater(() -> {
+	            이미지등록수정창.add(imageLabel);
+	            이미지등록수정창.revalidate();
+	            이미지등록수정창.repaint();
+	        });
+	    }
+	}
+
+
+
+
+	
+	public void 선수정보수정메소드(int backnumber) {
+		
+	        String sql = "update players set backnumber = ?, name = ?, height = ?, weight = ?, age = ?, position = ?, coach = ?, doctor = ?, no = ? where backnumber = ?";
+	        Connection conn = null;
+		    PreparedStatement stmt = null;
+
+		    try {
+		        conn = DBUtil.getConnection();
+		        stmt = conn.prepareStatement(sql);
+		        stmt.setInt(1, Integer.valueOf(등번호텍스트필드.getText()));
+		        stmt.setString(2, 이름텍스트필드.getText());
+		        stmt.setDouble(3, Double.valueOf(신장텍스트필드.getText()));
+		        stmt.setDouble(4, Double.valueOf(몸무게텍스트필드.getText()));
+		        stmt.setInt(5, Integer.valueOf(나이텍스트필드.getText()));
+		        stmt.setString(6, 포지션텍스트필드.getText());
+		        stmt.setString(7, 담당코치텍스트필드.getText());
+		        stmt.setString(8, 담당의사텍스트필드.getText());
+		        stmt.setString(9, no2텍스트필드.getText());
+
+		        int result = stmt.executeUpdate();
+		        if (result > 0) {
+		            System.out.println("데이터가 성공적으로 저장되었습니다.");
+		        } else {
+		            System.out.println("데이터 저장에 실패하였습니다.");
+		        }
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    } finally {
+		        DBUtil.close(stmt);
+		        DBUtil.close(conn);
+		    }
+		}
 
 
 	
@@ -425,10 +552,10 @@ private int backnumber;
       super(str);
       JPanel  one, two, three;
       pane = new JTabbedPane();
-      pane.setBounds(0, 0, 972, 551);
+      pane.setBounds(0, 101, 984, 460);
       lbl = new JLabel("              ");
       lbl.setBounds(0, 146, 284, 15);
-		
+      
       
       one = new JPanel();
       one.setBackground(Color.WHITE);
@@ -517,13 +644,13 @@ private int backnumber;
       비밀번호텍스트필드.setColumns(10);
       
       이미지등록버튼 = new JButton("이미지등록");
-		이미지등록버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				이미지를화면에등록하는메소드();
-			}
-		});
-		이미지등록버튼.setBounds(64, 347, 126, 23);
-		one.add(이미지등록버튼);
+      이미지등록버튼.addActionListener(new ActionListener() {
+      	public void actionPerformed(ActionEvent arg0) {
+      		이미지를화면에등록하는메소드();
+      	}
+      });
+      이미지등록버튼.setBounds(64, 347, 126, 23);
+      one.add(이미지등록버튼);
       
       저장버튼 = new JButton("저장");
       저장버튼.addActionListener(new ActionListener() {
@@ -533,7 +660,7 @@ private int backnumber;
           }
       });
       
-      		저장버튼.setBounds(422, 434, 149, 46);
+      		저장버튼.setBounds(422, 335, 149, 46);
       		one.add(저장버튼);
       		
       		등번호라벨 = new JLabel("등번호");
@@ -546,7 +673,7 @@ private int backnumber;
       		등번호텍스트필드.setColumns(10);
       		
       		no라벨2 = new JLabel("no");
-      		no라벨2.setBounds(618, 434, 81, 15);
+      		no라벨2.setBounds(374, 390, 81, 15);
       		one.add(no라벨2);
       		
       		이미지등록창 = new JPanel();
@@ -554,7 +681,7 @@ private int backnumber;
       		one.add(이미지등록창);
       		
       		no2텍스트필드 = new JTextField();
-      		no2텍스트필드.setBounds(723, 431, 116, 21);
+      		no2텍스트필드.setBounds(479, 387, 116, 21);
       		one.add(no2텍스트필드);
       		no2텍스트필드.setColumns(10);
       		
@@ -739,7 +866,7 @@ private int backnumber;
 		          의사소견창.setVisible(false);
 			}
 		});
-		일정버튼.setBounds(32, 213, 120, 46);
+		일정버튼.setBounds(32, 166, 120, 46);
 		three.add(일정버튼);
 		
 		JButton 컨디션버튼 = new JButton("컨디션");
@@ -751,7 +878,7 @@ private int backnumber;
 		          의사소견창.setVisible(false);
 			}
 		});
-		컨디션버튼.setBounds(32, 346, 120, 46);
+		컨디션버튼.setBounds(32, 243, 120, 46);
 		three.add(컨디션버튼);
 		
 		JButton 의사소견버튼 = new JButton("의사소견");
@@ -763,7 +890,7 @@ private int backnumber;
 		          의사소견창.setVisible(true);
 			}
 		});
-		의사소견버튼.setBounds(32, 466, 117, 46);
+		의사소견버튼.setBounds(32, 324, 117, 46);
 		three.add(의사소견버튼);
 		
 		JComboBox 날짜콤보박스 = new JComboBox();
@@ -775,10 +902,15 @@ private int backnumber;
 		three.add(선수정보콤보박스);
 		선수정보콤보박스목록만드는메소드();
 		선수정보콤보박스.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(backnumber);
-			}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
+		        int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
+		        System.out.println(backnumber);
+		        선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(backnumber);
+		        	콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(list);
+		       
+		    }
 		});
 		
 		
@@ -789,15 +921,6 @@ private int backnumber;
 		JLabel 선수정보라벨 = new JLabel("선수정보");
 		선수정보라벨.setBounds(678, 29, 66, 15);
 		three.add(선수정보라벨);
-		
-		개인정보창 = new JPanel();
-		개인정보창.setBounds(257, 91, 710, 421);
-		three.add(개인정보창);
-		개인정보창.setLayout(null);
-		
-		JLabel lblNewLabel_8 = new JLabel("New label");
-		lblNewLabel_8.setBounds(35, 54, 57, 15);
-		개인정보창.add(lblNewLabel_8);
 		
 		일정창 = new JPanel();
 		일정창.setBounds(12, 10, 10, 10);
@@ -811,8 +934,116 @@ private int backnumber;
 		의사소견창.setBounds(92, 10, 10, 10);
 		three.add(의사소견창);
 		
+		개인정보창 = new JPanel();
+		개인정보창.setBounds(192, 57, 787, 376);
+		three.add(개인정보창);
+		개인정보창.setLayout(null);
+		개인정보창.setBackground(Color.WHITE);
 		
-		개인정보창.setVisible(false);
+		이름수정라벨 = new JLabel("이름");
+		이름수정라벨.setBounds(544, 55, 52, 15);
+		개인정보창.add(이름수정라벨);
+		
+		신장수정라벨 = new JLabel("신장");
+		신장수정라벨.setBounds(267, 106, 62, 15);
+		개인정보창.add(신장수정라벨);
+		
+		몸무게수정라벨 = new JLabel("몸무게");
+		몸무게수정라벨.setBounds(532, 106, 64, 15);
+		개인정보창.add(몸무게수정라벨);
+		
+		나이수정라벨 = new JLabel("나이");
+		나이수정라벨.setBounds(267, 166, 62, 15);
+		개인정보창.add(나이수정라벨);
+		
+		포지션수정라벨 = new JLabel("포지션");
+		포지션수정라벨.setBounds(532, 166, 81, 15);
+		개인정보창.add(포지션수정라벨);
+		
+		담당코치수정라벨 = new JLabel("담당 코치");
+		담당코치수정라벨.setBounds(267, 218, 81, 15);
+		개인정보창.add(담당코치수정라벨);
+		
+		담당의사수정라벨 = new JLabel("담당 의사");
+		담당의사수정라벨.setBounds(523, 218, 90, 15);
+		개인정보창.add(담당의사수정라벨);
+		
+		이름수정텍스트필드 = new JTextField();
+		이름수정텍스트필드.setColumns(10);
+		이름수정텍스트필드.setBounds(623, 52, 116, 21);
+		개인정보창.add(이름수정텍스트필드);
+		
+		신장수정텍스트필드 = new JTextField();
+		신장수정텍스트필드.setColumns(10);
+		신장수정텍스트필드.setBounds(341, 103, 116, 21);
+		개인정보창.add(신장수정텍스트필드);
+		
+		몸무게수정텍스트필드 = new JTextField();
+		몸무게수정텍스트필드.setColumns(10);
+		몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
+		개인정보창.add(몸무게수정텍스트필드);
+		
+		나이수정텍스트필드 = new JTextField();
+		나이수정텍스트필드.setColumns(10);
+		나이수정텍스트필드.setBounds(341, 163, 116, 21);
+		개인정보창.add(나이수정텍스트필드);
+		
+		포지션수정텍스트필드 = new JTextField();
+		포지션수정텍스트필드.setColumns(10);
+		포지션수정텍스트필드.setBounds(625, 163, 116, 21);
+		개인정보창.add(포지션수정텍스트필드);
+		
+		담당코치수정텍스트필드 = new JTextField();
+		담당코치수정텍스트필드.setColumns(10);
+		담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
+		개인정보창.add(담당코치수정텍스트필드);
+		
+		담당의사수정텍스트필드 = new JTextField();
+		담당의사수정텍스트필드.setColumns(10);
+		담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
+		개인정보창.add(담당의사수정텍스트필드);
+		
+		이미지수정버튼 = new JButton("이미지수정");
+		이미지수정버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		이미지수정버튼.setBounds(48, 307, 126, 23);
+		개인정보창.add(이미지수정버튼);
+		
+		수정버튼 = new JButton("수정버튼");
+		수정버튼.setBounds(585, 307, 90, 29);
+		개인정보창.add(수정버튼);
+		
+		등번호수정라벨 = new JLabel("등번호");
+		등번호수정라벨.setBounds(267, 55, 64, 15);
+		개인정보창.add(등번호수정라벨);
+		
+		등번호수정텍스트필드 = new JTextField();
+		등번호수정텍스트필드.setColumns(10);
+		등번호수정텍스트필드.setBounds(341, 52, 116, 21);
+		개인정보창.add(등번호수정텍스트필드);
+		
+		이미지등록수정창 = new JPanel();
+		이미지등록수정창.setBounds(26, 55, 164, 207);
+		개인정보창.add(이미지등록수정창);
+		
+		선수정보수정라벨 = new JLabel("선수정보수정");
+		선수정보수정라벨.setBounds(377, 10, 116, 15);
+		개인정보창.add(선수정보수정라벨);
+		
+		JButton 선수삭제버튼 = new JButton("선수삭제");
+		선수삭제버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		선수삭제버튼.setBounds(367, 301, 90, 34);
+		개인정보창.add(선수삭제버튼);
+		
+		lbl_1 = new JLabel("              ");
+		lbl_1.setBounds(192, 146, 590, 212);
+		three.add(lbl_1);
+			개인정보창.setVisible(false);
           일정창.setVisible(false);
           컨디션창.setVisible(false);
           의사소견창.setVisible(false);
@@ -826,6 +1057,11 @@ private int backnumber;
       getContentPane().setLayout(null);
       this.getContentPane().add(pane);
       this.getContentPane().add(lbl);
+      
+      lblNewLabel_8 = new JLabel("New label");
+      lblNewLabel_8.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수위-배경.jpg")));
+      lblNewLabel_8.setBounds(0, 0, 984, 104);
+      getContentPane().add(lblNewLabel_8);
       
       this.setSize(1000, 600);
       this.setVisible(true);
