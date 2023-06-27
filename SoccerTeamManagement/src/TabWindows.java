@@ -45,6 +45,12 @@ public class TabWindows extends JFrame implements ChangeListener {
 	private File selectedFile;
 	private Image selectedImage;
 	private JLabel 이미지라벨;
+	private JPanel 개인정보창;
+	private JPanel 일정창;
+	private JPanel 컨디션창;
+	private JPanel 의사소견창;
+	
+	
 	
 	
 	public void 선수등록메소드() {
@@ -159,6 +165,8 @@ public class TabWindows extends JFrame implements ChangeListener {
 	        e.printStackTrace();
 	    }
 	}
+	
+	
 	
    
    public TabWindows(String str){
@@ -353,24 +361,58 @@ public class TabWindows extends JFrame implements ChangeListener {
       pane.addTab("Three", three);
       three.setLayout(null);
       
+   
+      
       JButton 개인정보버튼 = new JButton("개인정보");
       개인정보버튼.addActionListener(new ActionListener() {
-      	public void actionPerformed(ActionEvent arg0) {
-      		
-      	}
+    	  public void actionPerformed(ActionEvent arg0) {
+    		  JButton 개인정보버튼 = new JButton("개인정보");
+    		  개인정보버튼.addActionListener(new ActionListener() {
+    		      public void actionPerformed(ActionEvent arg0) {
+    		          개인정보창.setVisible(true);
+    		          일정창.setVisible(false);
+    		          컨디션창.setVisible(false);
+    		          의사소견창.setVisible(false);
+    		      }
+    		  });
+    		}
       });
 		개인정보버튼.setBounds(32, 91, 120, 46);
 		three.add(개인정보버튼);
 		
 		JButton 일정버튼 = new JButton("일정");
+		일정버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				개인정보창.setVisible(false);
+		          일정창.setVisible(true);
+		          컨디션창.setVisible(false);
+		          의사소견창.setVisible(false);
+			}
+		});
 		일정버튼.setBounds(32, 213, 120, 46);
 		three.add(일정버튼);
 		
 		JButton 컨디션버튼 = new JButton("컨디션");
+		컨디션버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				개인정보창.setVisible(false);
+		          일정창.setVisible(false);
+		          컨디션창.setVisible(true);
+		          의사소견창.setVisible(false);
+			}
+		});
 		컨디션버튼.setBounds(32, 346, 120, 46);
 		three.add(컨디션버튼);
 		
 		JButton 의사소견버튼 = new JButton("의사소견");
+		의사소견버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				개인정보창.setVisible(false);
+		          일정창.setVisible(false);
+		          컨디션창.setVisible(false);
+		          의사소견창.setVisible(true);
+			}
+		});
 		의사소견버튼.setBounds(32, 466, 117, 46);
 		three.add(의사소견버튼);
 		
@@ -382,17 +424,6 @@ public class TabWindows extends JFrame implements ChangeListener {
 		선수정보콤보박스.setBounds(756, 26, 117, 21);
 		three.add(선수정보콤보박스);
 		
-		JPanel 카드레이아웃창 = new JPanel();
-		카드레이아웃창.setBounds(236, 91, 719, 421);
-		three.add(카드레이아웃창);
-		카드레이아웃창.setLayout(new CardLayout(0, 0));
-		
-		JLabel 테스트라벨 = new JLabel("테스트라벨");
-		카드레이아웃창.add(테스트라벨, "name_12249384466600");
-		
-		JLabel 테스트라벨2 = new JLabel("테스트라벨2");
-		카드레이아웃창.add(테스트라벨2, "name_12235320464100");
-		
 		JLabel 날짜라벨 = new JLabel("날짜");
 		날짜라벨.setBounds(372, 29, 44, 15);
 		three.add(날짜라벨);
@@ -400,7 +431,24 @@ public class TabWindows extends JFrame implements ChangeListener {
 		JLabel 선수정보라벨 = new JLabel("선수정보");
 		선수정보라벨.setBounds(678, 29, 66, 15);
 		three.add(선수정보라벨);
+		
+		개인정보창 = new JPanel();
+		개인정보창.setBounds(257, 91, 710, 421);
+		three.add(개인정보창);
+		
+		일정창 = new JPanel();
+		일정창.setBounds(12, 10, 10, 10);
+		three.add(일정창);
+		
+		컨디션창 = new JPanel();
+		컨디션창.setBounds(43, 10, 10, 10);
+		three.add(컨디션창);
+		
+		의사소견창 = new JPanel();
+		의사소견창.setBounds(92, 10, 10, 10);
+		three.add(의사소견창);
       
+
       
       
       //====================================================================
@@ -428,5 +476,6 @@ public class TabWindows extends JFrame implements ChangeListener {
    
    public static void main(String[] args) {
       new TabWindows("탭 예제");
+      
    }
 }
