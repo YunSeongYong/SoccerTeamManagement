@@ -1,5 +1,5 @@
 public class Player {
-	private int backNumber;
+	private static int backNumber;
 	private String name;
 	private double heigh;
 	private double weight;
@@ -8,6 +8,9 @@ public class Player {
 	private String coach;
 	private String doctor;
 	
+	public Player() {
+		
+	}
 	
 	public Player(int backNumber, String name, double heigh, double weight, int age, String position, String coach,
 			String doctor) {
