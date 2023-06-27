@@ -1,7 +1,7 @@
 	import java.awt.Image;
 	
 public class Player {
-	private int backNumber;
+	private static int backNumber;
 	private String name;
 	private double height;
 	private double weight;
@@ -10,6 +10,10 @@ public class Player {
 	private String coach;
 	private String doctor;
 	private Image image;
+	
+	public Player() {
+		
+	}
 
 	public Player(int backNumber, String name, double height, double weight, int age, String position, String coach,
 			String doctor, Image image) {

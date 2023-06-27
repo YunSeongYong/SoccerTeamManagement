@@ -20,6 +20,7 @@ public class Login {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JLabel lblNewLabel_2;
+	public Player player;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -35,6 +36,7 @@ public class Login {
 	}
 
 	public Login() {
+		player = new Player();
 		initialize();
 	}
 
@@ -81,11 +83,13 @@ public class Login {
 
 				if (check == 1) {
 					String role = getRole(textField.getText());
-//					lblNewLabel_2.setText(role);
+					lblNewLabel_2.setText(role);
 					
 					if (role.equals("감독")) {
-						System.out.println("같다");
 						new PlayerRegistration();
+					} else if (role.equals("선수")) {
+						new PlayerTab();
+						player.setBackNumber(checkBackNumber(id));	
 					}
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");
@@ -135,6 +139,56 @@ public class Login {
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt("A");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return 0;
+	}
+	// 회원정보 번호 찾기
+	private static int checkNumber(String id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT no FROM identity WHERE id = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, id);
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("no");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return 0;
+	}
+	// 등 번호 찾기
+	private static int checkBackNumber(String id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT backnumber FROM players WHERE no = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, checkNumber(id));
+
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("backnumber");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
