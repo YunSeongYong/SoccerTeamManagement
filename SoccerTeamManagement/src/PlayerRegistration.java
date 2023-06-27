@@ -7,6 +7,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +46,8 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 	private JTextField no2텍스트필드;
 	private JTextField no1텍스트필드;
 	private JTextField 역할텍스트필드;
+	private JPanel 이미지등록창;
+	private File selectedFile;
 	
 	public void 선수등록메소드() {
 		String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -107,30 +110,54 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
         }
 	}
 	
-//	public void 이미지등록메소드() {
-//		Connection conn = null;
-//		PreparedStatement stmt = null;
-//		try {
-//			byte[] bytes = Files.readAllBytes(Paths.get("d:\\춘식2.png"));
-//			String encoded = encodeBase64(bytes);
-//			
-//			conn = SoccerDBUtil.getConnection();
-//			stmt = conn.prepareStatement("insert into files_base64 (name, contentEncoded) values(?,?)");
-//			stmt.setString(1, "춘식2.png");
-//			stmt.setString(2, encoded);
-//			
-//			stmt.executeUpdate();
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			SoccerDBUtil.close(stmt);
-//			SoccerDBUtil.close(conn);
-//		}
-//	}
-//	
+	public void 이미지를화면에등록하는메소드() {
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showOpenDialog(frame);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		    selectedFile = fileChooser.getSelectedFile();
+		    
+		    // JLabel 생성 및 이미지 아이콘 설정
+		    JLabel 이미지라벨 = new JLabel();
+		    ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+		    Image image = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+		    이미지라벨.setIcon(new ImageIcon(image));
+		    
+		    // JLabel을 JPanel에 추가
+		    이미지등록창.add(이미지라벨);
+		    
+		    // JPanel 갱신
+		    이미지등록창.revalidate();
+		    이미지등록창.repaint();
+
+		}
+	}
+	
+	public void 이미지를데이터베이스에등록하는메소드() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		FileInputStream fileInputStream = new FileInputStream(selectedFile);
+		byte[] imageData = new byte[(int) selectedFile.length()];
+		try {
+			byte[] bytes = Files.readAllBytes(Paths.get("d:\\춘식2.png"));
+			String encoded = encodeBase64(bytes);
+			
+			conn = SoccerDBUtil.getConnection();
+			stmt = conn.prepareStatement("insert into files_base64 (name, contentEncoded) values(?,?)");
+			stmt.setString(1, "춘식2.png");
+			stmt.setString(2, encoded);
+			
+			stmt.executeUpdate();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			SoccerDBUtil.close(stmt);
+			SoccerDBUtil.close(conn);
+		}
+	}
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -157,7 +184,7 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JPanel 이미지등록창 = new JPanel();
+		이미지등록창 = new JPanel();
 		이미지등록창.setBounds(36, 94, 189, 227);
 		frame.getContentPane().add(이미지등록창);
 		
@@ -258,25 +285,7 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 		이미지등록버튼 = new JButton("이미지등록");
 		이미지등록버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fileChooser = new JFileChooser();
-				int result = fileChooser.showOpenDialog(frame);
-				if (result == JFileChooser.APPROVE_OPTION) {
-				    File selectedFile = fileChooser.getSelectedFile();
-				    
-				    // JLabel 생성 및 이미지 아이콘 설정
-				    JLabel 이미지라벨 = new JLabel();
-				    ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-				    Image image = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
-				    이미지라벨.setIcon(new ImageIcon(image));
-				    
-				    // JLabel을 JPanel에 추가
-				    이미지등록창.add(이미지라벨);
-				    
-				    // JPanel 갱신
-				    이미지등록창.revalidate();
-				    이미지등록창.repaint();
-
-				}
+				이미지를화면에등록하는메소드();
 			}
 		});
 		이미지등록버튼.setBounds(66, 365, 126, 23);
