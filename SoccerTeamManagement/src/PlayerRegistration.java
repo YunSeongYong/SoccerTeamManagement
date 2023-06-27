@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.JFrame;
@@ -6,12 +7,15 @@ import javax.swing.JPanel;
 import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,10 +23,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
 
 import dbutil.DBUtil;
+
+
 
 
 public class PlayerRegistration extends JFrame implements ChangeListener{
@@ -50,38 +57,39 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 	private JTextField 역할텍스트필드;
 	private JPanel 이미지등록창;
 	private File selectedFile;
+	private Image selectedImage;
 	
 	public void 선수등록메소드() {
-		String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        
-        try {
-            conn = DBUtil.getConnection();
-            stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, Integer.valueOf(등번호텍스트필드.getText()));
-            stmt.setString(2, 이름텍스트필드.getText());
-            stmt.setDouble(3, Double.valueOf(신장텍스트필드.getText()));
-            stmt.setDouble(4, Double.valueOf(몸무게텍스트필드.getText()));
-            stmt.setInt(5, Integer.valueOf(나이텍스트필드.getText()));
-            stmt.setString(6, 포지션텍스트필드.getText());
-            //stmt.set?(7, 이미지텍스트필드.getText());
-            stmt.setString(7, 담당코치텍스트필드.getText());
-            stmt.setString(8, 담당의사텍스트필드.getText());
-            stmt.setString(9, no2텍스트필드.getText());
-            
-            int result = stmt.executeUpdate();
-            if (result > 0) {
-                System.out.println("데이터가 성공적으로 저장되었습니다.");
-            } else {
-                System.out.println("데이터 저장에 실패하였습니다.");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            DBUtil.close(stmt);
-            DBUtil.close(conn);
-        }
+	    String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, Integer.valueOf(등번호텍스트필드.getText()));
+	        stmt.setString(2, 이름텍스트필드.getText());
+	        stmt.setDouble(3, Double.valueOf(신장텍스트필드.getText()));
+	        stmt.setDouble(4, Double.valueOf(몸무게텍스트필드.getText()));
+	        stmt.setInt(5, Integer.valueOf(나이텍스트필드.getText()));
+	        stmt.setString(6, 포지션텍스트필드.getText());
+	        stmt.setString(7, 담당코치텍스트필드.getText());
+	        stmt.setString(8, 담당의사텍스트필드.getText());
+	        stmt.setString(9, no2텍스트필드.getText());
+
+	        int result = stmt.executeUpdate();
+	        if (result > 0) {
+	            System.out.println("데이터가 성공적으로 저장되었습니다.");
+	        } else {
+	            System.out.println("데이터 저장에 실패하였습니다.");
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    } finally {
+	    	이미지를데이터베이스에등록하는메소드(stmt);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
 	}
 	
 	
@@ -113,52 +121,54 @@ public class PlayerRegistration extends JFrame implements ChangeListener{
 	}
 	
 	public void 이미지를화면에등록하는메소드() {
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showOpenDialog(frame);
-		if (result == JFileChooser.APPROVE_OPTION) {
-		    selectedFile = fileChooser.getSelectedFile();
-		    
-		    // JLabel 생성 및 이미지 아이콘 설정
-		    JLabel 이미지라벨 = new JLabel();
-		    ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-		    Image image = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
-		    이미지라벨.setIcon(new ImageIcon(image));
-		    
-		    // JLabel을 JPanel에 추가
-		    이미지등록창.add(이미지라벨);
-		    
-		    // JPanel 갱신
-		    이미지등록창.revalidate();
-		    이미지등록창.repaint();
+	    JFileChooser fileChooser = new JFileChooser();
+	    int result = fileChooser.showOpenDialog(frame);
+	    if (result == JFileChooser.APPROVE_OPTION) {
+	        selectedFile = fileChooser.getSelectedFile(); // 필드에 할당
 
-		}
+	        // 이미지 아이콘 설정
+	        ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+	        selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+
+	        // JLabel 생성 및 이미지 아이콘 설정
+	        JLabel 이미지라벨 = new JLabel();
+	        이미지라벨.setIcon(new ImageIcon(selectedImage));
+
+	        // JLabel을 JPanel에 추가
+	        이미지등록창.add(이미지라벨);
+
+	        // JPanel 갱신
+	        이미지등록창.revalidate();
+	        이미지등록창.repaint();
+	    }
 	}
-	
-	public void 이미지를데이터베이스에등록하는메소드() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		FileInputStream fileInputStream = new FileInputStream(selectedFile);
-		byte[] imageData = new byte[(int) selectedFile.length()];
-		try {
-			byte[] bytes = Files.readAllBytes(Paths.get("d:\\춘식2.png"));
-			String encoded = encodeBase64(bytes);
-			
-			conn = SoccerDBUtil.getConnection();
-			stmt = conn.prepareStatement("insert into files_base64 (name, contentEncoded) values(?,?)");
-			stmt.setString(1, "춘식2.png");
-			stmt.setString(2, encoded);
-			
-			stmt.executeUpdate();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			SoccerDBUtil.close(stmt);
-			SoccerDBUtil.close(conn);
-		}
+
+	public void 이미지를데이터베이스에등록하는메소드(PreparedStatement stmt) {
+		 Connection conn = null;
+	    try {
+	    	conn = DBUtil.getConnection();
+	        // 이미지를 바이트 배열로 변환
+	        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	        BufferedImage bufferedImage = new BufferedImage(selectedImage.getWidth(null), selectedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
+	        Graphics2D graphics = bufferedImage.createGraphics();
+	        graphics.drawImage(selectedImage, 0, 0, null);
+	        graphics.dispose();
+	        ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+	        byte[] imageData = byteArrayOutputStream.toByteArray();
+
+	        // 선수 이미지를 업데이트하는 쿼리 실행
+	        String updateQuery = "UPDATE players SET image = ? WHERE backnumber = ?";
+	        stmt = conn.prepareStatement(updateQuery);
+	        stmt.setBytes(1, imageData);
+	        stmt.setInt(2, Integer.valueOf(등번호텍스트필드.getText()));
+	        stmt.executeUpdate();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 
 	public static void main(String[] args) {
