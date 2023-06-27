@@ -89,6 +89,8 @@ private JLabel lbl_1;
 private JLabel lblNewLabel_8;
 private List<Player> list;
 private JTextField 담당의사수정텍스트필드;
+private boolean 이미지를화면에수정하는메소드boolean = false;
+private boolean 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = false;
 
    public void insertStaff() {
 	   Connection conn = null;
@@ -312,7 +314,6 @@ private JTextField 담당의사수정텍스트필드;
 	    }
 	}
 	
-	
 	public void identity등록메소드() {
 		String sql = "INSERT INTO identity (no, id, password, role) VALUES (?, ?, ?, ?)";
         Connection conn = null;
@@ -383,7 +384,7 @@ private JTextField 담당의사수정텍스트필드;
 	        String updateQuery = "UPDATE players SET image = ? WHERE backnumber = ?";
 	        stmt = conn.prepareStatement(updateQuery);
 	        stmt.setBytes(1, imageData);
-	        stmt.setInt(2, Integer.valueOf(등번호텍스트필드.getText()));
+	        stmt.setInt(2, Integer.valueOf(등번호수정텍스트필드.getText()));
 	        stmt.executeUpdate();
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -393,14 +394,20 @@ private JTextField 담당의사수정텍스트필드;
 	}
 	
 	public void 선수정보콤보박스목록만드는메소드() {
+	    if (선수정보콤보박스 == null) {
+	        선수정보콤보박스 = new JComboBox<>();
+	    } else {
+	        선수정보콤보박스.removeAllItems();
+	    }
+
+	    // 콤보박스 초기화 코드 추가
+
 	    Connection conn = null;
 	    try {
-	        conn = DBUtil.getConnection();  // Connection 객체 할당
+	        conn = DBUtil.getConnection();
 	        String sql = "SELECT backnumber, name FROM players";
 	        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-	            // 쿼리 실행
 	            try (ResultSet rs = stmt.executeQuery()) {
-	                // 결과를 콤보박스에 추가
 	                while (rs.next()) {
 	                    int backnumber = rs.getInt("backnumber");
 	                    String name = rs.getString("name");
@@ -413,35 +420,37 @@ private JTextField 담당의사수정텍스트필드;
 	        e.printStackTrace();
 	    }
 	}
+
+
 	
-	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-	    try {
-	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, backnumber);
-	        rs = stmt.executeQuery();
-	        
-	        while (rs.next()) {
-	            int backnumber1 = rs.getInt("backnumber");
-	            String name = rs.getString("name");
-	            
-	            System.out.println(backnumber1);
-	            System.out.println(name);
-	        }
-	        
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        // 사용한 자원을 닫아주어야 합니다.
-	        DBUtil.close(rs);
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
-	}
+//	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
+//	    Connection conn = null;
+//	    PreparedStatement stmt = null;
+//	    ResultSet rs = null;
+//	    try {
+//	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+//	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
+//	        stmt = conn.prepareStatement(sql);
+//	        stmt.setInt(1, backnumber);
+//	        rs = stmt.executeQuery();
+//	        
+//	        while (rs.next()) {
+//	            int backnumber1 = rs.getInt("backnumber");
+//	            String name = rs.getString("name");
+//	            
+//	            System.out.println(backnumber1);
+//	            System.out.println(name);
+//	        }
+//	        
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    } finally {
+//	        // 사용한 자원을 닫아주어야 합니다.
+//	        DBUtil.close(rs);
+//	        DBUtil.close(stmt);
+//	        DBUtil.close(conn);
+//	    }
+//	}
 	
 	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
 	    Connection conn = null;
@@ -485,6 +494,9 @@ private JTextField 담당의사수정텍스트필드;
 	}
 	
 	public void 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(List<Player> playerList) {
+		콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = true;
+		System.out.println(콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean);
+		
 	    if (!playerList.isEmpty()) {
 	        Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
 
@@ -500,6 +512,10 @@ private JTextField 담당의사수정텍스트필드;
 	        // 이미지 표시를 위한 JLabel 생성
 	        Image image = player.getImage();
 	        JLabel imageLabel = new JLabel(new ImageIcon(image));
+
+	        // 이미지를 추가하기 전에 이전에 추가한 이미지 제거
+	        이미지등록수정창.removeAll();
+
 	        SwingUtilities.invokeLater(() -> {
 	            이미지등록수정창.add(imageLabel);
 	            이미지등록수정창.revalidate();
@@ -507,46 +523,78 @@ private JTextField 담당의사수정텍스트필드;
 	        });
 	    }
 	}
-
-
-
-
 	
-	public void 선수정보수정메소드(int backnumber) {
-		
-	        String sql = "update players set backnumber = ?, name = ?, height = ?, weight = ?, age = ?, position = ?, coach = ?, doctor = ?, no = ? where backnumber = ?";
-	        Connection conn = null;
-		    PreparedStatement stmt = null;
+	public void 선수수정메소드(List<Player> playerList) {
+	    Player player = playerList.get(0);
+	    String sql = "UPDATE players SET backnumber=?, name=?, height=?, weight=?, age=?, position=?, coach=?, doctor=? WHERE backnumber = ?";
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
 
-		    try {
-		        conn = DBUtil.getConnection();
-		        stmt = conn.prepareStatement(sql);
-		        stmt.setInt(1, Integer.valueOf(등번호텍스트필드.getText()));
-		        stmt.setString(2, 이름텍스트필드.getText());
-		        stmt.setDouble(3, Double.valueOf(신장텍스트필드.getText()));
-		        stmt.setDouble(4, Double.valueOf(몸무게텍스트필드.getText()));
-		        stmt.setInt(5, Integer.valueOf(나이텍스트필드.getText()));
-		        stmt.setString(6, 포지션텍스트필드.getText());
-		        stmt.setString(7, 담당코치텍스트필드.getText());
-		        stmt.setString(8, 담당의사텍스트필드.getText());
-		        stmt.setString(9, no2텍스트필드.getText());
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, Integer.valueOf(등번호수정텍스트필드.getText()));
+	        stmt.setString(2, 이름수정텍스트필드.getText());
+	        stmt.setDouble(3, Double.valueOf(신장수정텍스트필드.getText()));
+	        stmt.setDouble(4, Double.valueOf(몸무게수정텍스트필드.getText()));
+	        stmt.setInt(5, Integer.valueOf(나이수정텍스트필드.getText()));
+	        stmt.setString(6, 포지션수정텍스트필드.getText());
+	        stmt.setString(7, 담당코치수정텍스트필드.getText());
+	        stmt.setString(8, 담당의사수정텍스트필드.getText());
+	        stmt.setInt(9, player.getBackNumber());
 
-		        int result = stmt.executeUpdate();
-		        if (result > 0) {
-		            System.out.println("데이터가 성공적으로 저장되었습니다.");
-		        } else {
-		            System.out.println("데이터 저장에 실패하였습니다.");
-		        }
-		    } catch (SQLException ex) {
-		        ex.printStackTrace();
-		    } finally {
-		        DBUtil.close(stmt);
-		        DBUtil.close(conn);
-		    }
+	        int result = stmt.executeUpdate();
+	        if (result > 0) {
+	            System.out.println("데이터가 성공적으로 저장되었습니다.");
+	            
+	        } else {
+	            System.out.println("데이터 저장에 실패하였습니다.");
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    } finally {
+	    	이미지를데이터베이스에등록하는메소드(stmt);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	}
+	
+	public void 이미지를화면에수정하는메소드() {
+		이미지를화면에수정하는메소드boolean = true;
+		System.out.println("이미지boolean: " + 이미지를화면에수정하는메소드boolean);
+		System.out.println("콤보박스boolean: " + 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean);
+		if (이미지를화면에수정하는메소드boolean == true && 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean == true) {
+			이미지등록수정창.removeAll();
+			이미지를화면에수정하는메소드boolean = false;
+			콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = false;
+					
 		}
+	       JFileChooser fileChooser = new JFileChooser();
+	       int result = fileChooser.showOpenDialog(frame);
+	       if (result == JFileChooser.APPROVE_OPTION) {
+	           selectedFile = fileChooser.getSelectedFile(); // 선택한 파일 가져오기
 
+	           // 이미지 아이콘 설정
+	           ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+	           selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
 
-	
+			// 기존에 생성한 JLabel이 있을 경우 수정, 없을 경우 새로 생성
+	           if (이미지라벨 == null) {
+	               이미지라벨 = new JLabel();
+	               이미지라벨.setBounds(12, 38, 136, 187);
+	               이미지등록수정창.add(이미지라벨);
+	           }
+
+	           // JLabel에 이미지 아이콘 설정
+	           이미지라벨.setIcon(new ImageIcon(selectedImage));
+
+	           // JPanel 갱신
+	           이미지등록수정창.revalidate();
+	           이미지등록수정창.repaint();
+	       }
+	   }
+
+	//======================================================================
    
    public DirectorGUI(String str){
       super(str);
@@ -902,7 +950,7 @@ private JTextField 담당의사수정텍스트필드;
 		three.add(선수정보콤보박스);
 		선수정보콤보박스목록만드는메소드();
 		선수정보콤보박스.addActionListener(new ActionListener() {
-		    @Override
+			@Override
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
 		        int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
@@ -923,7 +971,7 @@ private JTextField 담당의사수정텍스트필드;
 		three.add(선수정보라벨);
 		
 		일정창 = new JPanel();
-		일정창.setBounds(12, 10, 10, 10);
+		일정창.setBounds(12, 10, 19, 21);
 		three.add(일정창);
 		
 		컨디션창 = new JPanel();
@@ -1006,12 +1054,19 @@ private JTextField 담당의사수정텍스트필드;
 		이미지수정버튼 = new JButton("이미지수정");
 		이미지수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				이미지를화면에수정하는메소드();
 			}
 		});
 		이미지수정버튼.setBounds(48, 307, 126, 23);
 		개인정보창.add(이미지수정버튼);
 		
 		수정버튼 = new JButton("수정버튼");
+		수정버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				선수수정메소드(list);
+			
+			}
+		});
 		수정버튼.setBounds(585, 307, 90, 29);
 		개인정보창.add(수정버튼);
 		
