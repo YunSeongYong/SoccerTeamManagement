@@ -19,7 +19,7 @@ import javax.swing.event.*;
 import dbutil.DBUtil;
 import java.awt.CardLayout;
 
-public class TabWindows extends JFrame implements ChangeListener {
+public class DirectorGUI extends JFrame implements ChangeListener {
    JTabbedPane pane;
    JLabel  lbl;
    private JFrame frame;
@@ -202,7 +202,7 @@ private JLabel 사용가능유무라벨;
 	
 	// 중복확인 버튼 클릭 시 실행되는 메서드
 		private void 아이디중복확인() {
-		   String id = textField_4.getText(); // 입력한 아이디 가져오기
+		   String id = 아이디텍스트필드.getText(); // 입력한 아이디 가져오기
 		   boolean isDuplicate = checkIfIDExists(id); // 데이터베이스에서 아이디 중복 여부 확인
 		
 		   // 중복 여부에 따라 메시지 업데이트
@@ -360,10 +360,11 @@ private JLabel 사용가능유무라벨;
 	}
 	
    
-   public TabWindows(String str){
+   public DirectorGUI(String str){
       super(str);
-      JPanel  one, two, three;
+      JPanel  one, two, three, four;
       pane = new JTabbedPane();
+      pane.setForeground(Color.BLACK);
       pane.setBounds(0, 0, 972, 551);
       lbl = new JLabel("              ");
       lbl.setBounds(0, 146, 284, 15);
@@ -544,6 +545,8 @@ private JLabel 사용가능유무라벨;
       //==================================================================
       
       two = new JPanel();
+      two.setBackground(new Color(220, 220, 220));
+      two.setForeground(Color.BLACK);
       two.add(new JLabel("두번째 탭입니다"));
       two.add(new JTextField("문자를 입력하세요"));
 
@@ -552,101 +555,101 @@ private JLabel 사용가능유무라벨;
       
 
     
-    two.setLayout(null);
-    
-    JLabel lblNewLabel_1 = new JLabel("이름");
-    lblNewLabel_1.setBounds(193, 54, 57, 15);
-    two.add(lblNewLabel_1);
-    
-    JLabel lblNewLabel_2 = new JLabel("나이");
-    lblNewLabel_2.setBounds(193, 106, 57, 15);
-    two.add(lblNewLabel_2);
-    
-    JLabel lblNewLabel_3 = new JLabel("직책");
-    lblNewLabel_3.setBounds(193, 158, 57, 15);
-    two.add(lblNewLabel_3);
-    
-    textField = new JTextField();
-    textField.setBounds(239, 51, 116, 21);
-    two.add(textField);
-    textField.setColumns(10);
-    
-    textField_1 = new JTextField();
-    textField_1.setBounds(239, 103, 116, 21);
-    two.add(textField_1);
-    textField_1.setColumns(10);
-    
-    textField_2 = new JTextField();
-    textField_2.setBounds(239, 155, 116, 21);
-    two.add(textField_2);
-    textField_2.setColumns(10);
-    
-    JLabel lblNewLabel_4 = new JLabel("ID Number");
-    lblNewLabel_4.setBounds(419, 54, 76, 15);
-    two.add(lblNewLabel_4);
-    
-    JLabel lblNewLabel_5 = new JLabel("ID");
-    lblNewLabel_5.setBounds(419, 106, 57, 15);
-    two.add(lblNewLabel_5);
-    
-    JLabel lblNewLabel_6 = new JLabel("PW");
-    lblNewLabel_6.setBounds(419, 158, 57, 15);
-    two.add(lblNewLabel_6);
-    
-    textField_3 = new JTextField();
-    textField_3.setBounds(515, 51, 116, 21);
-    two.add(textField_3);
-    textField_3.setColumns(10);
-    
-    textField_4 = new JTextField();
-    textField_4.setBounds(515, 103, 116, 21);
-    two.add(textField_4);
-    textField_4.setColumns(10);
-    
-    textField_5 = new JTextField();
-    textField_5.setBounds(515, 155, 116, 21);
-    two.add(textField_5);
-    textField_5.setColumns(10);
-    
-    JButton btnNewButton = new JButton("등록");
-    btnNewButton.setBounds(534, 239, 97, 23);
-    two.add(btnNewButton);
-    btnNewButton.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			insertStaffID();
-			insertStaff();
-			
-		}
-	} );
-    JButton btnNewButton_1 = new JButton("이미지");
-    btnNewButton_1.setBounds(32, 239, 97, 23);
-    two.add(btnNewButton_1);
-    
-    panel = new JPanel();
-    panel.setBounds(12, 38, 136, 187);
-    two.add(panel);
-    
-    JButton btnNewButton_2 = new JButton("중복확인");
-    btnNewButton_2.setBounds(657, 102, 97, 23);
-    two.add(btnNewButton_2);
-    btnNewButton_2.addActionListener(new ActionListener() {		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			checkDuplicateID();
-		}
-	});
-    
-    lblNewLabel_7 = new JLabel("중복여부");
-    lblNewLabel_7.setBounds(515, 130, 239, 15);
-    two.add(lblNewLabel_7);
-    btnNewButton_1.addActionListener(new ActionListener() {		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			insertImg();
-			
-		}
-	});
+	    two.setLayout(null);
+	    
+	    JLabel lblNewLabel_1 = new JLabel("이름");
+	    lblNewLabel_1.setBounds(193, 54, 57, 15);
+	    two.add(lblNewLabel_1);
+	    
+	    JLabel lblNewLabel_2 = new JLabel("나이");
+	    lblNewLabel_2.setBounds(193, 106, 57, 15);
+	    two.add(lblNewLabel_2);
+	    
+	    JLabel lblNewLabel_3 = new JLabel("직책");
+	    lblNewLabel_3.setBounds(193, 158, 57, 15);
+	    two.add(lblNewLabel_3);
+	    
+	    textField = new JTextField();
+	    textField.setBounds(239, 51, 116, 21);
+	    two.add(textField);
+	    textField.setColumns(10);
+	    
+	    textField_1 = new JTextField();
+	    textField_1.setBounds(239, 103, 116, 21);
+	    two.add(textField_1);
+	    textField_1.setColumns(10);
+	    
+	    textField_2 = new JTextField();
+	    textField_2.setBounds(239, 155, 116, 21);
+	    two.add(textField_2);
+	    textField_2.setColumns(10);
+	    
+	    JLabel lblNewLabel_4 = new JLabel("ID Number");
+	    lblNewLabel_4.setBounds(419, 54, 76, 15);
+	    two.add(lblNewLabel_4);
+	    
+	    JLabel lblNewLabel_5 = new JLabel("ID");
+	    lblNewLabel_5.setBounds(419, 106, 57, 15);
+	    two.add(lblNewLabel_5);
+	    
+	    JLabel lblNewLabel_6 = new JLabel("PW");
+	    lblNewLabel_6.setBounds(419, 158, 57, 15);
+	    two.add(lblNewLabel_6);
+	    
+	    textField_3 = new JTextField();
+	    textField_3.setBounds(515, 51, 116, 21);
+	    two.add(textField_3);
+	    textField_3.setColumns(10);
+	    
+	    textField_4 = new JTextField();
+	    textField_4.setBounds(515, 103, 116, 21);
+	    two.add(textField_4);
+	    textField_4.setColumns(10);
+	    
+	    textField_5 = new JTextField();
+	    textField_5.setBounds(515, 155, 116, 21);
+	    two.add(textField_5);
+	    textField_5.setColumns(10);
+	    
+	    JButton btnNewButton = new JButton("등록");
+	    btnNewButton.setBounds(534, 239, 97, 23);
+	    two.add(btnNewButton);
+	    btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				insertStaffID();
+				insertStaff();
+				
+			}
+		} );
+	    JButton btnNewButton_1 = new JButton("이미지");
+	    btnNewButton_1.setBounds(32, 239, 97, 23);
+	    two.add(btnNewButton_1);
+	    
+	    panel = new JPanel();
+	    panel.setBounds(12, 38, 136, 187);
+	    two.add(panel);
+	    
+	    JButton btnNewButton_2 = new JButton("중복확인");
+	    btnNewButton_2.setBounds(657, 102, 97, 23);
+	    two.add(btnNewButton_2);
+	    btnNewButton_2.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checkDuplicateID();
+			}
+		});
+	    
+	    lblNewLabel_7 = new JLabel("중복여부");
+	    lblNewLabel_7.setBounds(515, 130, 239, 15);
+	    two.add(lblNewLabel_7);
+	    btnNewButton_1.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				insertImg();
+				
+			}
+		});
       
       //====================================================================
       
@@ -706,7 +709,14 @@ private JLabel 사용가능유무라벨;
       
       
       //====================================================================
-      
+		four = new JPanel();
+		four.setBackground(Color.WHITE);
+	    pane.addTab("공동일정", four);
+	    four.setLayout(null);
+		
+		
+		
+	  //====================================================================
       pane.setSelectedIndex(0);
       pane.addChangeListener(this);
       getContentPane().setLayout(null);
@@ -729,6 +739,6 @@ private JLabel 사용가능유무라벨;
    
    
    public static void main(String[] args) {
-      new TabWindows("감독창");
+      new DirectorGUI("감독창");
    }
 }
