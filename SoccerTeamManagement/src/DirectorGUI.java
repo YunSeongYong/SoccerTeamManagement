@@ -20,7 +20,7 @@ import javax.swing.event.*;
 import dbutil.DBUtil;
 import java.awt.CardLayout;
 
-public class TabWindows extends JFrame implements ChangeListener {
+public class DirectorGUI extends JFrame implements ChangeListener {
    JTabbedPane pane;
    JLabel  lbl;
    private JFrame frame;
@@ -421,7 +421,7 @@ private int backnumber;
 
 	
    
-   public TabWindows(String str){
+   public DirectorGUI(String str){
       super(str);
       JPanel  one, two, three;
       pane = new JTabbedPane();
@@ -844,6 +844,6 @@ private int backnumber;
    
    public static void main(String[] args) {
 
-      new TabWindows("감독창");
+      new DirectorGUI("감독창");
    }
 }
