@@ -237,7 +237,7 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 	
 	// 중복확인 버튼 클릭 시 실행되는 메서드
 		private void 아이디중복확인() {
-		   String id = textField_4.getText(); // 입력한 아이디 가져오기
+		   String id = 아이디텍스트필드.getText(); // 입력한 아이디 가져오기
 		   boolean isDuplicate = checkIfIDExists(id); // 데이터베이스에서 아이디 중복 여부 확인
 		
 		   // 중복 여부에 따라 메시지 업데이트
@@ -611,83 +611,83 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
       one.setLayout(null);
       
       JLabel 이름라벨 = new JLabel("이름");
-      이름라벨.setBounds(618, 106, 52, 15);
+      이름라벨.setBounds(618, 91, 52, 15);
       one.add(이름라벨);
       
       JLabel 신장라벨 = new JLabel("신장");
-      신장라벨.setBounds(618, 163, 62, 15);
+      신장라벨.setBounds(618, 130, 62, 15);
       one.add(신장라벨);
       
       JLabel 몸무게라벨 = new JLabel("몸무게");
-      몸무게라벨.setBounds(618, 206, 64, 15);
+      몸무게라벨.setBounds(618, 167, 64, 15);
       one.add(몸무게라벨);
       
       JLabel 나이라벨 = new JLabel("나이");
-      나이라벨.setBounds(618, 247, 62, 15);
+      나이라벨.setBounds(618, 205, 62, 15);
       one.add(나이라벨);
       
       JLabel 포지션라벨 = new JLabel("포지션");
-      포지션라벨.setBounds(618, 298, 81, 15);
+      포지션라벨.setBounds(618, 244, 81, 15);
       one.add(포지션라벨);
       
       JLabel 담당코치라벨 = new JLabel("담당 코치");
-      담당코치라벨.setBounds(618, 351, 81, 15);
+      담당코치라벨.setBounds(618, 282, 81, 15);
       one.add(담당코치라벨);
       
       JLabel 담당의사라벨 = new JLabel("담당 의사");
-      담당의사라벨.setBounds(618, 393, 90, 15);
+      담당의사라벨.setBounds(618, 318, 90, 15);
       one.add(담당의사라벨);
       
       JLabel 아이디라벨 = new JLabel("아이디");
-      아이디라벨.setBounds(239, 163, 60, 15);
+      아이디라벨.setBounds(239, 91, 60, 15);
       one.add(아이디라벨);
       
       JLabel 비밀번호라벨 = new JLabel("비밀번호");
-      비밀번호라벨.setBounds(239, 228, 64, 15);
+      비밀번호라벨.setBounds(239, 143, 64, 15);
       one.add(비밀번호라벨);
       
       이름텍스트필드 = new JTextField();
-      이름텍스트필드.setBounds(699, 103, 116, 21);
+      이름텍스트필드.setBounds(699, 88, 116, 21);
       one.add(이름텍스트필드);
       이름텍스트필드.setColumns(10);
       
       신장텍스트필드 = new JTextField();
-      신장텍스트필드.setBounds(699, 160, 116, 21);
+      신장텍스트필드.setBounds(699, 127, 116, 21);
       one.add(신장텍스트필드);
       신장텍스트필드.setColumns(10);
       
       몸무게텍스트필드 = new JTextField();
-      몸무게텍스트필드.setBounds(699, 203, 116, 21);
+      몸무게텍스트필드.setBounds(699, 164, 116, 21);
       one.add(몸무게텍스트필드);
       몸무게텍스트필드.setColumns(10);
       
       나이텍스트필드 = new JTextField();
-      나이텍스트필드.setBounds(709, 244, 116, 21);
+      나이텍스트필드.setBounds(699, 202, 116, 21);
       one.add(나이텍스트필드);
       나이텍스트필드.setColumns(10);
       
       포지션텍스트필드 = new JTextField();
-      포지션텍스트필드.setBounds(711, 295, 116, 21);
+      포지션텍스트필드.setBounds(699, 241, 116, 21);
       one.add(포지션텍스트필드);
       포지션텍스트필드.setColumns(10);
       
       담당코치텍스트필드 = new JTextField();
-      담당코치텍스트필드.setBounds(723, 348, 116, 21);
+      담당코치텍스트필드.setBounds(699, 279, 116, 21);
       one.add(담당코치텍스트필드);
       담당코치텍스트필드.setColumns(10);
       
       담당의사텍스트필드 = new JTextField();
-      담당의사텍스트필드.setBounds(720, 390, 116, 21);
+      담당의사텍스트필드.setBounds(699, 315, 116, 21);
       one.add(담당의사텍스트필드);
       담당의사텍스트필드.setColumns(10);
       
       아이디텍스트필드 = new JTextField();
-      아이디텍스트필드.setBounds(311, 160, 116, 21);
+      아이디텍스트필드.setBounds(311, 84, 116, 21);
       one.add(아이디텍스트필드);
       아이디텍스트필드.setColumns(10);
       
       비밀번호텍스트필드 = new JTextField();
-      비밀번호텍스트필드.setBounds(311, 225, 116, 21);
+      비밀번호텍스트필드.setBounds(311, 140, 116, 21);
       one.add(비밀번호텍스트필드);
       비밀번호텍스트필드.setColumns(10);
       
@@ -697,7 +697,7 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
       		이미지를화면에등록하는메소드();
       	}
       });
-      이미지등록버튼.setBounds(64, 347, 126, 23);
+      이미지등록버튼.setBounds(64, 261, 126, 23);
       one.add(이미지등록버튼);
       
       저장버튼 = new JButton("저장");
@@ -708,7 +708,7 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
           }
       });
       
-      		저장버튼.setBounds(422, 335, 149, 46);
+      		저장버튼.setBounds(877, 382, 90, 39);
       		one.add(저장버튼);
       		
       		등번호라벨 = new JLabel("등번호");
@@ -721,15 +721,15 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
       		등번호텍스트필드.setColumns(10);
       		
       		no라벨2 = new JLabel("no");
-      		no라벨2.setBounds(374, 390, 81, 15);
+      		no라벨2.setBounds(618, 351, 81, 15);
       		one.add(no라벨2);
       		
       		이미지등록창 = new JPanel();
-      		이미지등록창.setBounds(26, 106, 192, 211);
+      		이미지등록창.setBounds(29, 32, 192, 211);
       		one.add(이미지등록창);
       		
       		no2텍스트필드 = new JTextField();
-      		no2텍스트필드.setBounds(479, 387, 116, 21);
+      		no2텍스트필드.setBounds(699, 348, 116, 21);
       		one.add(no2텍스트필드);
       		no2텍스트필드.setColumns(10);
       		
@@ -738,29 +738,29 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
       		one.add(선수등록라벨);
       		
       		JLabel no라벨1 = new JLabel("no");
-      		no라벨1.setBounds(237, 104, 62, 15);
+      		no라벨1.setBounds(237, 56, 62, 15);
       		one.add(no라벨1);
       		
       		no1텍스트필드 = new JTextField();
-      		no1텍스트필드.setBounds(311, 101, 116, 21);
+      		no1텍스트필드.setBounds(311, 53, 116, 21);
       		one.add(no1텍스트필드);
       		no1텍스트필드.setColumns(10);
       		
       		JLabel 역할라벨 = new JLabel("역할");
-      		역할라벨.setBounds(239, 285, 60, 15);
+      		역할라벨.setBounds(239, 183, 60, 15);
       		one.add(역할라벨);
       		
       		역할텍스트필드 = new JTextField();
-      		역할텍스트필드.setBounds(311, 282, 116, 21);
+      		역할텍스트필드.setBounds(311, 180, 116, 21);
       		one.add(역할텍스트필드);
       		역할텍스트필드.setColumns(10);
       		
       		JLabel identity등록라벨 = new JLabel("identity등록");
-      		identity등록라벨.setBounds(315, 56, 64, 15);
+      		identity등록라벨.setBounds(315, 10, 64, 15);
       		one.add(identity등록라벨);
       		
       		JButton 중복확인버튼 = new JButton("중복확인");
-      		중복확인버튼.setBounds(460, 159, 97, 23);
+      		중복확인버튼.setBounds(446, 83, 97, 23);
       		one.add(중복확인버튼);
       		중복확인버튼.addActionListener(new ActionListener() {
 				@Override
@@ -770,7 +770,7 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 			});
       		
       		사용가능유무라벨 = new JLabel("중복확인 버튼을 누르세요");
-      		사용가능유무라벨.setBounds(321, 191, 178, 15);
+      		사용가능유무라벨.setBounds(311, 109, 178, 15);
       		one.add(사용가능유무라벨);
       		
       
@@ -884,224 +884,7 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 			
 		}
 	});
-      
-      //====================================================================
-      
-      three = new JPanel();
-      three.setBackground(Color.WHITE);
-      pane.addTab("Three", three);
-      three.setLayout(null);
-     
-      
-      JButton 개인정보버튼 = new JButton("개인정보");
-      개인정보버튼.addActionListener(new ActionListener() {
-    		  public void actionPerformed(ActionEvent e) {
-  				개인정보창.setVisible(true);
-  		          일정창.setVisible(false);
-  		          컨디션창.setVisible(false);
-  		          의사소견창.setVisible(false);
-  			}
-  		});
-		개인정보버튼.setBounds(32, 91, 120, 46);
-		three.add(개인정보버튼);
-		
-		JButton 일정버튼 = new JButton("일정");
-		일정버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				개인정보창.setVisible(false);
-		          일정창.setVisible(true);
-		          컨디션창.setVisible(false);
-		          의사소견창.setVisible(false);
-			}
-		});
-		일정버튼.setBounds(32, 166, 120, 46);
-		three.add(일정버튼);
-		
-		JButton 컨디션버튼 = new JButton("컨디션");
-		컨디션버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				개인정보창.setVisible(false);
-		          일정창.setVisible(false);
-		          컨디션창.setVisible(true);
-		          의사소견창.setVisible(false);
-			}
-		});
-		컨디션버튼.setBounds(32, 243, 120, 46);
-		three.add(컨디션버튼);
-		
-		JButton 의사소견버튼 = new JButton("의사소견");
-		의사소견버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				개인정보창.setVisible(false);
-		          일정창.setVisible(false);
-		          컨디션창.setVisible(false);
-		          의사소견창.setVisible(true);
-			}
-		});
-		의사소견버튼.setBounds(32, 324, 117, 46);
-		three.add(의사소견버튼);
-		
-		JComboBox 날짜콤보박스 = new JComboBox();
-		날짜콤보박스.setBounds(424, 26, 127, 21);
-		three.add(날짜콤보박스);
-		
-		선수정보콤보박스 = new JComboBox();
-		선수정보콤보박스.setBounds(756, 26, 117, 21);
-		three.add(선수정보콤보박스);
 		선수정보콤보박스목록만드는메소드();
-		선수정보콤보박스.addActionListener(new ActionListener() {
-			@Override
-		    public void actionPerformed(ActionEvent e) {
-		        String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
-		        int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
-		        System.out.println(backnumber);
-		        선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(backnumber);
-		        	콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(list);
-		       
-		    }
-		});
-		
-		
-		JLabel 날짜라벨 = new JLabel("날짜");
-		날짜라벨.setBounds(372, 29, 44, 15);
-		three.add(날짜라벨);
-		
-		JLabel 선수정보라벨 = new JLabel("선수정보");
-		선수정보라벨.setBounds(678, 29, 66, 15);
-		three.add(선수정보라벨);
-		
-		일정창 = new JPanel();
-		일정창.setBounds(12, 10, 19, 21);
-		three.add(일정창);
-		
-		컨디션창 = new JPanel();
-		컨디션창.setBounds(43, 10, 10, 10);
-		three.add(컨디션창);
-		
-		의사소견창 = new JPanel();
-		의사소견창.setBounds(92, 10, 10, 10);
-		three.add(의사소견창);
-		
-		개인정보창 = new JPanel();
-		개인정보창.setBounds(192, 57, 787, 376);
-		three.add(개인정보창);
-		개인정보창.setLayout(null);
-		개인정보창.setBackground(Color.WHITE);
-		
-		이름수정라벨 = new JLabel("이름");
-		이름수정라벨.setBounds(544, 55, 52, 15);
-		개인정보창.add(이름수정라벨);
-		
-		신장수정라벨 = new JLabel("신장");
-		신장수정라벨.setBounds(267, 106, 62, 15);
-		개인정보창.add(신장수정라벨);
-		
-		몸무게수정라벨 = new JLabel("몸무게");
-		몸무게수정라벨.setBounds(532, 106, 64, 15);
-		개인정보창.add(몸무게수정라벨);
-		
-		나이수정라벨 = new JLabel("나이");
-		나이수정라벨.setBounds(267, 166, 62, 15);
-		개인정보창.add(나이수정라벨);
-		
-		포지션수정라벨 = new JLabel("포지션");
-		포지션수정라벨.setBounds(532, 166, 81, 15);
-		개인정보창.add(포지션수정라벨);
-		
-		담당코치수정라벨 = new JLabel("담당 코치");
-		담당코치수정라벨.setBounds(267, 218, 81, 15);
-		개인정보창.add(담당코치수정라벨);
-		
-		담당의사수정라벨 = new JLabel("담당 의사");
-		담당의사수정라벨.setBounds(523, 218, 90, 15);
-		개인정보창.add(담당의사수정라벨);
-		
-		이름수정텍스트필드 = new JTextField();
-		이름수정텍스트필드.setColumns(10);
-		이름수정텍스트필드.setBounds(623, 52, 116, 21);
-		개인정보창.add(이름수정텍스트필드);
-		
-		신장수정텍스트필드 = new JTextField();
-		신장수정텍스트필드.setColumns(10);
-		신장수정텍스트필드.setBounds(341, 103, 116, 21);
-		개인정보창.add(신장수정텍스트필드);
-		
-		몸무게수정텍스트필드 = new JTextField();
-		몸무게수정텍스트필드.setColumns(10);
-		몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
-		개인정보창.add(몸무게수정텍스트필드);
-		
-		나이수정텍스트필드 = new JTextField();
-		나이수정텍스트필드.setColumns(10);
-		나이수정텍스트필드.setBounds(341, 163, 116, 21);
-		개인정보창.add(나이수정텍스트필드);
-		
-		포지션수정텍스트필드 = new JTextField();
-		포지션수정텍스트필드.setColumns(10);
-		포지션수정텍스트필드.setBounds(625, 163, 116, 21);
-		개인정보창.add(포지션수정텍스트필드);
-		
-		담당코치수정텍스트필드 = new JTextField();
-		담당코치수정텍스트필드.setColumns(10);
-		담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
-		개인정보창.add(담당코치수정텍스트필드);
-		
-		담당의사수정텍스트필드 = new JTextField();
-		담당의사수정텍스트필드.setColumns(10);
-		담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
-		개인정보창.add(담당의사수정텍스트필드);
-		
-		이미지수정버튼 = new JButton("이미지수정");
-		이미지수정버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				이미지를화면에수정하는메소드();
-			}
-		});
-		이미지수정버튼.setBounds(48, 307, 126, 23);
-		개인정보창.add(이미지수정버튼);
-		
-		수정버튼 = new JButton("수정버튼");
-		수정버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				선수수정메소드(list);
-			
-			}
-		});
-		수정버튼.setBounds(585, 307, 90, 29);
-		개인정보창.add(수정버튼);
-		
-		등번호수정라벨 = new JLabel("등번호");
-		등번호수정라벨.setBounds(267, 55, 64, 15);
-		개인정보창.add(등번호수정라벨);
-		
-		등번호수정텍스트필드 = new JTextField();
-		등번호수정텍스트필드.setColumns(10);
-		등번호수정텍스트필드.setBounds(341, 52, 116, 21);
-		개인정보창.add(등번호수정텍스트필드);
-		
-		이미지등록수정창 = new JPanel();
-		이미지등록수정창.setBounds(26, 55, 164, 207);
-		개인정보창.add(이미지등록수정창);
-		
-		선수정보수정라벨 = new JLabel("선수정보수정");
-		선수정보수정라벨.setBounds(377, 10, 116, 15);
-		개인정보창.add(선수정보수정라벨);
-		
-		JButton 선수삭제버튼 = new JButton("선수삭제");
-		선수삭제버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		선수삭제버튼.setBounds(367, 301, 90, 34);
-		개인정보창.add(선수삭제버튼);
-		
-		lbl_1 = new JLabel("              ");
-		lbl_1.setBounds(192, 146, 590, 212);
-		three.add(lbl_1);
-			개인정보창.setVisible(false);
-          일정창.setVisible(false);
-          컨디션창.setVisible(false);
-          의사소견창.setVisible(false);
 
       
       
@@ -1111,6 +894,223 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
       pane.addChangeListener(this);
       getContentPane().setLayout(null);
       this.getContentPane().add(pane);
+      		
+      		//====================================================================
+      		
+      		three = new JPanel();
+      		three.setBackground(Color.WHITE);
+      		pane.addTab("Three", three);
+      		three.setLayout(null);
+      		
+      		 
+      		 JButton 개인정보버튼 = new JButton("개인정보");
+      		 개인정보버튼.addActionListener(new ActionListener() {
+    		  public void actionPerformed(ActionEvent e) {
+  				개인정보창.setVisible(true);
+  		          일정창.setVisible(false);
+  		          컨디션창.setVisible(false);
+  		          의사소견창.setVisible(false);
+  			}
+  		});
+      		 개인정보버튼.setBounds(32, 91, 120, 46);
+      		 three.add(개인정보버튼);
+      		 
+      		 JButton 일정버튼 = new JButton("일정");
+      		 일정버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 		개인정보창.setVisible(false);
+      		           일정창.setVisible(true);
+      		           컨디션창.setVisible(false);
+      		           의사소견창.setVisible(false);
+      		 	}
+      		 });
+      		 일정버튼.setBounds(32, 166, 120, 46);
+      		 three.add(일정버튼);
+      		 
+      		 JButton 컨디션버튼 = new JButton("컨디션");
+      		 컨디션버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 		개인정보창.setVisible(false);
+      		           일정창.setVisible(false);
+      		           컨디션창.setVisible(true);
+      		           의사소견창.setVisible(false);
+      		 	}
+      		 });
+      		 컨디션버튼.setBounds(32, 243, 120, 46);
+      		 three.add(컨디션버튼);
+      		 
+      		 JButton 의사소견버튼 = new JButton("의사소견");
+      		 의사소견버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 		개인정보창.setVisible(false);
+      		           일정창.setVisible(false);
+      		           컨디션창.setVisible(false);
+      		           의사소견창.setVisible(true);
+      		 	}
+      		 });
+      		 의사소견버튼.setBounds(32, 324, 117, 46);
+      		 three.add(의사소견버튼);
+      		 
+      		 JComboBox 날짜콤보박스 = new JComboBox();
+      		 날짜콤보박스.setBounds(424, 26, 127, 21);
+      		 three.add(날짜콤보박스);
+      		 
+      		 선수정보콤보박스 = new JComboBox();
+      		 선수정보콤보박스.setBounds(756, 26, 117, 21);
+      		 three.add(선수정보콤보박스);
+      		 선수정보콤보박스.addActionListener(new ActionListener() {
+      		 	@Override
+      		     public void actionPerformed(ActionEvent e) {
+      		         String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
+      		         int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
+      		         System.out.println(backnumber);
+      		         선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(backnumber);
+      		         	콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(list);
+      		        
+      		     }
+      		 });
+      		 
+      		 
+      		 JLabel 날짜라벨 = new JLabel("날짜");
+      		 날짜라벨.setBounds(372, 29, 44, 15);
+      		 three.add(날짜라벨);
+      		 
+      		 JLabel 선수정보라벨 = new JLabel("선수정보");
+      		 선수정보라벨.setBounds(678, 29, 66, 15);
+      		 three.add(선수정보라벨);
+      		 
+      		 일정창 = new JPanel();
+      		 일정창.setBounds(12, 10, 19, 21);
+      		 three.add(일정창);
+      		 
+      		 컨디션창 = new JPanel();
+      		 컨디션창.setBounds(43, 10, 10, 10);
+      		 three.add(컨디션창);
+      		 
+      		 의사소견창 = new JPanel();
+      		 의사소견창.setBounds(92, 10, 10, 10);
+      		 three.add(의사소견창);
+      		 
+      		 개인정보창 = new JPanel();
+      		 개인정보창.setBounds(192, 57, 787, 376);
+      		 three.add(개인정보창);
+      		 개인정보창.setLayout(null);
+      		 개인정보창.setBackground(Color.WHITE);
+      		 
+      		 이름수정라벨 = new JLabel("이름");
+      		 이름수정라벨.setBounds(544, 55, 52, 15);
+      		 개인정보창.add(이름수정라벨);
+      		 
+      		 신장수정라벨 = new JLabel("신장");
+      		 신장수정라벨.setBounds(267, 106, 62, 15);
+      		 개인정보창.add(신장수정라벨);
+      		 
+      		 몸무게수정라벨 = new JLabel("몸무게");
+      		 몸무게수정라벨.setBounds(532, 106, 64, 15);
+      		 개인정보창.add(몸무게수정라벨);
+      		 
+      		 나이수정라벨 = new JLabel("나이");
+      		 나이수정라벨.setBounds(267, 166, 62, 15);
+      		 개인정보창.add(나이수정라벨);
+      		 
+      		 포지션수정라벨 = new JLabel("포지션");
+      		 포지션수정라벨.setBounds(532, 166, 81, 15);
+      		 개인정보창.add(포지션수정라벨);
+      		 
+      		 담당코치수정라벨 = new JLabel("담당 코치");
+      		 담당코치수정라벨.setBounds(267, 218, 81, 15);
+      		 개인정보창.add(담당코치수정라벨);
+      		 
+      		 담당의사수정라벨 = new JLabel("담당 의사");
+      		 담당의사수정라벨.setBounds(523, 218, 90, 15);
+      		 개인정보창.add(담당의사수정라벨);
+      		 
+      		 이름수정텍스트필드 = new JTextField();
+      		 이름수정텍스트필드.setColumns(10);
+      		 이름수정텍스트필드.setBounds(623, 52, 116, 21);
+      		 개인정보창.add(이름수정텍스트필드);
+      		 
+      		 신장수정텍스트필드 = new JTextField();
+      		 신장수정텍스트필드.setColumns(10);
+      		 신장수정텍스트필드.setBounds(341, 103, 116, 21);
+      		 개인정보창.add(신장수정텍스트필드);
+      		 
+      		 몸무게수정텍스트필드 = new JTextField();
+      		 몸무게수정텍스트필드.setColumns(10);
+      		 몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
+      		 개인정보창.add(몸무게수정텍스트필드);
+      		 
+      		 나이수정텍스트필드 = new JTextField();
+      		 나이수정텍스트필드.setColumns(10);
+      		 나이수정텍스트필드.setBounds(341, 163, 116, 21);
+      		 개인정보창.add(나이수정텍스트필드);
+      		 
+      		 포지션수정텍스트필드 = new JTextField();
+      		 포지션수정텍스트필드.setColumns(10);
+      		 포지션수정텍스트필드.setBounds(625, 163, 116, 21);
+      		 개인정보창.add(포지션수정텍스트필드);
+      		 
+      		 담당코치수정텍스트필드 = new JTextField();
+      		 담당코치수정텍스트필드.setColumns(10);
+      		 담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
+      		 개인정보창.add(담당코치수정텍스트필드);
+      		 
+      		 담당의사수정텍스트필드 = new JTextField();
+      		 담당의사수정텍스트필드.setColumns(10);
+      		 담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
+      		 개인정보창.add(담당의사수정텍스트필드);
+      		 
+      		 이미지수정버튼 = new JButton("이미지수정");
+      		 이미지수정버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 		이미지를화면에수정하는메소드();
+      		 	}
+      		 });
+      		 이미지수정버튼.setBounds(48, 307, 126, 23);
+      		 개인정보창.add(이미지수정버튼);
+      		 
+      		 수정버튼 = new JButton("수정버튼");
+      		 수정버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 		선수수정메소드(list);
+      		 	
+      		 	}
+      		 });
+      		 수정버튼.setBounds(585, 307, 90, 29);
+      		 개인정보창.add(수정버튼);
+      		 
+      		 등번호수정라벨 = new JLabel("등번호");
+      		 등번호수정라벨.setBounds(267, 55, 64, 15);
+      		 개인정보창.add(등번호수정라벨);
+      		 
+      		 등번호수정텍스트필드 = new JTextField();
+      		 등번호수정텍스트필드.setColumns(10);
+      		 등번호수정텍스트필드.setBounds(341, 52, 116, 21);
+      		 개인정보창.add(등번호수정텍스트필드);
+      		 
+      		 이미지등록수정창 = new JPanel();
+      		 이미지등록수정창.setBounds(26, 55, 164, 207);
+      		 개인정보창.add(이미지등록수정창);
+      		 
+      		 선수정보수정라벨 = new JLabel("선수정보수정");
+      		 선수정보수정라벨.setBounds(377, 10, 116, 15);
+      		 개인정보창.add(선수정보수정라벨);
+      		 
+      		 JButton 선수삭제버튼 = new JButton("선수삭제");
+      		 선수삭제버튼.addActionListener(new ActionListener() {
+      		 	public void actionPerformed(ActionEvent e) {
+      		 	}
+      		 });
+      		 선수삭제버튼.setBounds(367, 301, 90, 34);
+      		 개인정보창.add(선수삭제버튼);
+      		 
+      		 lbl_1 = new JLabel("              ");
+      		 lbl_1.setBounds(192, 146, 590, 212);
+      		 three.add(lbl_1);
+      		 개인정보창.setVisible(false);
+      		 일정창.setVisible(false);
+      		 컨디션창.setVisible(false);
+      		 의사소견창.setVisible(false);
       this.getContentPane().add(lbl);
       
       lblNewLabel_8 = new JLabel("New label");
