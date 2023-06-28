@@ -26,7 +26,10 @@ import dbutil.DBUtil;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class DirectorGUI extends JFrame implements ChangeListener {
 	JTabbedPane pane;
@@ -468,6 +471,33 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			e.printStackTrace();
 		}
 	}
+	
+	public void 이미지를데이터베이스에수정하는메소드(PreparedStatement stmt) {
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			// 이미지를 바이트 배열로 변환
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			BufferedImage bufferedImage = new BufferedImage(selectedImage.getWidth(null), selectedImage.getHeight(null),
+					BufferedImage.TYPE_INT_RGB);
+			Graphics2D graphics = bufferedImage.createGraphics();
+			graphics.drawImage(selectedImage, 0, 0, null);
+			graphics.dispose();
+			ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+			byte[] imageData = byteArrayOutputStream.toByteArray();
+
+			// 선수 이미지를 업데이트하는 쿼리 실행
+			String updateQuery = "UPDATE players SET image = ? WHERE backnumber = ?";
+			stmt = conn.prepareStatement(updateQuery);
+			stmt.setBytes(1, imageData);
+			stmt.setInt(2, Integer.valueOf(등번호수정텍스트필드.getText()));
+			stmt.executeUpdate();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void 선수정보콤보박스목록만드는메소드() {
 		if (선수정보콤보박스 == null) {
@@ -626,7 +656,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
-			이미지를데이터베이스에등록하는메소드(stmt);
+			이미지를데이터베이스에수정하는메소드(stmt);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
@@ -740,7 +770,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
-	    List<Schedule> filteredList = new ArrayList<>();
+		List<Schedule> filteredList = new ArrayList<>();
 
 	    for (Schedule schedule : scheduleList) {
 	        if (schedule.getDate().equals(formattedDate)) {
@@ -754,36 +784,86 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 	    // filteredList의 데이터를 테이블 모델에 추가
 	    for (Schedule schedule : filteredList) {
-	        Object[] rowData = {schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-	                schedule.getContent(), schedule.getWhere(),false };
+	        Object[] rowData = {
+	            schedule.getDate(),
+	            schedule.getStartTime(),
+	            schedule.getEndTime(),
+	            schedule.getContent(),
+	            schedule.getWhere(),
+	            false  // 체크박스 데이터 추가
+	        };
 	        tableModel.addRow(rowData);
 	    }
+
+	    // 체크박스 컬럼 추가
+	    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(table.getDefaultRenderer(Boolean.class));
+	    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(table.getDefaultEditor(Boolean.class));
+	    
+	    tableModel.addTableModelListener(e -> {
+	        if (e.getColumn() == 5) {
+	            int rowIndex = e.getFirstRow();
+	            boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 5);
+	            if (isChecked) {
+	                체크박스선택시각행의값콘솔출력메소드(rowIndex);
+	            }
+	        }
+	    });
 	}
+
+
+
+
+
 
 	public void 날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
-		List<Schedule> filteredList = new ArrayList<>();
+		try {
+			 List<Schedule> filteredList = new ArrayList<>();
 
-		for (Schedule schedule : scheduleList) {
-			if (schedule.getDate().equals(formattedDate)) {
-				filteredList.add(schedule);
-			}
+			    for (Schedule schedule : scheduleList) {
+			        if (schedule.getDate().equals(formattedDate)) {
+			            filteredList.add(schedule);
+			        }
+			    }
+
+			    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+			    // 기존의 테이블 데이터 초기화
+			    tableModel.setRowCount(0);
+
+			    // filteredList의 데이터를 테이블 모델에 추가
+			    for (Schedule schedule : filteredList) {
+			        Object[] rowData = {
+			            schedule.getDate(),
+			            schedule.getStartTime(),
+			            schedule.getEndTime(),
+			            schedule.getContent(),
+			            schedule.getWhere(),
+			            false  // 체크박스 데이터 추가
+			        };
+			        tableModel.addRow(rowData);
+			    }
+
+			    // 체크박스 컬럼 추가
+			    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(table.getDefaultRenderer(Boolean.class));
+			    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(table.getDefaultEditor(Boolean.class));
+		
+		}catch (NullPointerException e) {
+	        JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
-
-		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		// 기존의 테이블 데이터 초기화
-		tableModel.setRowCount(0);
-
-		// filteredList의 데이터를 테이블 모델에 추가
-		for (Schedule schedule : filteredList) {
-			Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-					schedule.getContent(), schedule.getWhere() };
-			tableModel.addRow(rowData);
-		}
+		
+		
 	}
 
-	public void 체크박스선택시라벨색깔빨간색으로변경하는메소드() {
+	public void 체크박스선택시각행의값콘솔출력메소드(int rowIndex) {
+	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+	    int columnCount = tableModel.getColumnCount();
 
+	    for (int j = 0; j < columnCount - 1; j++) {
+	        Object value = tableModel.getValueAt(rowIndex, j);
+	        System.out.print(value + " ");
+	    }
+	    System.out.println();
 	}
+
 	
 	public void 코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
 		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
@@ -1210,8 +1290,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		일정창.add(scrolledTable);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uB0A0\uC9DC",
-				"\uC2DC\uC791\uC2DC\uAC04", "\uB05D\uB098\uB294\uC2DC\uAC04", "\uB0B4\uC6A9", "\uC7A5\uC18C" }));
+		table = new JTable(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"date", "starttime", "endtime", "content", "where", "checkbox"
+			}
+		));
 		scrolledTable.setViewportView(table);
 
 		컨디션창 = new JPanel();
