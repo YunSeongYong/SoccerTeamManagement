@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ import javax.swing.event.*;
 
 import dbutil.DBUtil;
 import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class DirectorGUI extends JFrame implements ChangeListener {
    JTabbedPane pane;
@@ -42,9 +47,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
    private JButton 저장버튼;
    private JLabel 등번호라벨;
    private JTextField 등번호텍스트필드;
-   private JLabel no라벨2;
-   private JTextField no2텍스트필드;
-   private JTextField no1텍스트필드;
    private JTextField 역할텍스트필드;
    private JPanel 이미지등록창;
    private File selectedFile;
@@ -88,7 +90,13 @@ private JLabel 선수정보수정라벨;
 private JLabel lbl_1;
 private JLabel lblNewLabel_8;
 private List<Player> list;
+private List<Schedule> scheduleList;
 private JTextField 담당의사수정텍스트필드;
+private JTextField 일정창_코멘트텍스트필드;
+private JScrollPane scrolledTable;
+private JTable table;
+private JComboBox 날짜콤보박스;
+private String formattedDate;
 
    public void insertStaff() {
 	   Connection conn = null;
@@ -277,7 +285,32 @@ private JTextField 담당의사수정텍스트필드;
 		
 		   return isDuplicate;
 		}
-   
+		
+		private int 선수인원확인메소드() {
+		      Connection conn = null;
+		      PreparedStatement stmt = null;
+		      ResultSet rs = null;
+		      
+		      String sql = "SELECT count(*) AS A FROM players";
+		      
+		      try {
+		         conn = DBUtil.getConnection();
+		         stmt = conn.prepareStatement(sql);
+		         
+		         rs = stmt.executeQuery();
+		         
+		         if (rs.next()) {
+		            return rs.getInt("A");
+		         }
+		      } catch (SQLException e) {
+		         e.printStackTrace();
+		      } finally {
+		         DBUtil.close(rs);
+		         DBUtil.close(stmt);
+		         DBUtil.close(conn);
+		      }
+		      return 0;
+		   }
    
 	public void 선수등록메소드() {
 	    String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -295,7 +328,8 @@ private JTextField 담당의사수정텍스트필드;
 	        stmt.setString(6, 포지션텍스트필드.getText());
 	        stmt.setString(7, 담당코치텍스트필드.getText());
 	        stmt.setString(8, 담당의사텍스트필드.getText());
-	        stmt.setString(9, no2텍스트필드.getText());
+	        stmt.setInt(9, 선수인원확인메소드());
+	       
 
 	        int result = stmt.executeUpdate();
 	        if (result > 0) {
@@ -320,7 +354,7 @@ private JTextField 담당의사수정텍스트필드;
         try {
             conn = DBUtil.getConnection();
             stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, Integer.valueOf(no1텍스트필드.getText()));
+            stmt.setInt(1, 선수인원확인메소드());
             stmt.setString(2, 아이디텍스트필드.getText());
             stmt.setString(3, 비밀번호텍스트필드.getText());
             stmt.setString(4, 역할텍스트필드.getText());
@@ -382,7 +416,7 @@ private JTextField 담당의사수정텍스트필드;
 	        String updateQuery = "UPDATE players SET image = ? WHERE backnumber = ?";
 	        stmt = conn.prepareStatement(updateQuery);
 	        stmt.setBytes(1, imageData);
-	        stmt.setInt(2, Integer.valueOf(등번호수정텍스트필드.getText()));
+	        stmt.setInt(2, Integer.valueOf(등번호텍스트필드.getText()));
 	        stmt.executeUpdate();
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -491,7 +525,7 @@ private JTextField 담당의사수정텍스트필드;
 	    return list;
 	}
 	
-	public void 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(List<Player> playerList) {
+	public void 콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(List<Player> playerList) {
 	    if (!playerList.isEmpty()) {
 	        Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
 
@@ -516,6 +550,9 @@ private JTextField 담당의사수정텍스트필드;
 	            이미지등록수정창.revalidate();
 	            이미지등록수정창.repaint();
 	        });
+
+	        // 이미지 변수 설정
+	        selectedImage = image;
 	    }
 	}
 	
@@ -564,19 +601,26 @@ private JTextField 담당의사수정텍스트필드;
 	        ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
 	        selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
 
-	        // JLabel에 이미지 아이콘 설정
-	        if (이미지라벨 == null) {
-	            이미지라벨 = new JLabel();
-	            이미지라벨.setBounds(12, 38, 136, 187);
-	            이미지등록수정창.add(이미지라벨);
+	        // 이미지 라벨이 이미 추가되어 있는지 확인하고, 있다면 제거
+	        if (이미지라벨 != null) {
+	            이미지등록수정창.remove(이미지라벨);
 	        }
-	        이미지라벨.setIcon(new ImageIcon(selectedImage));
 
-	        // JPanel 갱신
+	        // 새로운 이미지 라벨 생성
+	        이미지라벨 = new JLabel(new ImageIcon(selectedImage));
+	        이미지라벨.setBounds(12, 38, 136, 187);
+
+	        // 이미지 라벨을 패널에 추가
+	        이미지등록수정창.add(이미지라벨);
+
+	        // 패널 갱신
 	        이미지등록수정창.revalidate();
 	        이미지등록수정창.repaint();
+	        
+	        selectedImage = selectedImage;
 	    }
 	}
+
 
 	
 	public void 선수삭제메소드(List<Player> playerList) {
@@ -599,13 +643,13 @@ private JTextField 담당의사수정텍스트필드;
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	    } finally {
-	    	모든텍스트필드값제거메소드();
+	    	선수정보의모든텍스트필드값제거메소드();
 	        DBUtil.close(stmt);
 	        DBUtil.close(conn);
 	    }
 	}
 	
-	public void 모든텍스트필드값제거메소드() {
+	public void 선수정보의모든텍스트필드값제거메소드() {
 	    등번호수정텍스트필드.setText("");
 	    이름수정텍스트필드.setText("");
 	    신장수정텍스트필드.setText("");
@@ -619,7 +663,101 @@ private JTextField 담당의사수정텍스트필드;
 	    이미지등록수정창.repaint();
 	}
 
+	public List<Schedule> 선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(int backnumber) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    scheduleList = new ArrayList<>();
+	    
+	    try {
+	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	        String sql = "SELECT * from playerschedule where number = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, backnumber);
+	        rs = stmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            int number1 = rs.getInt("number");
+	            String date  = rs.getString("date");
+	            String startTime = rs.getString("starttime");
+	            String endTime = rs.getString("endtime");
+	            String content = rs.getString("content");
+	            String where = rs.getString("where");
+	            String who = rs.getString("who");
+	         
+	            
+	            scheduleList.add(new Schedule(number1, date, startTime, endTime, content, where, who));
+	            System.out.println(scheduleList);
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 사용한 자원을 닫아주어야 합니다.
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	    return scheduleList;
+	}
+	
+	
+	public void 콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
+		List<Schedule> filteredList = new ArrayList<>();
 
+	    for (Schedule schedule : scheduleList) {
+	        if (schedule.getDate().equals(formattedDate)) {
+	            filteredList.add(schedule);
+	        }
+	    }
+	    
+	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+	    // 기존의 테이블 데이터 초기화
+	    tableModel.setRowCount(0);
+	    
+	    // filteredList의 데이터를 테이블 모델에 추가
+	    for (Schedule schedule : filteredList) {
+	        Object[] rowData = {
+	            schedule.getDate(),
+	            schedule.getStartTime(),
+	            schedule.getEndTime(),
+	            schedule.getContent(),
+	            schedule.getWhere()
+	        };
+	        tableModel.addRow(rowData);
+	    }
+	}
+
+	public void 날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
+	    List<Schedule> filteredList = new ArrayList<>();
+
+	    for (Schedule schedule : scheduleList) {
+	        if (schedule.getDate().equals(formattedDate)) {
+	            filteredList.add(schedule);
+	        }
+	    }
+	    
+	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+	    // 기존의 테이블 데이터 초기화
+	    tableModel.setRowCount(0);
+	    
+	    // filteredList의 데이터를 테이블 모델에 추가
+	    for (Schedule schedule : filteredList) {
+	        Object[] rowData = {
+	            schedule.getDate(),
+	            schedule.getStartTime(),
+	            schedule.getEndTime(),
+	            schedule.getContent(),
+	            schedule.getWhere()
+	        };
+	        tableModel.addRow(rowData);
+	    }
+	}
+
+	
+	public void 체크박스선택시라벨색깔빨간색으로변경하는메소드() {
+		
+	}
 
 	//======================================================================
    
@@ -666,11 +804,11 @@ private JTextField 담당의사수정텍스트필드;
       one.add(담당의사라벨);
       
       JLabel 아이디라벨 = new JLabel("아이디");
-      아이디라벨.setBounds(239, 163, 60, 15);
+      아이디라벨.setBounds(240, 122, 60, 15);
       one.add(아이디라벨);
       
       JLabel 비밀번호라벨 = new JLabel("비밀번호");
-      비밀번호라벨.setBounds(239, 228, 64, 15);
+      비밀번호라벨.setBounds(240, 187, 64, 15);
       one.add(비밀번호라벨);
       
       이름텍스트필드 = new JTextField();
@@ -689,32 +827,32 @@ private JTextField 담당의사수정텍스트필드;
       몸무게텍스트필드.setColumns(10);
       
       나이텍스트필드 = new JTextField();
-      나이텍스트필드.setBounds(709, 244, 116, 21);
+      나이텍스트필드.setBounds(699, 244, 116, 21);
       one.add(나이텍스트필드);
       나이텍스트필드.setColumns(10);
       
       포지션텍스트필드 = new JTextField();
-      포지션텍스트필드.setBounds(711, 295, 116, 21);
+      포지션텍스트필드.setBounds(699, 295, 116, 21);
       one.add(포지션텍스트필드);
       포지션텍스트필드.setColumns(10);
       
       담당코치텍스트필드 = new JTextField();
-      담당코치텍스트필드.setBounds(723, 348, 116, 21);
+      담당코치텍스트필드.setBounds(699, 348, 116, 21);
       one.add(담당코치텍스트필드);
       담당코치텍스트필드.setColumns(10);
       
       담당의사텍스트필드 = new JTextField();
-      담당의사텍스트필드.setBounds(720, 390, 116, 21);
+      담당의사텍스트필드.setBounds(699, 390, 116, 21);
       one.add(담당의사텍스트필드);
       담당의사텍스트필드.setColumns(10);
       
       아이디텍스트필드 = new JTextField();
-      아이디텍스트필드.setBounds(311, 160, 116, 21);
+      아이디텍스트필드.setBounds(312, 119, 116, 21);
       one.add(아이디텍스트필드);
       아이디텍스트필드.setColumns(10);
       
       비밀번호텍스트필드 = new JTextField();
-      비밀번호텍스트필드.setBounds(311, 225, 116, 21);
+      비밀번호텍스트필드.setBounds(312, 184, 116, 21);
       one.add(비밀번호텍스트필드);
       비밀번호텍스트필드.setColumns(10);
       
@@ -735,7 +873,7 @@ private JTextField 담당의사수정텍스트필드;
           }
       });
       
-      		저장버튼.setBounds(422, 335, 149, 46);
+      		저장버튼.setBounds(871, 368, 81, 39);
       		one.add(저장버튼);
       		
       		등번호라벨 = new JLabel("등번호");
@@ -743,51 +881,33 @@ private JTextField 담당의사수정텍스트필드;
       		one.add(등번호라벨);
       		
       		등번호텍스트필드 = new JTextField();
-      		등번호텍스트필드.setBounds(700, 53, 116, 21);
+      		등번호텍스트필드.setBounds(699, 53, 116, 21);
       		one.add(등번호텍스트필드);
       		등번호텍스트필드.setColumns(10);
-      		
-      		no라벨2 = new JLabel("no");
-      		no라벨2.setBounds(374, 390, 81, 15);
-      		one.add(no라벨2);
       		
       		이미지등록창 = new JPanel();
       		이미지등록창.setBounds(26, 106, 192, 211);
       		one.add(이미지등록창);
       		
-      		no2텍스트필드 = new JTextField();
-      		no2텍스트필드.setBounds(479, 387, 116, 21);
-      		one.add(no2텍스트필드);
-      		no2텍스트필드.setColumns(10);
-      		
       		JLabel 선수등록라벨 = new JLabel("선수등록");
       		선수등록라벨.setBounds(699, 10, 48, 15);
       		one.add(선수등록라벨);
       		
-      		JLabel no라벨1 = new JLabel("no");
-      		no라벨1.setBounds(237, 104, 62, 15);
-      		one.add(no라벨1);
-      		
-      		no1텍스트필드 = new JTextField();
-      		no1텍스트필드.setBounds(311, 101, 116, 21);
-      		one.add(no1텍스트필드);
-      		no1텍스트필드.setColumns(10);
-      		
       		JLabel 역할라벨 = new JLabel("역할");
-      		역할라벨.setBounds(239, 285, 60, 15);
+      		역할라벨.setBounds(240, 244, 60, 15);
       		one.add(역할라벨);
       		
       		역할텍스트필드 = new JTextField();
-      		역할텍스트필드.setBounds(311, 282, 116, 21);
+      		역할텍스트필드.setBounds(312, 241, 116, 21);
       		one.add(역할텍스트필드);
       		역할텍스트필드.setColumns(10);
       		
       		JLabel identity등록라벨 = new JLabel("identity등록");
-      		identity등록라벨.setBounds(315, 56, 64, 15);
+      		identity등록라벨.setBounds(364, 56, 64, 15);
       		one.add(identity등록라벨);
       		
       		JButton 중복확인버튼 = new JButton("중복확인");
-      		중복확인버튼.setBounds(460, 159, 97, 23);
+      		중복확인버튼.setBounds(461, 118, 97, 23);
       		one.add(중복확인버튼);
       		중복확인버튼.addActionListener(new ActionListener() {
 				@Override
@@ -797,7 +917,7 @@ private JTextField 담당의사수정텍스트필드;
 			});
       		
       		사용가능유무라벨 = new JLabel("중복확인 버튼을 누르세요");
-      		사용가능유무라벨.setBounds(321, 191, 178, 15);
+      		사용가능유무라벨.setBounds(322, 150, 178, 15);
       		one.add(사용가능유무라벨);
       		
       
@@ -968,9 +1088,29 @@ private JTextField 담당의사수정텍스트필드;
 		의사소견버튼.setBounds(32, 324, 117, 46);
 		three.add(의사소견버튼);
 		
-		JComboBox 날짜콤보박스 = new JComboBox();
+		날짜콤보박스 = new JComboBox();
 		날짜콤보박스.setBounds(424, 26, 127, 21);
 		three.add(날짜콤보박스);
+		
+		LocalDate currentDate = LocalDate.now();
+		LocalDate minusDate = currentDate.minusDays(15);
+		List<LocalDate> calendar = new ArrayList<LocalDate>();
+		for (int i = 0; i < 30; i++) {
+			날짜콤보박스.addItem(minusDate.plusDays(i));
+		}
+		날짜콤보박스.setSelectedIndex(15);
+		날짜콤보박스.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    LocalDate selectedDate = (LocalDate) 날짜콤보박스.getSelectedItem();
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    formattedDate = selectedDate.format(formatter);
+			    
+			    System.out.println("콤보박스에서 선택한 날짜 출력 : " + formattedDate);
+			    날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+			}
+		});
+		
 		
 		선수정보콤보박스 = new JComboBox();
 		선수정보콤보박스.setBounds(756, 26, 117, 21);
@@ -983,10 +1123,15 @@ private JTextField 담당의사수정텍스트필드;
 		        int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
 		        System.out.println(backnumber);
 		        선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(backnumber);
-		        	콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(list);
+		        	콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(list);
+		        	선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(backnumber);
+		        	콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
+		        	날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 		       
 		    }
 		});
+		
+		
 		
 		
 		JLabel 날짜라벨 = new JLabel("날짜");
@@ -998,8 +1143,36 @@ private JTextField 담당의사수정텍스트필드;
 		three.add(선수정보라벨);
 		
 		일정창 = new JPanel();
-		일정창.setBounds(12, 10, 19, 21);
+		일정창.setBounds(192, 57, 787, 376);
 		three.add(일정창);
+		일정창.setLayout(null);
+		
+		JCheckBox 일정창_거부체크박스 = new JCheckBox("거절");
+		일정창_거부체크박스.setBounds(662, 54, 115, 23);
+		일정창.add(일정창_거부체크박스);
+		
+		일정창_코멘트텍스트필드 = new JTextField();
+		일정창_코멘트텍스트필드.setBounds(89, 289, 513, 77);
+		일정창.add(일정창_코멘트텍스트필드);
+		일정창_코멘트텍스트필드.setColumns(10);
+		
+		JButton 일정창_저장버튼 = new JButton("저장");
+		일정창_저장버튼.setBounds(626, 293, 135, 73);
+		일정창.add(일정창_저장버튼);
+		
+		scrolledTable = new JScrollPane((Component) null);
+		scrolledTable.setBounds(23, 21, 617, 263);
+		일정창.add(scrolledTable);
+		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		table = new JTable(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"\uB0A0\uC9DC", "\uC2DC\uC791\uC2DC\uAC04", "\uB05D\uB098\uB294\uC2DC\uAC04", "\uB0B4\uC6A9", "\uC7A5\uC18C"
+			}
+		));
+		scrolledTable.setViewportView(table);
 		
 		컨디션창 = new JPanel();
 		컨디션창.setBounds(43, 10, 10, 10);
