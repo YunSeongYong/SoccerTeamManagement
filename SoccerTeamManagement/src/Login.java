@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import dbutil.DBUtil;
 
 import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 public class Login {
 
@@ -21,6 +22,7 @@ public class Login {
 	private JTextField textField_1;
 	private JLabel lblNewLabel_2;
 	public Player player;
+	private JLabel lblNewLabel_3;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -46,31 +48,29 @@ public class Login {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("아이디");
-		lblNewLabel.setBounds(295, 392, 57, 15);
-		frame.getContentPane().add(lblNewLabel);
-
 		textField = new JTextField();
-		textField.setBounds(364, 389, 176, 21);
+		textField.setBounds(280, 337, 135, 33);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
-		JLabel lblNewLabel_1 = new JLabel("비밀번호");
-		lblNewLabel_1.setBounds(295, 434, 57, 15);
-		frame.getContentPane().add(lblNewLabel_1);
-
 		textField_1 = new JTextField();
-		textField_1.setBounds(364, 431, 176, 21);
+		textField_1.setBounds(506, 337, 139, 33);
 		frame.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 
-		JButton btnNewButton = new JButton("로그인");
-		btnNewButton.setBounds(552, 388, 97, 64);
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setIcon(new ImageIcon(Login.class.getResource("/image/로그인.jpg")));
+		btnNewButton.setBounds(676, 336, 97, 33);
 		frame.getContentPane().add(btnNewButton);
 
-		lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setBounds(351, 500, 229, 15);
 		frame.getContentPane().add(lblNewLabel_2);
+		
+		lblNewLabel_3 = new JLabel("l");
+		lblNewLabel_3.setIcon(new ImageIcon(Login.class.getResource("/image/메인화면-배경만.jpg")));
+		lblNewLabel_3.setBounds(0, 0, 984, 561);
+		frame.getContentPane().add(lblNewLabel_3);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -201,3 +201,4 @@ public class Login {
 		return 0;
 	}
 }
+//
