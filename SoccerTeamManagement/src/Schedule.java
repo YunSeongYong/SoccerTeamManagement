@@ -7,6 +7,13 @@ public class Schedule {
 	private String where;
 	private String who;
 	
+	public Schedule(String startTime, String endTime, String content) {
+		super();
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.content = content;
+	}
+
 	public Schedule(int num, String date, String startTime, String endTime, String content, String where, String who) {
 		super();
 		this.num = num;

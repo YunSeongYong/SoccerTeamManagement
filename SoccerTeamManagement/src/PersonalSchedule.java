@@ -23,7 +23,6 @@ public class PersonalSchedule extends JFrame {
 	public PlayerTab playerTab;
 
 	public PersonalSchedule() {
-		playerTab = new PlayerTab();
 		player = new Player();
 
 		getContentPane().setLayout(null);
@@ -71,8 +70,7 @@ public class PersonalSchedule extends JFrame {
 				registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(),
 						"선수");
 				addRecord();
-				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
+				dispose();
 			}
 		});
 
@@ -111,7 +109,6 @@ public class PersonalSchedule extends JFrame {
 	}
 
 	public void addRecord() {
-		PlayerTab playerTab = new PlayerTab();
 		JTable table = playerTab.table;
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		String[] record = new String[3];
