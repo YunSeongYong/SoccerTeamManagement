@@ -97,6 +97,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTable table;
 	private JComboBox 날짜콤보박스;
 	private String formattedDate;
+	private JButton 일정창_저장버튼;
+	private int 일정창_선수정보콤보박스에서선택한등번호;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -738,24 +740,24 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
-		List<Schedule> filteredList = new ArrayList<>();
+	    List<Schedule> filteredList = new ArrayList<>();
 
-		for (Schedule schedule : scheduleList) {
-			if (schedule.getDate().equals(formattedDate)) {
-				filteredList.add(schedule);
-			}
-		}
+	    for (Schedule schedule : scheduleList) {
+	        if (schedule.getDate().equals(formattedDate)) {
+	            filteredList.add(schedule);
+	        }
+	    }
 
-		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		// 기존의 테이블 데이터 초기화
-		tableModel.setRowCount(0);
+	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+	    // 기존의 테이블 데이터 초기화
+	    tableModel.setRowCount(0);
 
-		// filteredList의 데이터를 테이블 모델에 추가
-		for (Schedule schedule : filteredList) {
-			Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-					schedule.getContent(), schedule.getWhere() };
-			tableModel.addRow(rowData);
-		}
+	    // filteredList의 데이터를 테이블 모델에 추가
+	    for (Schedule schedule : filteredList) {
+	        Object[] rowData = {schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
+	                schedule.getContent(), schedule.getWhere(),false };
+	        tableModel.addRow(rowData);
+	    }
 	}
 
 	public void 날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
@@ -781,6 +783,31 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 	public void 체크박스선택시라벨색깔빨간색으로변경하는메소드() {
 
+	}
+	
+	public void 코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
+		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backNumber);
+			stmt.setString(2, comment);
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 저장되었습니다.");
+			} else {
+				System.out.println("데이터 저장에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
 	}
 
 	// ======================================================================
@@ -1131,14 +1158,15 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보콤보박스);
 		선수정보콤보박스목록만드는메소드();
 		선수정보콤보박스.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
-				int backnumber = Integer.parseInt(selectedItem.split(" - ")[0]);
-				System.out.println(backnumber);
-				선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(backnumber);
+				일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItem.split(" - ")[0]);
+				System.out.println(일정창_선수정보콤보박스에서선택한등번호);
+				선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(list);
-				선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(backnumber);
+				선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
 				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 
@@ -1167,7 +1195,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		일정창.add(일정창_코멘트텍스트필드);
 		일정창_코멘트텍스트필드.setColumns(10);
 
-		JButton 일정창_저장버튼 = new JButton("저장");
+		일정창_저장버튼 = new JButton("저장");
+		일정창_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String comment = 일정창_코멘트텍스트필드.getText();
+		        코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+			}
+		});
 		일정창_저장버튼.setBounds(626, 293, 135, 73);
 		일정창.add(일정창_저장버튼);
 
