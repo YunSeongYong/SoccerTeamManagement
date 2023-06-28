@@ -38,12 +38,14 @@ import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
 public class PlayerTab extends JFrame implements ChangeListener {
-	JTabbedPane pane;
+	
+	private JTabbedPane pane;
 	private JTextField startTxt;
 	private JTextField endTxt;
 	private JTextField contentTxt;
 	public Player player;
-	private JTable table;
+	public JTable table;
+	public JComboBox comboBox;
 
 	public PlayerTab() {
 		player = new Player();
@@ -102,7 +104,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		
 
 		// 콤보박스
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		comboBox.setBounds(822, 9, 131, 21);
 		LocalDate minusDate = currentDate.minusDays(15);
 		List<LocalDate> calendar = new ArrayList<LocalDate>();
@@ -146,20 +148,20 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		// 버튼
 		// 일정등록
-		JButton registrationBtn = new JButton("등록");
-		registrationBtn.setBounds(843, 72, 62, 23);
-		one.add(registrationBtn);
-		
-		registrationBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int number = player.getBackNumber();
-
-				String selectedDate = comboBox.getSelectedItem().toString();
-
-				registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(), "선수");
-			}
-		});
+//		JButton registrationBtn = new JButton("등록");
+//		registrationBtn.setBounds(843, 72, 62, 23);
+//		one.add(registrationBtn);
+//		
+//		registrationBtn.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				int number = player.getBackNumber();
+//
+//				String selectedDate = comboBox.getSelectedItem().toString();
+//
+//				registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(), "선수");
+//			}
+//		});
 		
 		// JTabel
 		JScrollPane scrolledTable = new JScrollPane((Component) null);
@@ -315,35 +317,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			DBUtil.close(conn);
 		}
 		return list;
-	}
-
-	// 일정 등록 메소드
-	private static void registerSchedule(int number, String date, String startTime, String endTime, String content,
-			String who) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "INSERT INTO playerschedule (number, date, starttime, endtime, content, who) VALUES (?, ?, ?, ?, ?, ?)";
-			stmt = conn.prepareStatement(sql);
-
-			stmt.setInt(1, number);
-			stmt.setString(2, date);
-			stmt.setString(3, startTime);
-			stmt.setString(4, endTime);
-			stmt.setString(5, content);
-			stmt.setString(6, who);
-
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
 	}
 
 	// 코멘트 보여주는 메소드
