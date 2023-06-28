@@ -86,10 +86,11 @@ public class Login {
 					lblNewLabel_2.setText(role);
 					
 					if (role.equals("감독")) {
-						new PlayerRegistration();
+						new DirectorGUI();
 					} else if (role.equals("선수")) {
-						new PlayerTab();
+						
 						player.setBackNumber(checkBackNumber(id));	
+						new PlayerTab();
 					}
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");

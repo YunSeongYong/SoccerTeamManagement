@@ -28,7 +28,14 @@ import javax.swing.event.ChangeListener;
 import dbutil.DBUtil;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JScrollPane;
+import javax.swing.ImageIcon;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class PlayerTab extends JFrame implements ChangeListener {
 	JTabbedPane pane;
@@ -36,47 +43,67 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	private JTextField endTxt;
 	private JTextField contentTxt;
 	public Player player;
+	private JTable table;
 
 	public PlayerTab() {
 		player = new Player();
+		LocalDate currentDate = LocalDate.now();
+		
 		JPanel one, two;
 		pane = new JTabbedPane();
+		pane.setBounds(0, 85, 984, 476);
 
 		one = new JPanel();
-		one.setLayout(null);
 
 		pane.addTab("개인일정", one);
+		one.setLayout(null);
 
 		// 개인일정 탭
 		// 라벨
 		JLabel label = new JLabel("공동일정");
-		label.setBounds(56, 46, 57, 42);
+		label.setBounds(56, 15, 57, 42);
 		one.add(label);
 
 		JLabel startLbl = new JLabel("시작 시간");
-		startLbl.setBounds(56, 116, 57, 15);
+		startLbl.setBounds(56, 67, 57, 15);
 		one.add(startLbl);
 
 		JLabel endLbl = new JLabel("끝나는 시간");
-		endLbl.setBounds(219, 116, 73, 15);
+		endLbl.setBounds(212, 76, 73, 15);
 		one.add(endLbl);
 
 		JLabel scheduleLbl = new JLabel("일정");
-		scheduleLbl.setBounds(403, 116, 31, 15);
+		scheduleLbl.setBounds(400, 76, 31, 15);
 		one.add(scheduleLbl);
 
 		JLabel commentLbl = new JLabel("코멘트");
-		commentLbl.setBounds(93, 373, 49, 103);
+		commentLbl.setBounds(152, 376, 49, 61);
 		one.add(commentLbl);
 
+		// 공동일정 라벨
 		JLabel commonScheduleLbl = new JLabel("공동일정");
-		commonScheduleLbl.setBounds(125, 40, 764, 54);
+		commonScheduleLbl.setBounds(125, 9, 653, 54);
 		one.add(commonScheduleLbl);
+		
+		List<CommonSchedule> scTodayList = viewCommonSchedule(currentDate.toString());
+		commonScheduleLbl.setText(scTodayList.toString());
+		
+		List<Comment> comTodayList = viewComment(player.getBackNumber(), currentDate.toString());
+		
+		// 코멘트 스크롤
+		JLabel commentLbl2 =  new JLabel();
+		commentLbl2.setBounds(1, 1, 265, 267);
+		one.add(commentLbl2);
+		commentLbl2.setText(comTodayList.toString());
+				
+		JScrollPane scrollPane = new JScrollPane(commentLbl2);
+		scrollPane.setBounds(56, 115, 267, 269);
+		one.add(scrollPane);
+		
 
 		// 콤보박스
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(783, 9, 170, 21);
-		LocalDate currentDate = LocalDate.now();
+		comboBox.setBounds(822, 9, 131, 21);
 		LocalDate minusDate = currentDate.minusDays(15);
 		List<LocalDate> calendar = new ArrayList<LocalDate>();
 		for (int i = 0; i < 30; i++) {
@@ -91,35 +118,38 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				String index = String.valueOf(jcb.getSelectedItem());
 
 				List<CommonSchedule> csList = viewCommonSchedule(index);
-
 				commonScheduleLbl.setText(csList.toString());
+				
+				List<Comment> cmtList = viewComment(player.getBackNumber(), index);
+				commentLbl2.setText(cmtList.toString());
 			}
 		});
 
 		one.add(comboBox);
+		
 
 		// 텍스트 필드
 		startTxt = new JTextField();
-		startTxt.setBounds(116, 113, 81, 21);
+		startTxt.setBounds(116, 73, 81, 21);
 		one.add(startTxt);
 		startTxt.setColumns(10);
 
 		endTxt = new JTextField();
-		endTxt.setBounds(304, 113, 81, 21);
+		endTxt.setBounds(297, 73, 81, 21);
 		one.add(endTxt);
 		endTxt.setColumns(10);
 
 		contentTxt = new JTextField();
-		contentTxt.setBounds(446, 113, 362, 21);
+		contentTxt.setBounds(446, 73, 362, 21);
 		one.add(contentTxt);
 		contentTxt.setColumns(10);
 
 		// 버튼
 		// 일정등록
 		JButton registrationBtn = new JButton("등록");
-		registrationBtn.setBounds(843, 112, 62, 23);
+		registrationBtn.setBounds(843, 72, 62, 23);
 		one.add(registrationBtn);
-
+		
 		registrationBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -130,49 +160,83 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(), "선수");
 			}
 		});
+		
+		// JTabel
+		JScrollPane scrolledTable = new JScrollPane((Component) null);
+		scrolledTable.setBounds(377, 112, 477, 306);
+		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		one.add(scrolledTable);
+		
+		table = new JTable(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"\uC2DC\uC791 \uC2DC\uAC04", "\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9"
+			}
+		));
+		scrolledTable.setViewportView(table);
+		
+		
+		// 등록 버튼 누르면 새 창 열림
+		JButton regiBtn = new JButton("등록");
+		regiBtn.setBounds(856, 122, 81, 48);
+		one.add(regiBtn);
+		
+		regiBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new PersonalSchedule();
+			}
+		});
+		
 
-		JButton updateBtn = new JButton("수정");
-		updateBtn.setBounds(768, 161, 62, 23);
-		one.add(updateBtn);
+		
+		
+		
 
-		JButton deleteBtn = new JButton("삭제");
-		deleteBtn.setBounds(843, 161, 62, 23);
-		one.add(deleteBtn);
-
-		// 체크박스
-		JCheckBox cbox1 = new JCheckBox("New check box");
-		cbox1.setBounds(93, 161, 663, 23);
-		one.add(cbox1);
-
-		JCheckBox cbox2 = new JCheckBox("");
-		cbox2.setBounds(92, 197, 21, 23);
-		one.add(cbox2);
-
-		JCheckBox cbox3 = new JCheckBox("");
-		cbox3.setBounds(93, 240, 20, 23);
-		one.add(cbox3);
-
-		JCheckBox cbox4 = new JCheckBox("New check box");
-		cbox4.setBounds(93, 277, 20, 23);
-		one.add(cbox4);
-
-		JCheckBox cbox5 = new JCheckBox("New check box");
-		cbox5.setBounds(93, 317, 20, 23);
-		one.add(cbox5);
-
-		JScrollPane commentScroll = new JScrollPane();
-		commentScroll.setBounds(154, 373, 722, 103);
-		one.add(commentScroll);
 
 		// 컨디션 등록 탭
 		two = new JPanel();
-		two.add(new JLabel("컨디션"));
-		two.add(new JTextField("문자를 입력하세요"));
 		pane.addTab("컨디션", two);
+		two.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(41, 112, 279, 290);
+		two.add(panel);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(351, 379, 65, 23);
+		two.add(btnNewButton);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(351, 112, 279, 246);
+		two.add(panel_2);
+		
+		JLabel lblNewLabel_1 = new JLabel("코멘트");
+		lblNewLabel_1.setBounds(670, 112, 260, 148);
+		two.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("공동일정 : 이것저것 훈련할 계획이다. 운동장으로 나와라");
+		lblNewLabel_2.setBounds(41, 26, 870, 65);
+		two.add(lblNewLabel_2);
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		btnNewButton_1.setBounds(449, 379, 65, 23);
+		two.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("New button");
+		btnNewButton_2.setBounds(551, 379, 65, 23);
+		two.add(btnNewButton_2);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
-		this.getContentPane().add("Center", pane);
+		getContentPane().setLayout(null);
+		this.getContentPane().add(pane);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수위-배경.jpg")));
+		lblNewLabel.setBounds(0, 0, 984, 90);
+		getContentPane().add(lblNewLabel);
 
 		setBounds(100, 100, 1000, 600);
 		setVisible(true);
@@ -220,6 +284,39 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return list;
 	}
 
+	// 코멘트 리스트 생성 메소드
+	private static List<Comment> viewComment(int number, String datetime) {
+		List<Comment> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT SUBSTRING(datetime, 12, 5), schedulecomment FROM comment \r\n"
+					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, datetime);
+			stmt.setInt(2, number);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				String time = rs.getString(1);
+				String scheduleComment = rs.getString(2);
+
+				Comment comment = new Comment(time, scheduleComment);
+				list.add(comment);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return list;
+	}
+
 	// 일정 등록 메소드
 	private static void registerSchedule(int number, String date, String startTime, String endTime, String content,
 			String who) {
@@ -249,6 +346,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 	}
 
+	// 코멘트 보여주는 메소드
 	public static void main(String[] args) {
 		new PlayerTab();
 

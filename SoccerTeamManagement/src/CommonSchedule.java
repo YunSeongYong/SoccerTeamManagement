@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class CommonSchedule {
 	private String date;
 	private String startTime;
@@ -124,8 +126,8 @@ public class CommonSchedule {
 	
 	@Override
 	public String toString() {
-		return "CommonSchedule [date=" + date + ", startTime=" + startTime + ", endTime=" + endTime + ", content="
-				+ content + ", where=" + where + "]";
+		return "일자 : " + date + " / 시간 : " + startTime + " ~ " + endTime + " / 내용 : "
+				+ content + " / 장소 : " + where + "\n";
 	}
 
 	public static void main(String[] args) {

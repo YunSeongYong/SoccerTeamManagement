@@ -1,12 +1,20 @@
 public class Comment {
 	private int number;
-	private int date;
+	private String date;
 	private String schedulecomment;
 	private String condition;
 	private String doctorcomment;
 	private String person;
 	
-	public Comment(int number, int date, String schedulecomment, String condition, String doctorcomment,
+	public Comment(String date, String schedulecomment) {
+		super();
+		this.date = date;
+		this.schedulecomment = schedulecomment;
+	}
+
+
+
+	public Comment(int number, String date, String schedulecomment, String condition, String doctorcomment,
 			String person) {
 		super();
 		this.number = number;
@@ -31,13 +39,13 @@ public class Comment {
 
 
 
-	public int getDate() {
+	public String getDate() {
 		return date;
 	}
 
 
 
-	public void setDate(int date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -89,23 +97,18 @@ public class Comment {
 		this.person = person;
 	}
 
-	
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
-		result = prime * result + date;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((doctorcomment == null) ? 0 : doctorcomment.hashCode());
 		result = prime * result + number;
 		result = prime * result + ((person == null) ? 0 : person.hashCode());
 		result = prime * result + ((schedulecomment == null) ? 0 : schedulecomment.hashCode());
 		return result;
 	}
-
-
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -120,7 +123,10 @@ public class Comment {
 				return false;
 		} else if (!condition.equals(other.condition))
 			return false;
-		if (date != other.date)
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
 			return false;
 		if (doctorcomment == null) {
 			if (other.doctorcomment != null)
@@ -141,9 +147,7 @@ public class Comment {
 			return false;
 		return true;
 	}
-
 	
-
 	@Override
 	public String toString() {
 		return "Comment [number=" + number + ", date=" + date + ", schedulecomment=" + schedulecomment + ", condition="

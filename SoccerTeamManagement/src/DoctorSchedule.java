@@ -72,8 +72,6 @@ public class DoctorSchedule extends JPanel {
 		btnNewButton_2.setBounds(839, 206, 57, 23);
 		add(btnNewButton_2);
 		
-		setSize(1000, 600);
-		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("");
 		chckbxNewCheckBox.setBounds(88, 206, 21, 23);
 		add(chckbxNewCheckBox);
@@ -81,6 +79,9 @@ public class DoctorSchedule extends JPanel {
 		JLabel lblNewLabel_6 = new JLabel("New label");
 		lblNewLabel_6.setBounds(120, 202, 622, 31);
 		add(lblNewLabel_6);
+		
+//		setSize(979,532);
+		setSize(1164, 710);
 
 	}
 }
