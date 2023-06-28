@@ -89,8 +89,6 @@ private JLabel lbl_1;
 private JLabel lblNewLabel_8;
 private List<Player> list;
 private JTextField 담당의사수정텍스트필드;
-private boolean 이미지를화면에수정하는메소드boolean = false;
-private boolean 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = false;
 
    public void insertStaff() {
 	   Connection conn = null;
@@ -494,9 +492,6 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 	}
 	
 	public void 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드(List<Player> playerList) {
-		콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = true;
-		System.out.println(콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean);
-		
 	    if (!playerList.isEmpty()) {
 	        Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
 
@@ -560,39 +555,71 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 	}
 	
 	public void 이미지를화면에수정하는메소드() {
-		이미지를화면에수정하는메소드boolean = true;
-		System.out.println("이미지boolean: " + 이미지를화면에수정하는메소드boolean);
-		System.out.println("콤보박스boolean: " + 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean);
-		if (이미지를화면에수정하는메소드boolean == true && 콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean == true) {
-			이미지등록수정창.removeAll();
-			이미지를화면에수정하는메소드boolean = false;
-			콤보박스에서선택한등번호로모든텍스트필드에추가하는메소드boolean = false;
-					
-		}
-	       JFileChooser fileChooser = new JFileChooser();
-	       int result = fileChooser.showOpenDialog(frame);
-	       if (result == JFileChooser.APPROVE_OPTION) {
-	           selectedFile = fileChooser.getSelectedFile(); // 선택한 파일 가져오기
+	    JFileChooser fileChooser = new JFileChooser();
+	    int result = fileChooser.showOpenDialog(frame);
+	    if (result == JFileChooser.APPROVE_OPTION) {
+	        selectedFile = fileChooser.getSelectedFile(); // 선택한 파일 가져오기
 
-	           // 이미지 아이콘 설정
-	           ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-	           selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+	        // 이미지 아이콘 설정
+	        ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+	        selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
 
-			// 기존에 생성한 JLabel이 있을 경우 수정, 없을 경우 새로 생성
-	           if (이미지라벨 == null) {
-	               이미지라벨 = new JLabel();
-	               이미지라벨.setBounds(12, 38, 136, 187);
-	               이미지등록수정창.add(이미지라벨);
-	           }
+	        // JLabel에 이미지 아이콘 설정
+	        if (이미지라벨 == null) {
+	            이미지라벨 = new JLabel();
+	            이미지라벨.setBounds(12, 38, 136, 187);
+	            이미지등록수정창.add(이미지라벨);
+	        }
+	        이미지라벨.setIcon(new ImageIcon(selectedImage));
 
-	           // JLabel에 이미지 아이콘 설정
-	           이미지라벨.setIcon(new ImageIcon(selectedImage));
+	        // JPanel 갱신
+	        이미지등록수정창.revalidate();
+	        이미지등록수정창.repaint();
+	    }
+	}
 
-	           // JPanel 갱신
-	           이미지등록수정창.revalidate();
-	           이미지등록수정창.repaint();
-	       }
-	   }
+	
+	public void 선수삭제메소드(List<Player> playerList) {
+	    Player player = playerList.get(0);
+	    String sql = "delete from players where backnumber = ?";
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, player.getBackNumber());
+
+	        int result = stmt.executeUpdate();
+	        if (result > 0) {
+	            System.out.println("데이터가 성공적으로 삭제되었습니다.");
+	        } else {
+	            System.out.println("데이터 삭제에 실패하였습니다.");
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    } finally {
+	    	모든텍스트필드값제거메소드();
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	}
+	
+	public void 모든텍스트필드값제거메소드() {
+	    등번호수정텍스트필드.setText("");
+	    이름수정텍스트필드.setText("");
+	    신장수정텍스트필드.setText("");
+	    몸무게수정텍스트필드.setText("");
+	    나이수정텍스트필드.setText("");
+	    포지션수정텍스트필드.setText("");
+	    담당코치수정텍스트필드.setText("");
+	    담당의사수정텍스트필드.setText("");
+	    이미지등록수정창.removeAll();
+	    이미지등록수정창.revalidate();
+	    이미지등록수정창.repaint();
+	}
+
+
 
 	//======================================================================
    
@@ -1090,6 +1117,14 @@ private boolean 콤보박스에서선택한등번호로모든텍스트필드에�
 		JButton 선수삭제버튼 = new JButton("선수삭제");
 		선수삭제버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				 int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
+		            
+		            if (choice == JOptionPane.YES_OPTION) {
+		                선수삭제메소드(list);
+		            	System.out.println("삭제되었습니다.");
+		            } else {
+		                System.out.println("삭제가 취소되었습니다.");
+		            }
 			}
 		});
 		선수삭제버튼.setBounds(367, 301, 90, 34);
