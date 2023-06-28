@@ -243,7 +243,7 @@ private String formattedDate;
 	
 	// 중복확인 버튼 클릭 시 실행되는 메서드
 		private void 아이디중복확인() {
-		   String id = textField_4.getText(); // 입력한 아이디 가져오기
+		   String id = 아이디텍스트필드.getText(); // 입력한 아이디 가져오기
 		   boolean isDuplicate = checkIfIDExists(id); // 데이터베이스에서 아이디 중복 여부 확인
 		
 		   // 중복 여부에 따라 메시지 업데이트
@@ -890,7 +890,7 @@ private String formattedDate;
       		one.add(이미지등록창);
       		
       		JLabel 선수등록라벨 = new JLabel("선수등록");
-      		선수등록라벨.setBounds(699, 10, 48, 15);
+      		선수등록라벨.setBounds(713, 10, 116, 15);
       		one.add(선수등록라벨);
       		
       		JLabel 역할라벨 = new JLabel("역할");
@@ -903,7 +903,7 @@ private String formattedDate;
       		역할텍스트필드.setColumns(10);
       		
       		JLabel identity등록라벨 = new JLabel("identity등록");
-      		identity등록라벨.setBounds(364, 56, 64, 15);
+      		identity등록라벨.setBounds(333, 56, 116, 15);
       		one.add(identity등록라벨);
       		
       		JButton 중복확인버튼 = new JButton("중복확인");
