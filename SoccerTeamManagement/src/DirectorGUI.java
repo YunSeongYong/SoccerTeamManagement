@@ -91,11 +91,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTextField 등번호수정텍스트필드;
 	private JPanel 이미지등록수정창;
 	private JLabel 선수정보수정라벨;
-	private JLabel lbl_1;
 	private JLabel lblNewLabel_8;
 	private List<Player> playerList;
 	private List<Schedule> scheduleList;
 	private List<Condition> conditionList;
+	private List<DoctorAppointment> doctorAppointmentList;
+	private List<Comment> commentList;
+	private List<CommonSchedule> commonScheduleList;
 	private JTextField 담당의사수정텍스트필드;
 	private JTextField 일정창_코멘트텍스트필드;
 	private JScrollPane scrolledTable;
@@ -110,7 +112,30 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel 선수컨디션라벨;
 	private JScrollPane scrollPane_1;
 	private JTextArea 선수목록_컨디션_코멘트텍스트박스;
-	private JLabel 코멘트라벨;
+	private JLabel 코멘트작성라벨;
+	private JScrollPane scrollPane_2;
+	private JLabel lblNewLabel_4;
+	private JTextArea 선수목록_의사소견_선수컨디션텍스트박스;
+	private JLabel 선수목록_의사소견_의사소견라벨;
+	private JScrollPane scrollPane_3;
+	private JTextArea 선수목록_의사소견_의사소견텍스트박스;
+	private JLabel lblNewLabel_10;
+	private JScrollPane scrolledTable_2;
+	private JTable doctorAppointmentTable;
+	private JScrollPane scrollPane_4;
+	private JLabel 선수목록_의사소견_감독코멘트라벨;
+	private JTextArea 선수목록_의사소견_감독코멘트텍스트박스;
+	private JButton 선수목록_의사소견_저장버튼;
+	private JLabel lblNewLabel_9;
+	private JLabel lblNewLabel_11;
+	private JLabel lblNewLabel_12;
+	private JLabel lblNewLabel_13;
+	private JTextField 공동일정등록_시작시간텍스트필드;
+	private JTextField 공동일정등록_장소텍스트필드;
+	private JComboBox 공동일정등록_날짜콤보박스;
+	private JTextField 공동일정등록_끝나는시간텍스트필드;
+	private JLabel lblNewLabel_15;
+	private String 공동일정등록_콤보박스에서선택한날짜;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -535,34 +560,34 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	//	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
-	//	    Connection conn = null;
-	//	    PreparedStatement stmt = null;
-	//	    ResultSet rs = null;
-	//	    try {
-	//	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-	//	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
-	//	        stmt = conn.prepareStatement(sql);
-	//	        stmt.setInt(1, backnumber);
-	//	        rs = stmt.executeQuery();
-	//	        
-	//	        while (rs.next()) {
-	//	            int backnumber1 = rs.getInt("backnumber");
-	//	            String name = rs.getString("name");
-	//	            
-	//	            System.out.println(backnumber1);
-	//	            System.out.println(name);
-	//	        }
-	//	        
-	//	    } catch (SQLException e) {
-	//	        e.printStackTrace();
-	//	    } finally {
-	//	        // 사용한 자원을 닫아주어야 합니다.
-	//	        DBUtil.close(rs);
-	//	        DBUtil.close(stmt);
-	//	        DBUtil.close(conn);
-	//	    }
-	//	}
+	// public void 선수정보콤보박스선택후출력메소드(int backnumber) {
+	// Connection conn = null;
+	// PreparedStatement stmt = null;
+	// ResultSet rs = null;
+	// try {
+	// conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	// String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
+	// stmt = conn.prepareStatement(sql);
+	// stmt.setInt(1, backnumber);
+	// rs = stmt.executeQuery();
+	//
+	// while (rs.next()) {
+	// int backnumber1 = rs.getInt("backnumber");
+	// String name = rs.getString("name");
+	//
+	// System.out.println(backnumber1);
+	// System.out.println(name);
+	// }
+	//
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// } finally {
+	// // 사용한 자원을 닫아주어야 합니다.
+	// DBUtil.close(rs);
+	// DBUtil.close(stmt);
+	// DBUtil.close(conn);
+	// }
+	// }
 
 	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
@@ -800,9 +825,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		// 체크박스 컬럼 추가
 		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-		.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+				.setCellRenderer(table.getDefaultRenderer(Boolean.class));
 		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-		.setCellEditor(table.getDefaultEditor(Boolean.class));
+				.setCellEditor(table.getDefaultEditor(Boolean.class));
 
 		tableModel.addTableModelListener(e -> {
 			if (e.getColumn() == 5) {
@@ -839,9 +864,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			// 체크박스 컬럼 추가
 			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-			.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+					.setCellRenderer(table.getDefaultRenderer(Boolean.class));
 			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-			.setCellEditor(table.getDefaultEditor(Boolean.class));
+					.setCellEditor(table.getDefaultEditor(Boolean.class));
 
 		} catch (NullPointerException e) {
 			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
@@ -860,7 +885,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		System.out.println();
 	}
 
-	public void 코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
+	public void 선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
 		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -886,74 +911,267 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public List<Condition> 선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(int backnumber) {
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-	    conditionList = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		conditionList = new ArrayList<>();
 
-	    try {
-	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-	        String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, backnumber);
-	        rs = stmt.executeQuery();
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backnumber);
+			rs = stmt.executeQuery();
 
-	        while (rs.next()) {
-	            int number = rs.getInt("number");
-	            String playerName = rs.getString("playername");
-	            String playercondition = rs.getString("playercondition");
-	            java.sql.Date when = rs.getDate("when");
+			while (rs.next()) {
+				int number = rs.getInt("number");
+				String playerName = rs.getString("playername");
+				String playercondition = rs.getString("playercondition");
+				String when = rs.getString("when");
 
-	            conditionList.add(new Condition(number, playerName, playercondition, when.toString()));
-	            System.out.println(conditionList);
-	        }
+				conditionList.add(new Condition(number, playerName, playercondition, when));
+				System.out.println(conditionList);
+			}
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        // 사용한 자원을 닫아주어야 합니다.
-	        DBUtil.close(rs);
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
-	    return conditionList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return conditionList;
 	}
 
-	
-	
 	public void 선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
-	    DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
-	    
-	    for (Condition condition : conditionList) {
-	        if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
-	            Object[] rowData = {
-	                condition.getNumber(),
-	                condition.getPlayerName(),
-	                condition.getPlayercondition(),
-	                condition.getDate()
-	            };
-	            model.addRow(rowData);
-	        }
-	    }
-	}
-	
-	public void 선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<Condition> conditionList) {
-		List<Condition> condition1 = new ArrayList<>();
+		DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
+		model.setRowCount(0);
 
 		for (Condition condition : conditionList) {
-			if (condition.getDate().equals(일정창_콤보박스에서선택한날짜)) {
-				condition1.add(condition);
+			if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+				Object[] rowData = { condition.getNumber(), condition.getPlayerName(), condition.getPlayercondition(),
+						condition.getDate() };
+				model.addRow(rowData);
 			}
 		}
-		System.out.println(condition1);
 	}
 
+	public void 선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<Condition> conditionList) {
+		try {
+			List<Condition> condition1 = new ArrayList<>();
+
+			for (Condition condition : conditionList) {
+				if (condition.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
+					condition1.add(condition);
+				}
+			}
+
+			// JTextArea에 condition1의 playerCondition 설정
+			StringBuilder sb = new StringBuilder();
+			for (Condition condition : condition1) {
+				sb.append(condition.getPlayercondition()).append("\n");
+			}
+			선수목록_컨디션_선수컨디션텍스트박스.setText(sb.toString());
+
+		} catch (NullPointerException e) {
+			System.out.println("괜찮음 계속 하세요");
+			;
+		}
+	}
+
+	public void 선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
+		String sql = "INSERT INTO comment (number, datetime, conditioncomment, who) VALUES (?, current_timestamp(), ?, '감독')";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backNumber);
+			stmt.setString(2, comment);
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 저장되었습니다.");
+			} else {
+				System.out.println("데이터 저장에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	public List<DoctorAppointment> 선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(int backnumber) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		doctorAppointmentList = new ArrayList<>();
+
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT * FROM soccerteammanagement.appointment WHERE backnumber = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backnumber);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				int backnumber1 = rs.getInt("backnumber");
+				String playerName = rs.getString("playerName");
+				String date = rs.getString("date");
+				String time = rs.getString("time");
+				String condition = rs.getString("condition");
+				String doctor = rs.getString("doctor");
+				String coach = rs.getString("coach");
+
+				doctorAppointmentList
+						.add(new DoctorAppointment(backnumber1, playerName, date, time, condition, doctor, coach));
+				System.out.println(doctorAppointmentList);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return doctorAppointmentList;
+	}
+
+	public void 선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(List<DoctorAppointment> doctorAppointmentList) {
+		DefaultTableModel model = (DefaultTableModel) doctorAppointmentTable.getModel();
+		model.setRowCount(0);
+
+		for (DoctorAppointment doctorAppointment : doctorAppointmentList) {
+			if (doctorAppointment.getBacknumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+				Object[] rowData = { doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
+						doctorAppointment.getDate(), doctorAppointment.getTime(), doctorAppointment.getCondition(),
+						doctorAppointment.getDoctor(), doctorAppointment.getCoach() };
+				model.addRow(rowData);
+			}
+		}
+	}
+	
+	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<DoctorAppointment> doctorAppointmentList) {
+		try {
+			List<DoctorAppointment> doctorAppointment1 = new ArrayList<>();
+
+			for (DoctorAppointment doctorAppointment : doctorAppointmentList) {
+				if (doctorAppointment.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
+					doctorAppointment1.add(doctorAppointment);
+				}
+			}
+
+			// JTextArea에 condition1의 playerCondition 설정
+			StringBuilder sb = new StringBuilder();
+			for (DoctorAppointment condition : doctorAppointment1) {
+				sb.append(condition.getCondition()).append("\n");
+			}
+			선수목록_의사소견_선수컨디션텍스트박스.setText(sb.toString());
+
+		} catch (NullPointerException e) {
+			System.out.println("괜찮음 계속 하세요");
+			;
+		}
+	}
+	
+	public List<Comment> 선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(int backnumber) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		commentList = new ArrayList<>();
+
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT * FROM soccerteammanagement.comment where number = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backnumber);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				int number1 = rs.getInt("number");
+				String datetime = rs.getString("datetime");
+				String dateschedulecomment = rs.getString("schedulecomment");
+				String conditioncomment = rs.getString("conditioncomment");
+				String doctorcomment = rs.getString("doctorcomment");
+				String who = rs.getString("who");
+
+				commentList.add(new Comment(number1, datetime, dateschedulecomment, conditioncomment, doctorcomment, who));
+				System.out.println(commentList);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return commentList;
+	}
+	
+	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(List<Comment> commentList, int backnumber) {
+		try {
+			List<Comment> comment1 = new ArrayList<>();
+
+			for (Comment comment : commentList) {
+				if (comment.getWho().equals("의사") && comment.getNumber()==backnumber) {
+		
+					comment1.add(comment);
+				}
+			}
+
+			StringBuilder sb = new StringBuilder();
+			for (Comment comment : comment1) {
+				sb.append(comment.getDoctorcomment()).append("\n");
+			}
+			선수목록_의사소견_의사소견텍스트박스.setText(sb.toString());
+
+		} catch (NullPointerException e) {
+			System.out.println("괜찮음 계속 하세요");
+			;
+		}
+	}
+	
+	public void 선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(String date, String startTime, String endTime, String content, String location) {
+		String sql = "INSERT INTO commonschedule (date, starttime, endtime, content, location) VALUES (?, ?, ?, ?, ?)";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, date);
+			stmt.setString(2, startTime);
+			stmt.setString(3, endTime);
+			stmt.setString(4, content);
+			stmt.setString(5, location);
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 저장되었습니다.");
+			} else {
+				System.out.println("데이터 저장에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
 
 	// ======================================================================
 
 	public DirectorGUI() {
 
-		JPanel one, two, three;
+		JPanel one, two, three, four;
 		pane = new JTabbedPane();
 		pane.setBounds(0, 101, 984, 460);
 		lbl = new JLabel("              ");
@@ -1146,10 +1364,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		lblNewLabel_6.setBounds(414, 110, 57, 15);
 		two.add(lblNewLabel_6);
 
-		//		textField_3 = new JTextField();
-		//		textField_3.setBounds(515, 51, 116, 21);
-		//		two.add(textField_3);
-		//		textField_3.setColumns(10);
+		// textField_3 = new JTextField();
+		// textField_3.setBounds(515, 51, 116, 21);
+		// two.add(textField_3);
+		// textField_3.setColumns(10);
 
 		textField_4 = new JTextField();
 		textField_4.setBounds(510, 55, 116, 21);
@@ -1205,7 +1423,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		three = new JPanel();
 		three.setBackground(Color.WHITE);
-		pane.addTab("Three", three);
+		pane.addTab("선수목록", three);
 		three.setLayout(null);
 
 		JButton 개인정보버튼 = new JButton("개인정보");
@@ -1229,7 +1447,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(false);
 			}
 		});
-		일정버튼.setBounds(32, 166, 120, 46);
+		일정버튼.setBounds(32, 159, 120, 46);
 		three.add(일정버튼);
 
 		JButton 컨디션버튼 = new JButton("컨디션");
@@ -1277,6 +1495,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 일정창_콤보박스에서선택한날짜);
 				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList,일정창_선수정보콤보박스에서선택한등번호);
 			}
 		});
 
@@ -1298,6 +1518,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(conditionList);
+				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(doctorAppointmentList);
+				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				
 
 			}
 		});
@@ -1310,52 +1534,146 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수정보라벨.setBounds(678, 29, 66, 15);
 		three.add(선수정보라벨);
 
+		의사소견창 = new JPanel();
+		의사소견창.setBounds(192, 57, 787, 376);
+		three.add(의사소견창);
+		의사소견창.setLayout(null);
+
+		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(32, 177, 206, 149);
+		의사소견창.add(scrollPane_2);
+
+		선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
+		scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
+
+		lblNewLabel_4 = new JLabel("");
+		lblNewLabel_4.setBounds(69, 196, 57, 15);
+		의사소견창.add(lblNewLabel_4);
+
+		선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
+		선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
+		의사소견창.add(선수목록_의사소견_의사소견라벨);
+
+		scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(310, 177, 217, 156);
+		의사소견창.add(scrollPane_3);
+
+		선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
+		scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
+
+		lblNewLabel_10 = new JLabel("선수 컨디션");
+		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_10.setBounds(86, 152, 82, 15);
+		의사소견창.add(lblNewLabel_10);
+
+		scrolledTable_2 = new JScrollPane((Component) null);
+		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		scrolledTable_2.setBounds(84, 18, 616, 124);
+		의사소견창.add(scrolledTable_2);
+
+		doctorAppointmentTable = new JTable(
+				new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04", "\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58"
+			}
+		));
+		scrolledTable_2.setViewportView(doctorAppointmentTable);
+
+		scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(567, 177, 185, 156);
+		의사소견창.add(scrollPane_4);
+
+		선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
+		scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
+
+		선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
+		선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
+		의사소견창.add(선수목록_의사소견_감독코멘트라벨);
+
+		선수목록_의사소견_저장버튼 = new JButton("저장");
+		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
+				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+			}
+		});
+		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
+		의사소견창.add(선수목록_의사소견_저장버튼);
+
+		lblNewLabel_9 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_9.setBounds(203, 0, 372, 15);
+		의사소견창.add(lblNewLabel_9);
+
+		lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
+		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_12.setBounds(12, 336, 377, 15);
+		의사소견창.add(lblNewLabel_12);
+		의사소견창.setVisible(false);
+
 		컨디션창 = new JPanel();
 		컨디션창.setBounds(192, 57, 787, 376);
 		three.add(컨디션창);
 		컨디션창.setLayout(null);
-		
+
 		scrolledTable_1 = new JScrollPane((Component) null);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		scrolledTable_1.setBounds(23, 28, 694, 110);
 		컨디션창.add(scrolledTable_1);
-		
-		conditionTable = new JTable(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"number", "playername", "playercondition", "when"
-			}
-		));
+
+		conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "number", "playername", "playercondition", "when" }));
 		scrolledTable_1.setViewportView(conditionTable);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(146, 177, 195, 138);
 		컨디션창.add(scrollPane);
-		
+
 		선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
 		scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
-		
+
 		선수컨디션라벨 = new JLabel("선수 컨디션");
-		선수컨디션라벨.setHorizontalAlignment(SwingConstants.RIGHT);
-		선수컨디션라벨.setBounds(37, 240, 96, 15);
+		선수컨디션라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		선수컨디션라벨.setBounds(194, 152, 96, 15);
 		컨디션창.add(선수컨디션라벨);
-		
+
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(489, 177, 195, 138);
 		컨디션창.add(scrollPane_1);
-		
+
 		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
 		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
-		
-		코멘트라벨 = new JLabel("코멘트");
-		코멘트라벨.setHorizontalAlignment(SwingConstants.RIGHT);
-		코멘트라벨.setBounds(381, 240, 96, 15);
-		컨디션창.add(코멘트라벨);
-		
+
+		코멘트작성라벨 = new JLabel("코멘트 작성");
+		코멘트작성라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		코멘트작성라벨.setBounds(539, 152, 96, 15);
+		컨디션창.add(코멘트작성라벨);
+
 		JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
+		선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String comment = 선수목록_컨디션_코멘트텍스트박스.getText();
+				선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+			}
+		});
 		선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
 		컨디션창.add(선수목록_컨디션_저장버튼);
+
+		lblNewLabel_11 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_11.setBounds(201, 3, 372, 15);
+		컨디션창.add(lblNewLabel_11);
+
+		lblNewLabel_13 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수 컨디션이 나옵니다");
+		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_13.setBounds(49, 338, 355, 15);
+		컨디션창.add(lblNewLabel_13);
+		컨디션창.setVisible(false);
 
 		일정창 = new JPanel();
 		일정창.setBounds(192, 57, 787, 376);
@@ -1375,7 +1693,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		일정창_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String comment = 일정창_코멘트텍스트필드.getText();
-				코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
 			}
 		});
 		일정창_저장버튼.setBounds(626, 293, 135, 73);
@@ -1390,10 +1708,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				new String[] { "date", "starttime", "endtime", "content", "where", "checkbox" }));
 		scrolledTable.setViewportView(table);
 		일정창.setVisible(false);
-
-		의사소견창 = new JPanel();
-		의사소견창.setBounds(92, 10, 10, 10);
-		three.add(의사소견창);
 
 		개인정보창 = new JPanel();
 		개인정보창.setBounds(192, 57, 787, 376);
@@ -1515,15 +1829,114 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		});
 		선수삭제버튼.setBounds(367, 301, 90, 34);
 		개인정보창.add(선수삭제버튼);
-
-		lbl_1 = new JLabel("              ");
-		lbl_1.setBounds(192, 146, 590, 212);
-		three.add(lbl_1);
 		개인정보창.setVisible(false);
-		컨디션창.setVisible(false);
-		의사소견창.setVisible(false);
 
 		// ====================================================================
+
+		four = new JPanel();
+		four.setBackground(Color.WHITE);
+		pane.addTab("공동일정등록", four);
+		four.setLayout(null);
+		
+		공동일정등록_날짜콤보박스 = new JComboBox();
+		공동일정등록_날짜콤보박스.setBounds(729, 38, 137, 21);
+		four.add(공동일정등록_날짜콤보박스);
+
+		LocalDate currentDate1 = LocalDate.now();
+		LocalDate minusDate1 = currentDate1.minusDays(15);
+		List<LocalDate> calendar1 = new ArrayList<LocalDate>();
+		for (int i = 0; i < 30; i++) {
+			공동일정등록_날짜콤보박스.addItem(minusDate1.plusDays(i));
+		}
+		공동일정등록_날짜콤보박스.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				LocalDate selectedDate = (LocalDate) 공동일정등록_날짜콤보박스.getSelectedItem();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				공동일정등록_콤보박스에서선택한날짜 = selectedDate.format(formatter);
+
+				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 공동일정등록_콤보박스에서선택한날짜);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList,일정창_선수정보콤보박스에서선택한등번호);
+				
+				공동일정목록_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(date, startTime, endTime, content, location);
+				String 시작시간 = 공동일정등록_시작시간텍스트필드.getText();
+				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
+				String 끝나는시간 = 공동일정등록_끝나는시간텍스트필드.getText();
+				String 내용 = 공동일정등록_내용텍스트박스.getText();
+				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(공동일정등록_콤보박스에서선택한날짜, 시작시간, 끝나는시간, 내용, comment);
+			}
+		});
+		
+		JLabel 공동일정등록_날짜라벨 = new JLabel("날짜");
+		공동일정등록_날짜라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		공동일정등록_날짜라벨.setBounds(660, 41, 57, 15);
+		four.add(공동일정등록_날짜라벨);
+		
+		JLabel 공동일정등록_내용라벨 = new JLabel("내용");
+		공동일정등록_내용라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		공동일정등록_내용라벨.setBounds(219, 189, 57, 15);
+		four.add(공동일정등록_내용라벨);
+		
+		JLabel lblNewLabel_14 = new JLabel("감독님께서 직접 일정을 등록할 수 있습니다");
+		lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_14.setBounds(262, 25, 393, 15);
+		four.add(lblNewLabel_14);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(292, 172, 264, 55);
+		four.add(scrollPane_5);
+		
+		JTextArea 공동일정등록_내용텍스트박스 = new JTextArea();
+		scrollPane_5.setViewportView(공동일정등록_내용텍스트박스);
+		
+		JLabel 공동일정등록_시작시간라벨 = new JLabel("시작시간");
+		공동일정등록_시작시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		공동일정등록_시작시간라벨.setBounds(219, 113, 71, 15);
+		four.add(공동일정등록_시작시간라벨);
+		
+		JLabel 공동일정등록_장소라벨 = new JLabel("장소");
+		공동일정등록_장소라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		공동일정등록_장소라벨.setBounds(241, 278, 57, 15);
+		four.add(공동일정등록_장소라벨);
+		
+		공동일정등록_시작시간텍스트필드 = new JTextField();
+		공동일정등록_시작시간텍스트필드.setBounds(292, 110, 116, 21);
+		four.add(공동일정등록_시작시간텍스트필드);
+		공동일정등록_시작시간텍스트필드.setColumns(10);
+		
+		공동일정등록_장소텍스트필드 = new JTextField();
+		공동일정등록_장소텍스트필드.setBounds(314, 275, 116, 21);
+		four.add(공동일정등록_장소텍스트필드);
+		공동일정등록_장소텍스트필드.setColumns(10);
+		
+		JButton 공동일정등록_저장버튼 = new JButton("저장");
+		공동일정등록_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		공동일정등록_저장버튼.setBounds(665, 293, 105, 34);
+		four.add(공동일정등록_저장버튼);
+		
+		JLabel 공동일정등록_끝나는시간라벨 = new JLabel("끝나는 시간");
+		공동일정등록_끝나는시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		공동일정등록_끝나는시간라벨.setBounds(477, 113, 79, 15);
+		four.add(공동일정등록_끝나는시간라벨);
+		
+		공동일정등록_끝나는시간텍스트필드 = new JTextField();
+		공동일정등록_끝나는시간텍스트필드.setColumns(10);
+		공동일정등록_끝나는시간텍스트필드.setBounds(555, 110, 116, 21);
+		four.add(공동일정등록_끝나는시간텍스트필드);
+		
+		lblNewLabel_15 = new JLabel("(끝나는 시간은 굳이 넣지 않아도 됩니다)");
+		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_15.setBounds(487, 138, 246, 15);
+		four.add(lblNewLabel_15);
+		three.setLayout(null);
+
+		// =======================================================================
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);

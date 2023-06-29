@@ -5,15 +5,18 @@ public class DoctorAppointment {
 	private String time;
 	private String condition;
 	private String doctor;
+	private String coach;
 	
 	public DoctorAppointment(int backnumber, String playerName, String date, String time, String condition,
-			String doctor) {
+			String doctor, String coach) {
+		super();
 		this.backnumber = backnumber;
 		this.playerName = playerName;
 		this.date = date;
 		this.time = time;
 		this.condition = condition;
 		this.doctor = doctor;
+		this.coach = coach;
 	}
 
 	public int getBacknumber() {
@@ -64,11 +67,26 @@ public class DoctorAppointment {
 		this.doctor = doctor;
 	}
 
+	public String getCoach() {
+		return coach;
+	}
+
+	public void setCoach(String coach) {
+		this.coach = coach;
+	}
+
+	@Override
+	public String toString() {
+		return "DoctorAppointment [backnumber=" + backnumber + ", playerName=" + playerName + ", date=" + date
+				+ ", time=" + time + ", condition=" + condition + ", doctor=" + doctor + ", coach=" + coach + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + backnumber;
+		result = prime * result + ((coach == null) ? 0 : coach.hashCode());
 		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((doctor == null) ? 0 : doctor.hashCode());
@@ -81,12 +99,15 @@ public class DoctorAppointment {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof DoctorAppointment))
 			return false;
 		DoctorAppointment other = (DoctorAppointment) obj;
 		if (backnumber != other.backnumber)
+			return false;
+		if (coach == null) {
+			if (other.coach != null)
+				return false;
+		} else if (!coach.equals(other.coach))
 			return false;
 		if (condition == null) {
 			if (other.condition != null)
@@ -115,11 +136,8 @@ public class DoctorAppointment {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "DoctorAppointment [backnumber=" + backnumber + ", playerName=" + playerName + ", date=" + date
-				+ ", time=" + time + ", condition=" + condition + ", doctor=" + doctor + "]";
-	}
 	
+	
+	
+
 }
