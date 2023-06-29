@@ -38,6 +38,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 public class PlayerTab extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
@@ -45,7 +46,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	public static JTable table;
 	public static JComboBox comboBox;
 	private JTextArea playerconditionText;
-
+	public static JComboBox dateComboBox;
+	
 	public PlayerTab() {
 		player = new Player();
 		LocalDate currentDate = LocalDate.now();
@@ -198,26 +200,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.setLayout(null);
 
 		JLabel commentLbl_ = new JLabel("코멘트");
-		commentLbl_.setBounds(40, 262, 889, 148);
+		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
+		commentLbl_.setBounds(40, 261, 889, 148);
 		two.add(commentLbl_);
-
-		JLabel lblNewLabel_2 = new JLabel("공동일정 : 이것저것 훈련할 계획이다. 운동장으로 나와라");
-		lblNewLabel_2.setBounds(40, 10, 870, 65);
-		two.add(lblNewLabel_2);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(40, 68, 889, 142);
+		scrollPane_1.setBounds(40, 57, 889, 142);
 		two.add(scrollPane_1);
 		
 		playerconditionText = new JTextArea();
 		scrollPane_1.setViewportView(playerconditionText);
 		
-		JButton correctionBtn = new JButton("수정");
-		correctionBtn.setBounds(832, 220, 97, 23);
-		two.add(correctionBtn);
-		
 		JButton saveBtn = new JButton("저장");
-		saveBtn.setBounds(723, 220, 97, 23);
+		saveBtn.setBounds(832, 209, 97, 23);
 		two.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
 			@Override
@@ -225,6 +220,21 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				insertCondition(player);
 			}
 		});
+		
+		JLabel lblNewLabel_1 = new JLabel("오늘의 몸 상태");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setBounds(40, 32, 86, 15);
+		two.add(lblNewLabel_1);
+		
+		dateComboBox = new JComboBox();
+		dateComboBox.setBounds(837, 10, 92, 21);
+		two.add(dateComboBox);
+		LocalDate minusDate2 = currentDate.minusDays(15);
+		List<LocalDate> calendar2 = new ArrayList<LocalDate>();
+		for (int i = 0; i < 16; i++) {
+			dateComboBox.addItem(minusDate.plusDays(i));
+		}
+		dateComboBox.setSelectedIndex(15);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
@@ -430,6 +440,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 	// 선수 컨디션 저장
 	public void insertCondition(Player player) {
+		
+		
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    
@@ -439,6 +451,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	        stmt.setInt(1, player.getBackNumber());
 	        stmt.setString(2, getPlayerName(player.getBackNumber()));
 	        stmt.setString(3, playerconditionText.getText());
+	       
 	        
 	        stmt.executeUpdate();
 	    } catch (SQLException e) {
@@ -449,7 +462,59 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	    }
 	}
 	
+	// 날짜에 맞는 선수 컨디션 찾기
+	public List<Condition> viewCondition(int number) {
+		List<Condition> conditionList = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement("select playercondition from project_test.condition where number = ?");
+			stmt.setInt(1, number);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+		return conditionList;
+	}
 	
+	
+	
+	// 컨디션 코멘트 리스트 생성 메소드
+	private static List<Comment> viewConditionComment(int number, String datetime) {
+		List<Comment> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
+					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, datetime);
+			stmt.setInt(2, number);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				String time = rs.getString(1);
+				String scheduleComment = rs.getString(2);
+
+				Comment comment = new Comment(time, scheduleComment);
+				list.add(comment);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return list;
+	}
 	
 	public static void main(String[] args) {
 		new PlayerTab();
