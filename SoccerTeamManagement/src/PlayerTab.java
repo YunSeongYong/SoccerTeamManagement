@@ -1,5 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,7 +42,6 @@ import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 
 public class PlayerTab extends JFrame implements ChangeListener {
-
 	private JTabbedPane pane;
 	public static Player player;
 	public static JTable table;
@@ -109,28 +111,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				List<Comment> cmtList = viewComment(player.getBackNumber(), index);
 				commentLbl2.setText(cmtList.toString());
-				
+
 				List<Schedule> scList = viewPersonalSchedule(player.getBackNumber(), index);
 				insertTabel(scList);
 			}
 		});
 
 		one.add(comboBox);
-
-		// JTabel
-		JScrollPane scrolledTable = new JScrollPane((Component) null);
-		scrolledTable.setBounds(377, 112, 477, 306);
-		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		one.add(scrolledTable);
-
-		table = new JTable(new DefaultTableModel(new Object[][] {
-
-		}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04", "\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9" }));
-		
-		List<Schedule> psList = viewPersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString());
-		insertTabel(psList);
-
-		scrolledTable.setViewportView(table);
 
 		// 등록 버튼 누르면 새 창 열림
 		JButton regiBtn = new JButton("등록");
@@ -143,19 +130,69 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				new PersonalSchedule();
 			}
 		});
-		
+
 		// 삭제 버튼
 		JButton deleteBtn = new JButton("삭제");
 		deleteBtn.setBounds(856, 200, 81, 48);
 		one.add(deleteBtn);
-		
+		deleteBtn.setEnabled(false);
+
 		deleteBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				removeRecord(table.getSelectedRow());
+				int row = table.getSelectedRow();
+				TableModel data = table.getModel();
+				String startTime = (String) data.getValueAt(row, 0);
+
+				deletePersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString(), startTime);
+
+				removeRecord(row);
 			}
 		});
-		
+
+		// 수정 버튼
+		JButton updateBtn = new JButton("수정");
+		updateBtn.setBounds(856, 272, 81, 54);
+		one.add(updateBtn);
+		updateBtn.setEnabled(false);
+
+		updateBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				TableModel data = table.getModel();
+				String startTime = (String) data.getValueAt(row, 0);
+				String endTime = (String) data.getValueAt(row, 1);
+				String content = (String) data.getValueAt(row, 2);
+
+				Schedule schedule = new Schedule(startTime, endTime, content);
+
+				UpdateSchedule Jframe = new UpdateSchedule(schedule);
+			}
+		});
+
+		// JTabel
+		JScrollPane scrolledTable = new JScrollPane((Component) null);
+		scrolledTable.setBounds(377, 112, 477, 306);
+		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		one.add(scrolledTable);
+
+		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04",
+				"\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9", "\uC2B9\uC778\uC5EC\uBD80" }));
+
+		List<Schedule> psList = viewPersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString());
+		insertTabel(psList);
+
+		scrolledTable.setViewportView(table);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				updateBtn.setEnabled(true);
+				deleteBtn.setEnabled(true);
+			}
+		});
+
 		// 컨디션 등록 탭
 		two = new JPanel();
 		pane.addTab("컨디션", two);
@@ -203,8 +240,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
-
 
 	private String[][] change(List<Schedule> scList) {
 		// TODO Auto-generated method stub
@@ -319,6 +354,29 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return list;
 	}
 
+	// 데이터베이스 데이터 삭제
+	private static void deletePersonalSchedule(int number, String date, String startTime) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "DELETE FROM playerschedule WHERE number = ? AND date = ? AND starttime = ?;";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, number);
+			stmt.setString(2, date);
+			stmt.setString(3, startTime);
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	// 테이블 기록 가져오기
 	private static void insertTabel(List<Schedule> list) {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
 		// 기존의 테이블 데이터 초기화
@@ -330,13 +388,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			tableModel.addRow(rowData);
 		}
 	}
-	
+
+	// 테이블 기록 삭제
 	private static void removeRecord(int index) {
-		DefaultTableModel model=(DefaultTableModel)table.getModel();
-		if(index<0) {
-			if(table.getRowCount()==0)//비어있는 테이블이면
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		if (index < 0) {
+			if (table.getRowCount() == 0)// 비어있는 테이블이면
 				return;
-			index=0;
+			index = 0;
 		}
 		model.removeRow(index);
 	}

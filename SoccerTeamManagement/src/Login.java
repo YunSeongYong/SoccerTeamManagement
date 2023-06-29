@@ -88,9 +88,10 @@ public class Login {
 					if (role.equals("감독")) {
 						new DirectorGUI();
 					} else if (role.equals("선수")) {
-						
 						player.setBackNumber(checkBackNumber(id));	
 						new PlayerTab();
+					} else if (role.equals("의사")) {
+						new DoctorSchedule();
 					}
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");

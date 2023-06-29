@@ -1,87 +1,175 @@
 import java.awt.Color;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JCheckBox;
 
-public class DoctorSchedule extends JPanel {
-	JTabbedPane pane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+import dbutil.DBUtil;
+import javax.swing.JComboBox;
 
-	public DoctorSchedule() {
-		setLayout(null);
+public class DoctorSchedule extends JFrame implements ChangeListener {
 
-		JLabel lblNewLabel = new JLabel("공동일정");
-		lblNewLabel.setBounds(63, 71, 48, 15);
-		add(lblNewLabel);
+   private Connection con;
+   private Statement stmt;
+   private ResultSet rs;
+   
+   JTabbedPane pane;
+   JLabel lbl;
+   private JTextArea textArea;
+   private JTextArea textArea2;
 
-		JLabel lblNewLabel_1 = new JLabel("시작 시간");
-		lblNewLabel_1.setBounds(63, 154, 52, 15);
-		add(lblNewLabel_1);
+   public DoctorSchedule() {
+      JPanel one, two, three;
+      pane = new JTabbedPane();
+      lbl = new JLabel("              ");
 
-		textField = new JTextField();
-		textField.setBounds(127, 151, 116, 21);
-		add(textField);
-		textField.setColumns(10);
+      one = new JPanel();
+      one.setBackground(Color.pink);
+      pane.addTab("선수일정", one);
+      one.setLayout(null);
 
-		JLabel lblNewLabel_2 = new JLabel("끝나는 시간");
-		lblNewLabel_2.setBounds(255, 154, 64, 15);
-		add(lblNewLabel_2);
+      
 
-		textField_1 = new JTextField();
-		textField_1.setBounds(331, 151, 116, 21);
-		add(textField_1);
-		textField_1.setColumns(10);
+      textArea = new JTextArea();
+      textArea.setBounds(25, 10, 688, 85);
+      one.add(textArea);
+      textArea.setColumns(10);
 
-		JLabel lblNewLabel_3 = new JLabel("일정");
-		lblNewLabel_3.setBounds(459, 157, 24, 15);
-		add(lblNewLabel_3);
+      JButton btnNewButton_1 = new JButton("불러오기");
+      btnNewButton_1.setBounds(725, 4, 140, 78);
+      btnNewButton_1.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            try {
+               //textArea 은 텍스트 박스 안에 있는 문장을 여러 문장으로 쓸꺼다
+               textArea.setText("");
+               // 데이터베이스에 연결합니다.
+               Connection connection = DBUtil.getConnection();
+               Statement statement = connection.createStatement();
+               String sql = "SELECT * FROM `condition`"; // 백틱 backtick
+               ResultSet resultSet = statement.executeQuery(sql);
+               while (resultSet.next()) {
+                  int no = resultSet.getInt("no");
+                  int numder = resultSet.getInt("number");
+                  String playername = resultSet.getString("playername");
+                  String plyerconditon = resultSet.getString("playercondition");
+                  LocalDateTime when = resultSet.getTimestamp("when").toLocalDateTime();
+                     //String format = String.format("%d : %d : %s : %s : %s", no, numder, playername, plyerconditon, when);
+                  //여러문장을 이렇게 쓴다 생각 하시면되요
+                  String format = String.format("%d : %d : %s : %s : %s", no, numder, playername, plyerconditon, when);
+                  System.out.println(format);
+                  textArea.append(format+"\n");
+               }
 
-		textField_2 = new JTextField();
-		textField_2.setBounds(495, 151, 364, 21);
-		add(textField_2);
-		textField_2.setColumns(10);
+            } catch (SQLException e1) {
+               e1.printStackTrace();
+            }
+         }
+      });
+      one.add(btnNewButton_1);
+      
+      JComboBox comboBox = new JComboBox();
+      comboBox.setBounds(876, 4, 61, 34);
+      comboBox.addItem("다른의사");
+      
+      comboBox.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+              // 3번째 탭으로 이동
+              JTabbedPane tabbedPane = (JTabbedPane) comboBox.getParent();
+              tabbedPane.setSelectedIndex(2);
+          }
+      });
+      one.add(comboBox);
+      
 
-		JButton btnNewButton = new JButton("등록");
-		btnNewButton.setBounds(871, 150, 57, 23);
-		add(btnNewButton);
+      two = new JPanel();
+      two.setBackground(Color.yellow);
+      pane.addTab("Two", two);
+      two.setLayout(null);
+      
+      textArea2 = new JTextArea();
+      textArea2.setBounds(12, 10, 588, 74);
+      two.add(textArea2);
+      textArea2.setColumns(10);
+      
+      
+      
+      JButton btnNewButton_2 = new JButton("넣기");
+      btnNewButton_2.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            try {
+               //textArea 은 텍스트 박스 안에 있는 문장을 여러 문장으로 쓸꺼다
+               textArea.setText("");
+               // 데이터베이스에 연결합니다.
+               Connection connection = DBUtil.getConnection();
+               Statement statement = connection.createStatement();
+               String sql = "SELECT * FROM `condition`"; // 백틱 backtick
+               ResultSet resultSet = statement.executeQuery(sql);
+               while (resultSet.next()) {
+                  int number = resultSet.getInt("number");
+                  LocalDateTime starttime = resultSet.getTimestamp("starttime").toLocalDateTime();
+                  String schedulecomment = resultSet.getString("schedulecomment");
+                  String conditioncomment = resultSet.getString("conditioncomment");
+                  String doctorcomment = resultSet.getString("doctorcomment");
+                  String who = resultSet.getString("who");
 
-		JLabel lblNewLabel_5 = new JLabel("코멘트");
-		lblNewLabel_5.setBounds(75, 502, 36, 15);
-		add(lblNewLabel_5);
+                  // Timestamp timestamp = Timestamp.valueOf(starttime);
+                  String sql1 = "INSERT INTO comment (number, datetime, schedulecomment, conditioncomment, doctorcomment, who) VALUES ('" + number + "', '" + starttime + "', '" + schedulecomment + "', '" + conditioncomment + "', '" + doctorcomment + "', '" + who + "');";
+                  statement.executeUpdate(sql1);
+               }
+            } catch (SQLException e1) {
+               e1.printStackTrace();
+            }
+         }
+         
+         });
+      btnNewButton_2.setBounds(695, 10, 167, 74);
+      two.add(btnNewButton_2);
 
-		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setBounds(835, 16, 0, 0);
-		add(lblNewLabel_4);
+      three = new JPanel();
+      three.add(new JLabel("세번째 탭입니다"));
+      three.add(new JTextField("문자를 입력하세요"));
+      three.setBackground(Color.cyan);
+      pane.addTab("Three", three);
 
-		JButton btnNewButton_1 = new JButton("수정");
-		btnNewButton_1.setBounds(769, 206, 57, 23);
-		add(btnNewButton_1);
+      pane.setSelectedIndex(0);
+      pane.addChangeListener(this);
+      this.getContentPane().add("North", new JLabel("탭을 사용한 예"));
+      this.getContentPane().add("Center", pane);
+      this.getContentPane().add("South", lbl);
 
-		JButton btnNewButton_2 = new JButton("삭제");
-		btnNewButton_2.setBounds(839, 206, 57, 23);
-		add(btnNewButton_2);
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("");
-		chckbxNewCheckBox.setBounds(88, 206, 21, 23);
-		add(chckbxNewCheckBox);
-		
-		JLabel lblNewLabel_6 = new JLabel("New label");
-		lblNewLabel_6.setBounds(120, 202, 622, 31);
-		add(lblNewLabel_6);
-		
-//		setSize(979,532);
-		setSize(1164, 710);
+      this.setSize(981, 781);
+      this.setVisible(true);
+      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   
+   }// end
 
-	}
+   
+
+   @Override
+   public void stateChanged(ChangeEvent e) {
+      int index = pane.getSelectedIndex();// 현재탭의 번호를 가져온다
+      String msg = pane.getTitleAt(index); // index 위에 탭 문자열을 가져옴
+      msg += "탭이 선택되었습니다";
+      lbl.setText(msg);
+      pane.setSelectedIndex(index); // 현재 선택한 탭으로 화면 출력 변경
+   }
+
+   public static void main(String[] args) {
+      new DoctorSchedule();
+   }
 }
