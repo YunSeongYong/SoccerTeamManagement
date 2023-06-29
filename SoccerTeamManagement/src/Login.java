@@ -95,11 +95,12 @@ public class Login {
 					} else if (role.equals("코치")) {
 						new StaffRegistration();
 					}
+					frame.dispose();
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");
 				}
 				
-				frame.dispose();
+				
 			}
 		});
 	}
