@@ -23,6 +23,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import dbutil.DBUtil;
+import jdk.internal.org.objectweb.asm.tree.analysis.Value;
+
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.table.TableModel;
@@ -50,7 +52,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JButton 저장버튼;
 	private JLabel 등번호라벨;
 	private JTextField 등번호텍스트필드;
-	private JTextField 역할텍스트필드;
 	private JPanel 이미지등록창;
 	private File selectedFile;
 	private Image selectedImage;
@@ -92,16 +93,24 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel 선수정보수정라벨;
 	private JLabel lbl_1;
 	private JLabel lblNewLabel_8;
-	private List<Player> list;
+	private List<Player> playerList;
 	private List<Schedule> scheduleList;
+	private List<Condition> conditionList;
 	private JTextField 담당의사수정텍스트필드;
 	private JTextField 일정창_코멘트텍스트필드;
 	private JScrollPane scrolledTable;
 	private JTable table;
 	private JComboBox 날짜콤보박스;
-	private String formattedDate;
+	private String 일정창_콤보박스에서선택한날짜;
 	private JButton 일정창_저장버튼;
 	private int 일정창_선수정보콤보박스에서선택한등번호;
+	private JScrollPane scrolledTable_1;
+	private JTable conditionTable;
+	private JTextArea 선수목록_컨디션_선수컨디션텍스트박스;
+	private JLabel 선수컨디션라벨;
+	private JScrollPane scrollPane_1;
+	private JTextArea 선수목록_컨디션_코멘트텍스트박스;
+	private JLabel 코멘트라벨;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -243,7 +252,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-// 중복확인 버튼 클릭 시 실행되는 메서드
+	// 중복확인 버튼 클릭 시 실행되는 메서드
 	private void checkDuplicateID() {
 		String id = textField_4.getText(); // 입력한 아이디 가져오기
 		boolean isDuplicate = checkIfIDExists(id); // 데이터베이스에서 아이디 중복 여부 확인
@@ -337,15 +346,15 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		String sql = "SELECT count(*) AS A FROM players";
-		
+
 		try {
 			conn = DBUtil.getConnection();
 			stmt = conn.prepareStatement(sql);
-			
+
 			rs = stmt.executeQuery();
-			
+
 			if (rs.next()) {
 				return rs.getInt("A");
 			}
@@ -393,7 +402,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void identity등록메소드() {
-		String sql = "INSERT INTO identity (no, id, password, role) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO identity (no, id, password, role) VALUES (?, ?, ?, '선수')";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -403,7 +412,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			stmt.setInt(1, 선수인원확인메소드() + 1);
 			stmt.setString(2, 아이디텍스트필드.getText());
 			stmt.setString(3, 비밀번호텍스트필드.getText());
-			stmt.setString(4, 역할텍스트필드.getText());
 
 			int result = stmt.executeUpdate();
 			if (result > 0) {
@@ -471,7 +479,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void 이미지를데이터베이스에수정하는메소드(PreparedStatement stmt) {
 		Connection conn = null;
 		try {
@@ -527,40 +535,40 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-//	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
-//	    Connection conn = null;
-//	    PreparedStatement stmt = null;
-//	    ResultSet rs = null;
-//	    try {
-//	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-//	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
-//	        stmt = conn.prepareStatement(sql);
-//	        stmt.setInt(1, backnumber);
-//	        rs = stmt.executeQuery();
-//	        
-//	        while (rs.next()) {
-//	            int backnumber1 = rs.getInt("backnumber");
-//	            String name = rs.getString("name");
-//	            
-//	            System.out.println(backnumber1);
-//	            System.out.println(name);
-//	        }
-//	        
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    } finally {
-//	        // 사용한 자원을 닫아주어야 합니다.
-//	        DBUtil.close(rs);
-//	        DBUtil.close(stmt);
-//	        DBUtil.close(conn);
-//	    }
-//	}
+	//	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
+	//	    Connection conn = null;
+	//	    PreparedStatement stmt = null;
+	//	    ResultSet rs = null;
+	//	    try {
+	//	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	//	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
+	//	        stmt = conn.prepareStatement(sql);
+	//	        stmt.setInt(1, backnumber);
+	//	        rs = stmt.executeQuery();
+	//	        
+	//	        while (rs.next()) {
+	//	            int backnumber1 = rs.getInt("backnumber");
+	//	            String name = rs.getString("name");
+	//	            
+	//	            System.out.println(backnumber1);
+	//	            System.out.println(name);
+	//	        }
+	//	        
+	//	    } catch (SQLException e) {
+	//	        e.printStackTrace();
+	//	    } finally {
+	//	        // 사용한 자원을 닫아주어야 합니다.
+	//	        DBUtil.close(rs);
+	//	        DBUtil.close(stmt);
+	//	        DBUtil.close(conn);
+	//	    }
+	//	}
 
 	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		list = new ArrayList<>();
+		playerList = new ArrayList<>();
 
 		try {
 			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
@@ -581,8 +589,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				Blob imagePath = rs.getBlob("image");
 				Image image = ImageIO.read(imagePath.getBinaryStream());
 
-				list.add(new Player(backnumber1, name, height, weight, age, position, coach, doctor, image));
-				System.out.println(list);
+				playerList.add(new Player(backnumber1, name, height, weight, age, position, coach, doctor, image));
+				System.out.println(playerList);
 			}
 
 		} catch (SQLException | IOException e) {
@@ -593,7 +601,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
-		return list;
+		return playerList;
 	}
 
 	public void 콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(List<Player> playerList) {
@@ -772,99 +780,86 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	public void 콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
 		List<Schedule> filteredList = new ArrayList<>();
 
-	    for (Schedule schedule : scheduleList) {
-	        if (schedule.getDate().equals(formattedDate)) {
-	            filteredList.add(schedule);
-	        }
-	    }
+		for (Schedule schedule : scheduleList) {
+			if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
+				filteredList.add(schedule);
+			}
+		}
 
-	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-	    // 기존의 테이블 데이터 초기화
-	    tableModel.setRowCount(0);
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
 
-	    // filteredList의 데이터를 테이블 모델에 추가
-	    for (Schedule schedule : filteredList) {
-	        Object[] rowData = {
-	            schedule.getDate(),
-	            schedule.getStartTime(),
-	            schedule.getEndTime(),
-	            schedule.getContent(),
-	            schedule.getWhere(),
-	            false  // 체크박스 데이터 추가
-	        };
-	        tableModel.addRow(rowData);
-	    }
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Schedule schedule : filteredList) {
+			Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
+					schedule.getContent(), schedule.getWhere(), false // 체크박스 데이터 추가
+			};
+			tableModel.addRow(rowData);
+		}
 
-	    // 체크박스 컬럼 추가
-	    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(table.getDefaultRenderer(Boolean.class));
-	    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(table.getDefaultEditor(Boolean.class));
-	    
-	    tableModel.addTableModelListener(e -> {
-	        if (e.getColumn() == 5) {
-	            int rowIndex = e.getFirstRow();
-	            boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 5);
-	            if (isChecked) {
-	                체크박스선택시각행의값콘솔출력메소드(rowIndex);
-	            }
-	        }
-	    });
+		// 체크박스 컬럼 추가
+		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+		.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+		.setCellEditor(table.getDefaultEditor(Boolean.class));
+
+		tableModel.addTableModelListener(e -> {
+			if (e.getColumn() == 5) {
+				int rowIndex = e.getFirstRow();
+				boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 5);
+				if (isChecked) {
+					체크박스선택시각행의값콘솔출력메소드(rowIndex);
+				}
+			}
+		});
 	}
-
-
-
-
-
 
 	public void 날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
 		try {
-			 List<Schedule> filteredList = new ArrayList<>();
+			List<Schedule> filteredList = new ArrayList<>();
 
-			    for (Schedule schedule : scheduleList) {
-			        if (schedule.getDate().equals(formattedDate)) {
-			            filteredList.add(schedule);
-			        }
-			    }
+			for (Schedule schedule : scheduleList) {
+				if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
+					filteredList.add(schedule);
+				}
+			}
 
-			    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-			    // 기존의 테이블 데이터 초기화
-			    tableModel.setRowCount(0);
+			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+			// 기존의 테이블 데이터 초기화
+			tableModel.setRowCount(0);
 
-			    // filteredList의 데이터를 테이블 모델에 추가
-			    for (Schedule schedule : filteredList) {
-			        Object[] rowData = {
-			            schedule.getDate(),
-			            schedule.getStartTime(),
-			            schedule.getEndTime(),
-			            schedule.getContent(),
-			            schedule.getWhere(),
-			            false  // 체크박스 데이터 추가
-			        };
-			        tableModel.addRow(rowData);
-			    }
+			// filteredList의 데이터를 테이블 모델에 추가
+			for (Schedule schedule : filteredList) {
+				Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
+						schedule.getContent(), schedule.getWhere(), false // 체크박스 데이터 추가
+				};
+				tableModel.addRow(rowData);
+			}
 
-			    // 체크박스 컬럼 추가
-			    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellRenderer(table.getDefaultRenderer(Boolean.class));
-			    table.getColumnModel().getColumn(tableModel.getColumnCount() - 1).setCellEditor(table.getDefaultEditor(Boolean.class));
-		
-		}catch (NullPointerException e) {
-	        JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
+			// 체크박스 컬럼 추가
+			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+			.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+			.setCellEditor(table.getDefaultEditor(Boolean.class));
+
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
-		
-		
+
 	}
 
 	public void 체크박스선택시각행의값콘솔출력메소드(int rowIndex) {
-	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-	    int columnCount = tableModel.getColumnCount();
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		int columnCount = tableModel.getColumnCount();
 
-	    for (int j = 0; j < columnCount - 1; j++) {
-	        Object value = tableModel.getValueAt(rowIndex, j);
-	        System.out.print(value + " ");
-	    }
-	    System.out.println();
+		for (int j = 0; j < columnCount - 1; j++) {
+			Object value = tableModel.getValueAt(rowIndex, j);
+			System.out.print(value + " ");
+		}
+		System.out.println();
 	}
 
-	
 	public void 코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
 		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
 		Connection conn = null;
@@ -889,6 +884,70 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			DBUtil.close(conn);
 		}
 	}
+
+	public List<Condition> 선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(int backnumber) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    conditionList = new ArrayList<>();
+
+	    try {
+	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	        String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, backnumber);
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            int number = rs.getInt("number");
+	            String playerName = rs.getString("playername");
+	            String playercondition = rs.getString("playercondition");
+	            java.sql.Date when = rs.getDate("when");
+
+	            conditionList.add(new Condition(number, playerName, playercondition, when.toString()));
+	            System.out.println(conditionList);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 사용한 자원을 닫아주어야 합니다.
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	    return conditionList;
+	}
+
+	
+	
+	public void 선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
+	    DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
+	    
+	    for (Condition condition : conditionList) {
+	        if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+	            Object[] rowData = {
+	                condition.getNumber(),
+	                condition.getPlayerName(),
+	                condition.getPlayercondition(),
+	                condition.getDate()
+	            };
+	            model.addRow(rowData);
+	        }
+	    }
+	}
+	
+	public void 선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<Condition> conditionList) {
+		List<Condition> condition1 = new ArrayList<>();
+
+		for (Condition condition : conditionList) {
+			if (condition.getDate().equals(일정창_콤보박스에서선택한날짜)) {
+				condition1.add(condition);
+			}
+		}
+		System.out.println(condition1);
+	}
+
 
 	// ======================================================================
 
@@ -934,11 +993,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(담당의사라벨);
 
 		JLabel 아이디라벨 = new JLabel("아이디");
-		아이디라벨.setBounds(240, 122, 60, 15);
+		아이디라벨.setBounds(230, 167, 60, 15);
 		one.add(아이디라벨);
 
 		JLabel 비밀번호라벨 = new JLabel("비밀번호");
-		비밀번호라벨.setBounds(240, 187, 64, 15);
+		비밀번호라벨.setBounds(230, 232, 64, 15);
 		one.add(비밀번호라벨);
 
 		이름텍스트필드 = new JTextField();
@@ -977,12 +1036,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		담당의사텍스트필드.setColumns(10);
 
 		아이디텍스트필드 = new JTextField();
-		아이디텍스트필드.setBounds(312, 119, 116, 21);
+		아이디텍스트필드.setBounds(302, 164, 116, 21);
 		one.add(아이디텍스트필드);
 		아이디텍스트필드.setColumns(10);
 
 		비밀번호텍스트필드 = new JTextField();
-		비밀번호텍스트필드.setBounds(312, 184, 116, 21);
+		비밀번호텍스트필드.setBounds(302, 229, 116, 21);
 		one.add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
 
@@ -1023,21 +1082,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수등록라벨.setBounds(713, 10, 116, 15);
 		one.add(선수등록라벨);
 
-		JLabel 역할라벨 = new JLabel("역할");
-		역할라벨.setBounds(240, 244, 60, 15);
-		one.add(역할라벨);
-
-		역할텍스트필드 = new JTextField();
-		역할텍스트필드.setBounds(312, 241, 116, 21);
-		one.add(역할텍스트필드);
-		역할텍스트필드.setColumns(10);
-
 		JLabel identity등록라벨 = new JLabel("identity등록");
 		identity등록라벨.setBounds(333, 56, 116, 15);
 		one.add(identity등록라벨);
 
 		JButton 중복확인버튼 = new JButton("중복확인");
-		중복확인버튼.setBounds(461, 118, 97, 23);
+		중복확인버튼.setBounds(451, 163, 97, 23);
 		one.add(중복확인버튼);
 		중복확인버튼.addActionListener(new ActionListener() {
 			@Override
@@ -1047,7 +1097,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		});
 
 		사용가능유무라벨 = new JLabel("중복확인 버튼을 누르세요");
-		사용가능유무라벨.setBounds(322, 150, 178, 15);
+		사용가능유무라벨.setBounds(312, 195, 178, 15);
 		one.add(사용가능유무라벨);
 
 		// ==================================================================
@@ -1096,10 +1146,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		lblNewLabel_6.setBounds(414, 110, 57, 15);
 		two.add(lblNewLabel_6);
 
-//		textField_3 = new JTextField();
-//		textField_3.setBounds(515, 51, 116, 21);
-//		two.add(textField_3);
-//		textField_3.setColumns(10);
+		//		textField_3 = new JTextField();
+		//		textField_3.setBounds(515, 51, 116, 21);
+		//		two.add(textField_3);
+		//		textField_3.setColumns(10);
 
 		textField_4 = new JTextField();
 		textField_4.setBounds(510, 55, 116, 21);
@@ -1222,10 +1272,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				LocalDate selectedDate = (LocalDate) 날짜콤보박스.getSelectedItem();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				formattedDate = selectedDate.format(formatter);
+				일정창_콤보박스에서선택한날짜 = selectedDate.format(formatter);
 
-				System.out.println("콤보박스에서 선택한 날짜 출력 : " + formattedDate);
+				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 일정창_콤보박스에서선택한날짜);
 				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
 			}
 		});
 
@@ -1241,10 +1292,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItem.split(" - ")[0]);
 				System.out.println(일정창_선수정보콤보박스에서선택한등번호);
 				선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(list);
+				콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(playerList);
 				선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
 				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(conditionList);
 
 			}
 		});
@@ -1256,6 +1309,53 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		JLabel 선수정보라벨 = new JLabel("선수정보");
 		선수정보라벨.setBounds(678, 29, 66, 15);
 		three.add(선수정보라벨);
+
+		컨디션창 = new JPanel();
+		컨디션창.setBounds(192, 57, 787, 376);
+		three.add(컨디션창);
+		컨디션창.setLayout(null);
+		
+		scrolledTable_1 = new JScrollPane((Component) null);
+		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		scrolledTable_1.setBounds(23, 28, 694, 110);
+		컨디션창.add(scrolledTable_1);
+		
+		conditionTable = new JTable(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"number", "playername", "playercondition", "when"
+			}
+		));
+		scrolledTable_1.setViewportView(conditionTable);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(146, 177, 195, 138);
+		컨디션창.add(scrollPane);
+		
+		선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
+		scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
+		
+		선수컨디션라벨 = new JLabel("선수 컨디션");
+		선수컨디션라벨.setHorizontalAlignment(SwingConstants.RIGHT);
+		선수컨디션라벨.setBounds(37, 240, 96, 15);
+		컨디션창.add(선수컨디션라벨);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(489, 177, 195, 138);
+		컨디션창.add(scrollPane_1);
+		
+		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
+		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
+		
+		코멘트라벨 = new JLabel("코멘트");
+		코멘트라벨.setHorizontalAlignment(SwingConstants.RIGHT);
+		코멘트라벨.setBounds(381, 240, 96, 15);
+		컨디션창.add(코멘트라벨);
+		
+		JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
+		선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
+		컨디션창.add(선수목록_컨디션_저장버튼);
 
 		일정창 = new JPanel();
 		일정창.setBounds(192, 57, 787, 376);
@@ -1275,7 +1375,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		일정창_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String comment = 일정창_코멘트텍스트필드.getText();
-		        코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+				코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
 			}
 		});
 		일정창_저장버튼.setBounds(626, 293, 135, 73);
@@ -1286,18 +1386,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		일정창.add(scrolledTable);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		table = new JTable(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"date", "starttime", "endtime", "content", "where", "checkbox"
-			}
-		));
+		table = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "date", "starttime", "endtime", "content", "where", "checkbox" }));
 		scrolledTable.setViewportView(table);
-
-		컨디션창 = new JPanel();
-		컨디션창.setBounds(43, 10, 10, 10);
-		three.add(컨디션창);
+		일정창.setVisible(false);
 
 		의사소견창 = new JPanel();
 		의사소견창.setBounds(92, 10, 10, 10);
@@ -1384,7 +1476,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		수정버튼 = new JButton("수정버튼");
 		수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				선수수정메소드(list);
+				선수수정메소드(playerList);
 
 			}
 		});
@@ -1414,7 +1506,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
 
 				if (choice == JOptionPane.YES_OPTION) {
-					선수삭제메소드(list);
+					선수삭제메소드(playerList);
 					System.out.println("삭제되었습니다.");
 				} else {
 					System.out.println("삭제가 취소되었습니다.");
@@ -1428,7 +1520,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		lbl_1.setBounds(192, 146, 590, 212);
 		three.add(lbl_1);
 		개인정보창.setVisible(false);
-		일정창.setVisible(false);
 		컨디션창.setVisible(false);
 		의사소견창.setVisible(false);
 
