@@ -92,10 +92,14 @@ public class Login {
 						new PlayerTab();
 					} else if (role.equals("의사")) {
 						new DoctorSchedule();
+					} else if (role.equals("코치")) {
+						new StaffRegistration();
 					}
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");
 				}
+				
+				frame.dispose();
 			}
 		});
 	}
