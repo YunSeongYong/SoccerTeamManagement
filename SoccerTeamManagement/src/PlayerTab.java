@@ -1,38 +1,35 @@
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+
 import java.util.List;
 
-import javax.print.attribute.standard.DateTimeAtCompleted;
+
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import dbutil.DBUtil;
 
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
+
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import java.awt.Component;
@@ -40,12 +37,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JTextArea;
 
 public class PlayerTab extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
-	public static Player player;
+	public Player player;
 	public static JTable table;
 	public static JComboBox comboBox;
+	private JTextArea playerconditionText;
 
 	public PlayerTab() {
 		player = new Player();
@@ -198,33 +197,34 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		JPanel panel = new JPanel();
-		panel.setBounds(41, 112, 279, 290);
-		two.add(panel);
-
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(351, 379, 65, 23);
-		two.add(btnNewButton);
-
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(351, 112, 279, 246);
-		two.add(panel_2);
-
-		JLabel lblNewLabel_1 = new JLabel("코멘트");
-		lblNewLabel_1.setBounds(670, 112, 260, 148);
-		two.add(lblNewLabel_1);
+		JLabel commentLbl_ = new JLabel("코멘트");
+		commentLbl_.setBounds(40, 262, 889, 148);
+		two.add(commentLbl_);
 
 		JLabel lblNewLabel_2 = new JLabel("공동일정 : 이것저것 훈련할 계획이다. 운동장으로 나와라");
-		lblNewLabel_2.setBounds(41, 26, 870, 65);
+		lblNewLabel_2.setBounds(40, 10, 870, 65);
 		two.add(lblNewLabel_2);
-
-		JButton btnNewButton_1 = new JButton("New button");
-		btnNewButton_1.setBounds(449, 379, 65, 23);
-		two.add(btnNewButton_1);
-
-		JButton btnNewButton_2 = new JButton("New button");
-		btnNewButton_2.setBounds(551, 379, 65, 23);
-		two.add(btnNewButton_2);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(40, 68, 889, 142);
+		two.add(scrollPane_1);
+		
+		playerconditionText = new JTextArea();
+		scrollPane_1.setViewportView(playerconditionText);
+		
+		JButton correctionBtn = new JButton("수정");
+		correctionBtn.setBounds(832, 220, 97, 23);
+		two.add(correctionBtn);
+		
+		JButton saveBtn = new JButton("저장");
+		saveBtn.setBounds(723, 220, 97, 23);
+		two.add(saveBtn);
+		saveBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				insertCondition(player);
+			}
+		});
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
@@ -399,7 +399,58 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 		model.removeRow(index);
 	}
+	
+	// 선수 이름 찾기
+	private static String getPlayerName(int backNumber) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    String playerName = null;
 
+	    try {
+	        conn = DBUtil.getConnection();
+	        String sql = "SELECT name FROM players WHERE backnumber = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setInt(1, backNumber);
+
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            playerName = rs.getString("name");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	    return playerName;
+	}
+
+
+	// 선수 컨디션 저장
+	public void insertCondition(Player player) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement("INSERT INTO `condition` (number, playername, playercondition) VALUES (?, ?, ?)");
+	        stmt.setInt(1, player.getBackNumber());
+	        stmt.setString(2, getPlayerName(player.getBackNumber()));
+	        stmt.setString(3, playerconditionText.getText());
+	        
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		new PlayerTab();
 
