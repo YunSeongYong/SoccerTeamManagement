@@ -32,6 +32,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.border.TitledBorder;
+import java.awt.FlowLayout;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class DirectorGUI extends JFrame implements ChangeListener {
 	JTabbedPane pane;
@@ -50,7 +54,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTabbedPane tabbedPane_2;
 	private JButton 이미지등록버튼;
 	private JButton 저장버튼;
-	private JLabel 등번호라벨;
 	private JTextField 등번호텍스트필드;
 	private JPanel 이미지등록창;
 	private File selectedFile;
@@ -111,8 +114,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JScrollPane scrollPane_1;
 	private JTextArea 선수목록_컨디션_코멘트텍스트박스;
 	private JLabel 코멘트라벨;
+	private JLabel lblNewLabel_4;
 
 	private static int countStaff(String role) {
+		
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -203,12 +208,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			// 이미지 아이콘 설정
 			ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-			selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+			selectedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+			
 
 			// 기존에 생성한 JLabel이 있을 경우 수정, 없을 경우 새로 생성
 			if (lblNewLabel == null) {
 				lblNewLabel = new JLabel();
-				lblNewLabel.setBounds(12, 38, 136, 187);
+				lblNewLabel.setBounds(12, 0, 136, 187);
 				panel.add(lblNewLabel);
 			}
 
@@ -435,7 +441,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			// 이미지 아이콘 설정
 			ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-			selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+			selectedImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 
 			// 기존에 생성한 JLabel이 있을 경우 수정, 없을 경우 새로 생성
 			if (이미지라벨 == null) {
@@ -535,34 +541,34 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	//	public void 선수정보콤보박스선택후출력메소드(int backnumber) {
-	//	    Connection conn = null;
-	//	    PreparedStatement stmt = null;
-	//	    ResultSet rs = null;
-	//	    try {
-	//	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-	//	        String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
-	//	        stmt = conn.prepareStatement(sql);
-	//	        stmt.setInt(1, backnumber);
-	//	        rs = stmt.executeQuery();
-	//	        
-	//	        while (rs.next()) {
-	//	            int backnumber1 = rs.getInt("backnumber");
-	//	            String name = rs.getString("name");
-	//	            
-	//	            System.out.println(backnumber1);
-	//	            System.out.println(name);
-	//	        }
-	//	        
-	//	    } catch (SQLException e) {
-	//	        e.printStackTrace();
-	//	    } finally {
-	//	        // 사용한 자원을 닫아주어야 합니다.
-	//	        DBUtil.close(rs);
-	//	        DBUtil.close(stmt);
-	//	        DBUtil.close(conn);
-	//	    }
-	//	}
+	// public void 선수정보콤보박스선택후출력메소드(int backnumber) {
+	// Connection conn = null;
+	// PreparedStatement stmt = null;
+	// ResultSet rs = null;
+	// try {
+	// conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	// String sql = "SELECT backnumber, name FROM players WHERE backnumber = ?";
+	// stmt = conn.prepareStatement(sql);
+	// stmt.setInt(1, backnumber);
+	// rs = stmt.executeQuery();
+	//
+	// while (rs.next()) {
+	// int backnumber1 = rs.getInt("backnumber");
+	// String name = rs.getString("name");
+	//
+	// System.out.println(backnumber1);
+	// System.out.println(name);
+	// }
+	//
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// } finally {
+	// // 사용한 자원을 닫아주어야 합니다.
+	// DBUtil.close(rs);
+	// DBUtil.close(stmt);
+	// DBUtil.close(conn);
+	// }
+	// }
 
 	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
@@ -800,9 +806,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		// 체크박스 컬럼 추가
 		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-		.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+				.setCellRenderer(table.getDefaultRenderer(Boolean.class));
 		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-		.setCellEditor(table.getDefaultEditor(Boolean.class));
+				.setCellEditor(table.getDefaultEditor(Boolean.class));
 
 		tableModel.addTableModelListener(e -> {
 			if (e.getColumn() == 5) {
@@ -839,9 +845,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			// 체크박스 컬럼 추가
 			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-			.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+					.setCellRenderer(table.getDefaultRenderer(Boolean.class));
 			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-			.setCellEditor(table.getDefaultEditor(Boolean.class));
+					.setCellEditor(table.getDefaultEditor(Boolean.class));
 
 		} catch (NullPointerException e) {
 			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
@@ -886,57 +892,51 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public List<Condition> 선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(int backnumber) {
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-	    conditionList = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		conditionList = new ArrayList<>();
 
-	    try {
-	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-	        String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, backnumber);
-	        rs = stmt.executeQuery();
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backnumber);
+			rs = stmt.executeQuery();
 
-	        while (rs.next()) {
-	            int number = rs.getInt("number");
-	            String playerName = rs.getString("playername");
-	            String playercondition = rs.getString("playercondition");
-	            java.sql.Date when = rs.getDate("when");
+			while (rs.next()) {
+				int number = rs.getInt("number");
+				String playerName = rs.getString("playername");
+				String playercondition = rs.getString("playercondition");
+				java.sql.Date when = rs.getDate("when");
 
-	            conditionList.add(new Condition(number, playerName, playercondition, when.toString()));
-	            System.out.println(conditionList);
-	        }
+				conditionList.add(new Condition(number, playerName, playercondition, when.toString()));
+				System.out.println(conditionList);
+			}
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        // 사용한 자원을 닫아주어야 합니다.
-	        DBUtil.close(rs);
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
-	    return conditionList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return conditionList;
 	}
 
-	
-	
 	public void 선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
-	    DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
-	    
-	    for (Condition condition : conditionList) {
-	        if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
-	            Object[] rowData = {
-	                condition.getNumber(),
-	                condition.getPlayerName(),
-	                condition.getPlayercondition(),
-	                condition.getDate()
-	            };
-	            model.addRow(rowData);
-	        }
-	    }
+		DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
+
+		for (Condition condition : conditionList) {
+			if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+				Object[] rowData = { condition.getNumber(), condition.getPlayerName(), condition.getPlayercondition(),
+						condition.getDate() };
+				model.addRow(rowData);
+			}
+		}
 	}
-	
+
 	public void 선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<Condition> conditionList) {
 		List<Condition> condition1 = new ArrayList<>();
 
@@ -947,7 +947,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 		System.out.println(condition1);
 	}
-
 
 	// ======================================================================
 
@@ -964,97 +963,73 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		pane.addTab("선수등록", one);
 		one.setLayout(null);
 
-		JLabel 이름라벨 = new JLabel("이름");
-		이름라벨.setBounds(618, 106, 52, 15);
-		one.add(이름라벨);
-
-		JLabel 신장라벨 = new JLabel("신장");
-		신장라벨.setBounds(618, 163, 62, 15);
-		one.add(신장라벨);
-
-		JLabel 몸무게라벨 = new JLabel("몸무게");
-		몸무게라벨.setBounds(618, 206, 64, 15);
-		one.add(몸무게라벨);
-
-		JLabel 나이라벨 = new JLabel("나이");
-		나이라벨.setBounds(618, 247, 62, 15);
-		one.add(나이라벨);
-
-		JLabel 포지션라벨 = new JLabel("포지션");
-		포지션라벨.setBounds(618, 298, 81, 15);
-		one.add(포지션라벨);
-
-		JLabel 담당코치라벨 = new JLabel("담당 코치");
-		담당코치라벨.setBounds(618, 351, 81, 15);
-		one.add(담당코치라벨);
-
-		JLabel 담당의사라벨 = new JLabel("담당 의사");
-		담당의사라벨.setBounds(618, 393, 90, 15);
-		one.add(담당의사라벨);
-
-		JLabel 아이디라벨 = new JLabel("아이디");
-		아이디라벨.setBounds(230, 167, 60, 15);
-		one.add(아이디라벨);
-
-		JLabel 비밀번호라벨 = new JLabel("비밀번호");
-		비밀번호라벨.setBounds(230, 232, 64, 15);
-		one.add(비밀번호라벨);
-
 		이름텍스트필드 = new JTextField();
-		이름텍스트필드.setBounds(699, 103, 116, 21);
+		이름텍스트필드.setText("이름 입력");
+		이름텍스트필드.setForeground(new Color(192, 192, 192));
+		이름텍스트필드.setBounds(430, 294, 98, 29);
 		one.add(이름텍스트필드);
 		이름텍스트필드.setColumns(10);
 
 		신장텍스트필드 = new JTextField();
-		신장텍스트필드.setBounds(699, 160, 116, 21);
+		신장텍스트필드.setText("신장 입력");
+		신장텍스트필드.setForeground(new Color(192, 192, 192));
+		신장텍스트필드.setBounds(430, 332, 98, 29);
 		one.add(신장텍스트필드);
 		신장텍스트필드.setColumns(10);
 
 		몸무게텍스트필드 = new JTextField();
-		몸무게텍스트필드.setBounds(699, 203, 116, 21);
+		몸무게텍스트필드.setText("몸무게 입력");
+		몸무게텍스트필드.setForeground(new Color(192, 192, 192));
+		몸무게텍스트필드.setBounds(430, 370, 98, 29);
 		one.add(몸무게텍스트필드);
 		몸무게텍스트필드.setColumns(10);
 
 		나이텍스트필드 = new JTextField();
-		나이텍스트필드.setBounds(699, 244, 116, 21);
+		나이텍스트필드.setText("나이 입력");
+		나이텍스트필드.setForeground(new Color(192, 192, 192));
+		나이텍스트필드.setBounds(685, 255, 196, 30);
 		one.add(나이텍스트필드);
 		나이텍스트필드.setColumns(10);
 
 		포지션텍스트필드 = new JTextField();
-		포지션텍스트필드.setBounds(699, 295, 116, 21);
+		포지션텍스트필드.setText("포지션 입력");
+		포지션텍스트필드.setForeground(new Color(192, 192, 192));
+		포지션텍스트필드.setBounds(685, 293, 196, 30);
 		one.add(포지션텍스트필드);
 		포지션텍스트필드.setColumns(10);
 
 		담당코치텍스트필드 = new JTextField();
-		담당코치텍스트필드.setBounds(699, 348, 116, 21);
+		담당코치텍스트필드.setText("담당코치 이름 입력");
+		담당코치텍스트필드.setForeground(new Color(192, 192, 192));
+		담당코치텍스트필드.setBounds(685, 331, 196, 30);
 		one.add(담당코치텍스트필드);
 		담당코치텍스트필드.setColumns(10);
 
 		담당의사텍스트필드 = new JTextField();
-		담당의사텍스트필드.setBounds(699, 390, 116, 21);
+		담당의사텍스트필드.setText("담당의사 이름 입력");
+		담당의사텍스트필드.setForeground(new Color(192, 192, 192));
+		담당의사텍스트필드.setBounds(685, 371, 196, 30);
 		one.add(담당의사텍스트필드);
 		담당의사텍스트필드.setColumns(10);
 
-		아이디텍스트필드 = new JTextField();
-		아이디텍스트필드.setBounds(302, 164, 116, 21);
+		아이디텍스트필드 = new JTextField(15);
+		아이디텍스트필드.setForeground(new Color(192, 192, 192));
+		아이디텍스트필드.setText("아이디 입력");
+		아이디텍스트필드.setOpaque(false);
+		
+		
+		아이디텍스트필드.setBounds(685, 147, 99, 31);
 		one.add(아이디텍스트필드);
 		아이디텍스트필드.setColumns(10);
 
 		비밀번호텍스트필드 = new JTextField();
-		비밀번호텍스트필드.setBounds(302, 229, 116, 21);
+		비밀번호텍스트필드.setText("비밀번호 입력");
+		비밀번호텍스트필드.setForeground(new Color(192, 192, 192));
+		비밀번호텍스트필드.setBounds(685, 212, 196, 30);
 		one.add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
 
-		이미지등록버튼 = new JButton("이미지등록");
-		이미지등록버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				이미지를화면에등록하는메소드();
-			}
-		});
-		이미지등록버튼.setBounds(64, 347, 126, 23);
-		one.add(이미지등록버튼);
-
-		저장버튼 = new JButton("저장");
+		저장버튼 = new JButton("");
 		저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				identity등록메소드();
@@ -1062,43 +1037,67 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			}
 		});
 
-		저장버튼.setBounds(871, 368, 81, 39);
+		저장버튼.setBounds(907, 366, 54, 38);
+		저장버튼.setOpaque(false);
+		저장버튼.setContentAreaFilled(false);
+		저장버튼.setBorderPainted(false);
+		저장버튼.setFocusPainted(false);
 		one.add(저장버튼);
-
-		등번호라벨 = new JLabel("등번호");
-		등번호라벨.setBounds(618, 56, 64, 15);
-		one.add(등번호라벨);
+		
+				
+				이미지등록버튼 = new JButton("");
+				이미지등록버튼.setBackground(new Color(255, 255, 255));
+				이미지등록버튼.setIcon(null);
+				이미지등록버튼.setBorderPainted(false);
+				이미지등록버튼.setOpaque(false);
+				이미지등록버튼.setFocusPainted(false);
+				이미지등록버튼.setContentAreaFilled(false);
+				이미지등록버튼.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						이미지등록창.setVisible(true);
+						이미지를화면에등록하는메소드();
+					}
+				});
+				이미지등록버튼.setBounds(816, 42, 77, 25);
+				one.add(이미지등록버튼);
 
 		등번호텍스트필드 = new JTextField();
-		등번호텍스트필드.setBounds(699, 53, 116, 21);
+		등번호텍스트필드.setText("등번호 입력");
+		등번호텍스트필드.setForeground(new Color(192, 192, 192));
+		등번호텍스트필드.setBounds(430, 254, 98, 29);
 		one.add(등번호텍스트필드);
 		등번호텍스트필드.setColumns(10);
 
 		이미지등록창 = new JPanel();
-		이미지등록창.setBounds(26, 106, 192, 211);
+		이미지등록창.setBackground(new Color(22, 47, 138));
+		이미지등록창.setForeground(new Color(255, 255, 255));
+		이미지등록창.setBounds(690, 20, 100, 265);
 		one.add(이미지등록창);
-
-		JLabel 선수등록라벨 = new JLabel("선수등록");
-		선수등록라벨.setBounds(713, 10, 116, 15);
-		one.add(선수등록라벨);
-
-		JLabel identity등록라벨 = new JLabel("identity등록");
-		identity등록라벨.setBounds(333, 56, 116, 15);
-		one.add(identity등록라벨);
-
-		JButton 중복확인버튼 = new JButton("중복확인");
-		중복확인버튼.setBounds(451, 163, 97, 23);
-		one.add(중복확인버튼);
-		중복확인버튼.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				아이디중복확인();
-			}
-		});
+		이미지등록창.setLayout(null);
 
 		사용가능유무라벨 = new JLabel("중복확인 버튼을 누르세요");
-		사용가능유무라벨.setBounds(312, 195, 178, 15);
+		사용가능유무라벨.setForeground(new Color(255, 255, 255));
+		사용가능유무라벨.setBounds(606, 188, 178, 15);
 		one.add(사용가능유무라벨);
+		
+				JButton 중복확인버튼 = new JButton("");
+				중복확인버튼.setBounds(808, 151, 74, 25);
+				중복확인버튼.setBorderPainted(false);
+				중복확인버튼.setOpaque(false);
+				중복확인버튼.setFocusPainted(false);
+				중복확인버튼.setContentAreaFilled(false);
+				one.add(중복확인버튼);
+				중복확인버튼.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						아이디중복확인();
+					}
+				});
+
+		lblNewLabel_4 = new JLabel("New label");
+		lblNewLabel_4.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수등록화면-배경만-5.jpg")));
+		lblNewLabel_4.setBounds(0, 0, 979, 431);
+		one.add(lblNewLabel_4);
 
 		// ==================================================================
 
@@ -1111,58 +1110,52 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		two.setLayout(null);
 
-		JLabel lblNewLabel_1 = new JLabel("이름");
-		lblNewLabel_1.setBounds(193, 54, 57, 15);
-		two.add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel("나이");
-		lblNewLabel_2.setBounds(193, 106, 57, 15);
-		two.add(lblNewLabel_2);
-
-		JLabel lblNewLabel_3 = new JLabel("직책");
-		lblNewLabel_3.setBounds(193, 158, 57, 15);
-		two.add(lblNewLabel_3);
-
 		textField = new JTextField();
-		textField.setBounds(239, 51, 116, 21);
+		textField.setText("이름 입력");
+		textField.setForeground(new Color(192, 192, 192));
+		textField.setBounds(684, 293, 199, 30);
 		two.add(textField);
 		textField.setColumns(10);
 
 		textField_1 = new JTextField();
-		textField_1.setBounds(239, 103, 116, 21);
+		textField_1.setText("나이 입력");
+		textField_1.setForeground(new Color(192, 192, 192));
+		textField_1.setBounds(684, 332, 199, 30);
 		two.add(textField_1);
 		textField_1.setColumns(10);
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(239, 155, 116, 21);
+		textField_2.setText("직책 입력");
+		textField_2.setForeground(new Color(192, 192, 192));
+		textField_2.setBounds(684, 370, 199, 30);
 		two.add(textField_2);
 		textField_2.setColumns(10);
 
-		JLabel lblNewLabel_5 = new JLabel("ID");
-		lblNewLabel_5.setBounds(414, 58, 57, 15);
-		two.add(lblNewLabel_5);
-
-		JLabel lblNewLabel_6 = new JLabel("PW");
-		lblNewLabel_6.setBounds(414, 110, 57, 15);
-		two.add(lblNewLabel_6);
-
-		//		textField_3 = new JTextField();
-		//		textField_3.setBounds(515, 51, 116, 21);
-		//		two.add(textField_3);
-		//		textField_3.setColumns(10);
+		// textField_3 = new JTextField();
+		// textField_3.setBounds(515, 51, 116, 21);
+		// two.add(textField_3);
+		// textField_3.setColumns(10);
 
 		textField_4 = new JTextField();
-		textField_4.setBounds(510, 55, 116, 21);
+		textField_4.setText("아이디 입력");
+		textField_4.setForeground(new Color(192, 192, 192));
+		textField_4.setBounds(684, 148, 103, 30);
 		two.add(textField_4);
 		textField_4.setColumns(10);
 
 		textField_5 = new JTextField();
-		textField_5.setBounds(510, 107, 116, 21);
+		textField_5.setText("비밀번호 입력");
+		textField_5.setForeground(new Color(192, 192, 192));
+		textField_5.setBounds(684, 213, 199, 30);
 		two.add(textField_5);
 		textField_5.setColumns(10);
 
-		JButton btnNewButton = new JButton("등록");
-		btnNewButton.setBounds(529, 191, 97, 23);
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setOpaque(false);
+		btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setFocusPainted(false);
+		btnNewButton.setBounds(910, 370, 46, 30);
 		two.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -1172,16 +1165,26 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			}
 		});
-		JButton btnNewButton_1 = new JButton("이미지");
-		btnNewButton_1.setBounds(32, 239, 97, 23);
+		JButton btnNewButton_1 = new JButton("");
+		btnNewButton_1.setOpaque(false);
+		btnNewButton_1.setContentAreaFilled(false);
+		btnNewButton_1.setBorderPainted(false);
+		btnNewButton_1.setFocusPainted(false);
+		btnNewButton_1.setBounds(814, 43, 78, 23);
 		two.add(btnNewButton_1);
 
 		panel = new JPanel();
-		panel.setBounds(12, 38, 136, 187);
+		panel.setBackground(new Color(22, 47, 138));
+		panel.setBounds(690, 20, 100, 100);
+		panel.setVisible(true);//욱진
 		two.add(panel);
 
-		JButton btnNewButton_2 = new JButton("중복확인");
-		btnNewButton_2.setBounds(652, 54, 97, 23);
+		JButton btnNewButton_2 = new JButton("");
+		btnNewButton_2.setOpaque(false);
+		btnNewButton_2.setContentAreaFilled(false);
+		btnNewButton_2.setBorderPainted(false);
+		btnNewButton_2.setFocusPainted(false);
+		btnNewButton_2.setBounds(805, 152, 78, 23);
 		two.add(btnNewButton_2);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			@Override
@@ -1190,9 +1193,15 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			}
 		});
 
-		lblNewLabel_7 = new JLabel("중복여부");
-		lblNewLabel_7.setBounds(510, 82, 239, 15);
+		lblNewLabel_7 = new JLabel("중복확인 버튼을 누르세요");
+		lblNewLabel_7.setForeground(new Color(255, 255, 255));
+		lblNewLabel_7.setBounds(606, 188, 239, 15);
 		two.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_9 = new JLabel("New label");
+		lblNewLabel_9.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프등록화면.jpg")));
+		lblNewLabel_9.setBounds(0, 0, 979, 431);
+		two.add(lblNewLabel_9);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1314,45 +1323,40 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		컨디션창.setBounds(192, 57, 787, 376);
 		three.add(컨디션창);
 		컨디션창.setLayout(null);
-		
+
 		scrolledTable_1 = new JScrollPane((Component) null);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		scrolledTable_1.setBounds(23, 28, 694, 110);
 		컨디션창.add(scrolledTable_1);
-		
-		conditionTable = new JTable(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"number", "playername", "playercondition", "when"
-			}
-		));
+
+		conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "number", "playername", "playercondition", "when" }));
 		scrolledTable_1.setViewportView(conditionTable);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(146, 177, 195, 138);
 		컨디션창.add(scrollPane);
-		
+
 		선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
 		scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
-		
+
 		선수컨디션라벨 = new JLabel("선수 컨디션");
 		선수컨디션라벨.setHorizontalAlignment(SwingConstants.RIGHT);
 		선수컨디션라벨.setBounds(37, 240, 96, 15);
 		컨디션창.add(선수컨디션라벨);
-		
+
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(489, 177, 195, 138);
 		컨디션창.add(scrollPane_1);
-		
+
 		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
 		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
-		
+
 		코멘트라벨 = new JLabel("코멘트");
 		코멘트라벨.setHorizontalAlignment(SwingConstants.RIGHT);
 		코멘트라벨.setBounds(381, 240, 96, 15);
 		컨디션창.add(코멘트라벨);
-		
+
 		JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
 		선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
 		컨디션창.add(선수목록_컨디션_저장버튼);
@@ -1535,8 +1539,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		lblNewLabel_8.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수위-배경.jpg")));
 		lblNewLabel_8.setBounds(0, 0, 984, 104);
 		getContentPane().add(lblNewLabel_8);
-
 		this.setSize(1000, 600);
+		setLocation(470, 100);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}// end
