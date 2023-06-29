@@ -37,6 +37,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 public class PlayerTab extends JFrame implements ChangeListener {
@@ -46,12 +47,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	public static JComboBox comboBox;
 	private JTextArea playerconditionText;
 	public static JComboBox dateComboBox;
-	private JTable table_1;
-	private JTable table_2;
+	private static JTable conditionCommentTable;
+	private static JTable doctorCommentTable;
 
 	public PlayerTab() {
-		player = new Player();
 		LocalDate currentDate = LocalDate.now();
+		player = new Player();
+
+		JTextPane commentTp = new JTextPane();
 
 		JPanel one, two;
 		pane = new JTabbedPane();
@@ -72,24 +75,20 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		commentLbl.setBounds(152, 376, 49, 61);
 		one.add(commentLbl);
 
-		// 공동일정 라벨
-		JLabel commonScheduleLbl = new JLabel("공동일정");
-		commonScheduleLbl.setBounds(125, 9, 653, 54);
-		one.add(commonScheduleLbl);
-
+		// 공동일정 스크롤
+		JTextPane commonScheduleTp = new JTextPane();
+		
 		List<CommonSchedule> scTodayList = viewCommonSchedule(currentDate.toString());
-		commonScheduleLbl.setText(scTodayList.toString());
+		
+		String csStr = printCommonSchedule(scTodayList);
 
-		List<Comment> comTodayList = viewComment(player.getBackNumber(), currentDate.toString());
-
-		// 코멘트 스크롤
-		JLabel commentLbl2 = new JLabel();
-		commentLbl2.setBounds(1, 1, 265, 267);
-		one.add(commentLbl2);
-
-		JScrollPane scrollPane = new JScrollPane(commentLbl2);
-		scrollPane.setBounds(56, 115, 267, 269);
-		one.add(scrollPane);
+		commonScheduleTp.setText(csStr);
+		commonScheduleTp.setEditable(false);
+		
+		
+		JScrollPane scrollPane2 = new JScrollPane(commonScheduleTp);
+		scrollPane2.setBounds(125, 9, 653, 54);
+		one.add(scrollPane2);
 
 		// 콤보박스
 		comboBox = new JComboBox();
@@ -107,11 +106,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
+				// 수정수정!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				List<CommonSchedule> csList = viewCommonSchedule(index);
-				commonScheduleLbl.setText(csList.toString());
+				
+				String csStr = printCommonSchedule(csList);
+				commonScheduleTp.setText(csStr);
 
-				List<Comment> cmtList = viewComment(player.getBackNumber(), index);
-				commentLbl2.setText(cmtList.toString());
+				String scheduleSql = "SELECT SUBSTRING(datetime, 12, 5), schedulecomment FROM comment \r\n"
+						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
+
+				List<Comment> cmtList = viewComment(player.getBackNumber(), index, scheduleSql);
+			
+				String coStr = printComment(cmtList);
+				commentTp.setText(coStr);
 
 				List<Schedule> scList = viewPersonalSchedule(player.getBackNumber(), index);
 				insertTabel(scList);
@@ -119,6 +126,22 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		one.add(comboBox);
+
+		// 코멘트 스크롤
+
+		String scheduleSql = "SELECT SUBSTRING(datetime, 12, 5), schedulecomment FROM comment \r\n"
+				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
+		List<Comment> scCommentList = viewComment(player.getBackNumber(), comboBox.getSelectedItem().toString(),
+				scheduleSql);
+		
+		String coStr = printComment(scCommentList);
+
+		commentTp.setText(coStr);
+		commentTp.setEditable(false);
+
+		JScrollPane scrollPane = new JScrollPane(commentTp);
+		scrollPane.setBounds(56, 115, 267, 269);
+		one.add(scrollPane);
 
 		// 등록 버튼 누르면 새 창 열림
 		JButton regiBtn = new JButton("등록");
@@ -201,7 +224,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		JLabel commentLbl_ = new JLabel("일정 코멘트");
+		JLabel commentLbl_ = new JLabel("컨디션 코멘트");
 		commentLbl_.setBounds(323, 25, 97, 28);
 		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
 		two.add(commentLbl_);
@@ -238,15 +261,51 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 		dateComboBox.setSelectedIndex(15);
 
+		dateComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox<String> jcb = (JComboBox) e.getSource();
+				String index = String.valueOf(jcb.getSelectedItem());
+
+				String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
+						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+
+				List<Comment> conditionCommentList = viewComment(player.getBackNumber(), index, sql);
+				insertCommentTabel(conditionCommentList, conditionCommentTable);
+
+				String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
+						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
+
+				List<Comment> doctorCommentList = viewComment(player.getBackNumber(), index, sql2);
+				insertCommentTabel(doctorCommentList, doctorCommentTable);
+
+				if (!index.equals(currentDate.toString())) {
+					saveBtn.setEnabled(false);
+				} else {
+					saveBtn.setEnabled(true);
+				}
+
+			}
+		});
+
 		JScrollPane scrolledTable_1 = new JScrollPane((Component) null);
 		scrolledTable_1.setBounds(323, 63, 532, 141);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_1);
 
-		table_1 = new JTable(
+		// 컨디션 코멘트 테이블
+		conditionCommentTable = new JTable(
 				new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8" }));
-		table_1.setBounds(0, 0, 457, 1);
-		scrolledTable_1.setViewportView(table_1);
+
+		String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
+				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+
+		List<Comment> conditionCommentList = viewComment(player.getBackNumber(),
+				dateComboBox.getSelectedItem().toString(), sql);
+		insertCommentTabel(conditionCommentList, conditionCommentTable);
+
+		conditionCommentTable.setBounds(0, 0, 457, 1);
+		scrolledTable_1.setViewportView(conditionCommentTable);
 
 		JLabel lblNewLabel_2 = new JLabel("의사 코멘트");
 		lblNewLabel_2.setBounds(343, 214, 77, 15);
@@ -257,16 +316,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrolledTable_2.setBounds(333, 239, 515, 158);
 		two.add(scrolledTable_2);
 
-		table_2 = new JTable(
-				new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"\uC2DC\uAC04", "\uCF54\uBA58\uD2B8"
-			}
-		));
-		table_2.setBounds(0, 0, 457, 1);
-		scrolledTable_2.setViewportView(table_2);
+		// 의사 코멘트 테이블
+		doctorCommentTable = new JTable(
+				new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8" }));
+
+		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
+				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
+
+		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
+				sql2);
+		insertCommentTabel(doctorCommentList, doctorCommentTable);
+
+		doctorCommentTable.setBounds(0, 0, 457, 1);
+		scrolledTable_2.setViewportView(doctorCommentTable);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
@@ -294,6 +356,11 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		String msg = pane.getTitleAt(index); // index 위에 탭 문자열을 가져옴
 		pane.setSelectedIndex(index); // 현재 선택한 탭으로 화면 출력 변경
 	}
+
+	// 일정 코멘트 리스트를 JTextPane에 넣기
+//	private static void insertTextPane(List<Comment> list) {
+//		
+//	}
 
 	// 공동일정 리스트 생성 메소드
 	private static List<CommonSchedule> viewCommonSchedule(String date) {
@@ -329,39 +396,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return list;
 	}
 
-	// 코멘트 리스트 생성 메소드
-	private static List<Comment> viewComment(int number, String datetime) {
-		List<Comment> list = new ArrayList<>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT SUBSTRING(datetime, 12, 5), schedulecomment FROM comment \r\n"
-					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, datetime);
-			stmt.setInt(2, number);
-
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				String time = rs.getString(1);
-				String scheduleComment = rs.getString(2);
-
-				Comment comment = new Comment(time, scheduleComment);
-				list.add(comment);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return list;
-	}
-
 	// 개인 일정 리스트 생성
 	private static List<Schedule> viewPersonalSchedule(int number, String date) {
 		List<Schedule> list = new ArrayList<>();
@@ -371,7 +405,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT starttime, endtime, content FROM playerschedule \r\n"
+			String sql = "SELECT starttime, endtime, content, confirm FROM playerschedule \r\n"
 					+ "WHERE number = ? AND date = ?;";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, number);
@@ -382,8 +416,9 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				String starttime = rs.getString(1);
 				String endtime = rs.getString(2);
 				String content = rs.getString(3);
+				String check = rs.getString(4);
 
-				Schedule schedule = new Schedule(starttime, endtime, content);
+				Schedule schedule = new Schedule(starttime, endtime, content, check);
 				list.add(schedule);
 			}
 		} catch (SQLException e) {
@@ -421,12 +456,11 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	// 테이블 기록 가져오기
 	private static void insertTabel(List<Schedule> list) {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		// 기존의 테이블 데이터 초기화
 		tableModel.setRowCount(0);
 
-		// filteredList의 데이터를 테이블 모델에 추가
 		for (Schedule schedule : list) {
-			Object[] rowData = { schedule.getStartTime(), schedule.getEndTime(), schedule.getContent() };
+			Object[] rowData = { schedule.getStartTime(), schedule.getEndTime(), schedule.getContent(),
+					schedule.getCheck() };
 			tableModel.addRow(rowData);
 		}
 	}
@@ -510,8 +544,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return conditionList;
 	}
 
-	// 컨디션 코멘트 리스트 생성 메소드
-	private static List<Comment> viewConditionComment(int number, String datetime) {
+	// 일정 코멘트 & 컨디션 코멘트 & 의사 코멘트 리스트 생성 메소드
+	private static List<Comment> viewComment(int number, String datetime, String sql) {
 		List<Comment> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -519,8 +553,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
-					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, datetime);
 			stmt.setInt(2, number);
@@ -528,10 +561,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				String time = rs.getString(1);
-				String scheduleComment = rs.getString(2);
+				String comment = rs.getString(2);
 
-				Comment comment = new Comment(time, scheduleComment);
-				list.add(comment);
+				System.out.println(time);
+				System.out.println(comment);
+
+				Comment c = new Comment(time, comment);
+				list.add(c);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -543,19 +579,38 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return list;
 	}
 
-	// 컨디션 코멘트 JTable에 가져오기
-//	private static void insertTabel(List<Comment> list) {
-//		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-//		// 기존의 테이블 데이터 초기화
-//		tableModel.setRowCount(0);
-//
-//		// filteredList의 데이터를 테이블 모델에 추가
-//		for (Comment comment : list) {
-//			Object[] rowData = { comment.getStartTime(), comment.getEndTime(), comment.getContent() };
-//			tableModel.addRow(rowData);
-//		}
-//	}
+	// 테이블에 코멘트 넣는 메소드
+	private static void insertCommentTabel(List<Comment> list, JTable table) {
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
 
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Comment comment : list) {
+			Object[] rowData = { comment.getDatetime(), comment.getConditioncomment() };
+			tableModel.addRow(rowData);
+		}
+	}
+	
+	// 공동일정 보여주는 메소드
+	private static String printCommonSchedule (List<CommonSchedule> list) {
+		String str = "";
+		for (CommonSchedule cs : list) {
+			str = cs.getDate() + " " + cs.getStartTime() + "~" + cs.getEndTime() + 
+					"\n장소 : " + cs.getLocation() +  "\n내용 : " + cs.getContent() + "\n";
+		}
+		return str;
+	}
+	
+	// 일정 코멘트 보여주는 메소드
+	private static String printComment (List<Comment> list) {
+		String str = "";
+		for (Comment comment : list) {
+			str = comment.getDatetime() + " : " + comment.getConditioncomment() + "\n";
+		}
+		return str;
+	}
+	
 	public static void main(String[] args) {
 		new PlayerTab();
 

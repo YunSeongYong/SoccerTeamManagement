@@ -6,6 +6,12 @@ public class Comment {
 	private String doctorcomment;
 	private String who;
 	
+	Comment(String datetime, String conditioncomment) {
+		super();
+		this.datetime = datetime;
+		this.conditioncomment = conditioncomment;
+	}
+
 	public Comment(int number, String datetime, String schedulecomment, String conditioncomment, String doctorcomment,
 			String who) {
 		super();
@@ -70,7 +76,7 @@ public class Comment {
 		return "Comment [number=" + number + ", datetime=" + datetime + ", schedulecomment=" + schedulecomment
 				+ ", conditioncomment=" + conditioncomment + ", doctorcomment=" + doctorcomment + ", who=" + who + "]";
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
