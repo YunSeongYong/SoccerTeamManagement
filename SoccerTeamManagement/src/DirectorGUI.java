@@ -1088,16 +1088,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		two.add(textField_2);
 		textField_2.setColumns(10);
 
-		JLabel lblNewLabel_4 = new JLabel("ID Number");
-		lblNewLabel_4.setBounds(419, 54, 76, 15);
-		two.add(lblNewLabel_4);
-
 		JLabel lblNewLabel_5 = new JLabel("ID");
-		lblNewLabel_5.setBounds(419, 106, 57, 15);
+		lblNewLabel_5.setBounds(414, 58, 57, 15);
 		two.add(lblNewLabel_5);
 
 		JLabel lblNewLabel_6 = new JLabel("PW");
-		lblNewLabel_6.setBounds(419, 158, 57, 15);
+		lblNewLabel_6.setBounds(414, 110, 57, 15);
 		two.add(lblNewLabel_6);
 
 //		textField_3 = new JTextField();
@@ -1106,17 +1102,17 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 //		textField_3.setColumns(10);
 
 		textField_4 = new JTextField();
-		textField_4.setBounds(515, 103, 116, 21);
+		textField_4.setBounds(510, 55, 116, 21);
 		two.add(textField_4);
 		textField_4.setColumns(10);
 
 		textField_5 = new JTextField();
-		textField_5.setBounds(515, 155, 116, 21);
+		textField_5.setBounds(510, 107, 116, 21);
 		two.add(textField_5);
 		textField_5.setColumns(10);
 
 		JButton btnNewButton = new JButton("등록");
-		btnNewButton.setBounds(534, 239, 97, 23);
+		btnNewButton.setBounds(529, 191, 97, 23);
 		two.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -1135,7 +1131,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		two.add(panel);
 
 		JButton btnNewButton_2 = new JButton("중복확인");
-		btnNewButton_2.setBounds(657, 102, 97, 23);
+		btnNewButton_2.setBounds(652, 54, 97, 23);
 		two.add(btnNewButton_2);
 		btnNewButton_2.addActionListener(new ActionListener() {
 			@Override
@@ -1145,7 +1141,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		});
 
 		lblNewLabel_7 = new JLabel("중복여부");
-		lblNewLabel_7.setBounds(515, 130, 239, 15);
+		lblNewLabel_7.setBounds(510, 82, 239, 15);
 		two.add(lblNewLabel_7);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			@Override
