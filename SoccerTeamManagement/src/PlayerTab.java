@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
@@ -47,7 +46,9 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	public static JComboBox comboBox;
 	private JTextArea playerconditionText;
 	public static JComboBox dateComboBox;
-	
+	private JTable table_1;
+	private JTable table_2;
+
 	public PlayerTab() {
 		player = new Player();
 		LocalDate currentDate = LocalDate.now();
@@ -85,7 +86,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		JLabel commentLbl2 = new JLabel();
 		commentLbl2.setBounds(1, 1, 265, 267);
 		one.add(commentLbl2);
-		commentLbl2.setText(comTodayList.toString());
 
 		JScrollPane scrollPane = new JScrollPane(commentLbl2);
 		scrollPane.setBounds(56, 115, 267, 269);
@@ -196,24 +196,25 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		// 컨디션 등록 탭
+		// ////////////////////////////////////////////////////////////////////////////
 		two = new JPanel();
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		JLabel commentLbl_ = new JLabel("코멘트");
+		JLabel commentLbl_ = new JLabel("일정 코멘트");
+		commentLbl_.setBounds(323, 25, 97, 28);
 		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
-		commentLbl_.setBounds(40, 261, 889, 148);
 		two.add(commentLbl_);
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(40, 57, 889, 142);
+		scrollPane_1.setBounds(40, 59, 250, 312);
 		two.add(scrollPane_1);
-		
+
 		playerconditionText = new JTextArea();
-		scrollPane_1.setViewportView(playerconditionText);
-		
+		scrollPane_1.setColumnHeaderView(playerconditionText);
+
 		JButton saveBtn = new JButton("저장");
-		saveBtn.setBounds(832, 209, 97, 23);
+		saveBtn.setBounds(113, 386, 97, 23);
 		two.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
 			@Override
@@ -221,12 +222,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				insertCondition(player);
 			}
 		});
-		
+
 		JLabel lblNewLabel_1 = new JLabel("오늘의 몸 상태");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(40, 32, 86, 15);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		two.add(lblNewLabel_1);
-		
+
 		dateComboBox = new JComboBox();
 		dateComboBox.setBounds(837, 10, 92, 21);
 		two.add(dateComboBox);
@@ -236,6 +237,36 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			dateComboBox.addItem(minusDate.plusDays(i));
 		}
 		dateComboBox.setSelectedIndex(15);
+
+		JScrollPane scrolledTable_1 = new JScrollPane((Component) null);
+		scrolledTable_1.setBounds(323, 63, 532, 141);
+		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		two.add(scrolledTable_1);
+
+		table_1 = new JTable(
+				new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8" }));
+		table_1.setBounds(0, 0, 457, 1);
+		scrolledTable_1.setViewportView(table_1);
+
+		JLabel lblNewLabel_2 = new JLabel("의사 코멘트");
+		lblNewLabel_2.setBounds(343, 214, 77, 15);
+		two.add(lblNewLabel_2);
+
+		JScrollPane scrolledTable_2 = new JScrollPane((Component) null);
+		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		scrolledTable_2.setBounds(333, 239, 515, 158);
+		two.add(scrolledTable_2);
+
+		table_2 = new JTable(
+				new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"\uC2DC\uAC04", "\uCF54\uBA58\uD2B8"
+			}
+		));
+		table_2.setBounds(0, 0, 457, 1);
+		scrolledTable_2.setViewportView(table_2);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
@@ -410,66 +441,63 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 		model.removeRow(index);
 	}
-	
+
 	// 선수 이름 찾기
 	private static String getPlayerName(int backNumber) {
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-	    String playerName = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String playerName = null;
 
-	    try {
-	        conn = DBUtil.getConnection();
-	        String sql = "SELECT name FROM players WHERE backnumber = ?";
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setInt(1, backNumber);
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT name FROM players WHERE backnumber = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, backNumber);
 
-	        rs = stmt.executeQuery();
-	        if (rs.next()) {
-	            playerName = rs.getString("name");
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        DBUtil.close(rs);
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
-	    return playerName;
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				playerName = rs.getString("name");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return playerName;
 	}
-
 
 	// 선수 컨디션 저장
 	public void insertCondition(Player player) {
-		
-		
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    
-	    try {
-	        conn = DBUtil.getConnection();
-	        stmt = conn.prepareStatement("INSERT INTO `condition` (number, playername, playercondition) VALUES (?, ?, ?)");
-	        stmt.setInt(1, player.getBackNumber());
-	        stmt.setString(2, getPlayerName(player.getBackNumber()));
-	        stmt.setString(3, playerconditionText.getText());
-	       
-	        
-	        stmt.executeUpdate();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn
+					.prepareStatement("INSERT INTO `condition` (number, playername, playercondition) VALUES (?, ?, ?)");
+			stmt.setInt(1, player.getBackNumber());
+			stmt.setString(2, getPlayerName(player.getBackNumber()));
+			stmt.setString(3, playerconditionText.getText());
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
 	}
-	
+
 	// 날짜에 맞는 선수 컨디션 찾기
 	public List<Condition> viewCondition(int number) {
 		List<Condition> conditionList = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			conn = DBUtil.getConnection();
 			stmt = conn.prepareStatement("select playercondition from project_test.condition where number = ?");
@@ -477,13 +505,11 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 		return conditionList;
 	}
-	
-	
-	
+
 	// 컨디션 코멘트 리스트 생성 메소드
 	private static List<Comment> viewConditionComment(int number, String datetime) {
 		List<Comment> list = new ArrayList<>();
@@ -494,7 +520,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		try {
 			conn = DBUtil.getConnection();
 			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
-					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
+					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, datetime);
 			stmt.setInt(2, number);
@@ -516,7 +542,20 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 		return list;
 	}
-	
+
+	// 컨디션 코멘트 JTable에 가져오기
+//	private static void insertTabel(List<Comment> list) {
+//		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+//		// 기존의 테이블 데이터 초기화
+//		tableModel.setRowCount(0);
+//
+//		// filteredList의 데이터를 테이블 모델에 추가
+//		for (Comment comment : list) {
+//			Object[] rowData = { comment.getStartTime(), comment.getEndTime(), comment.getContent() };
+//			tableModel.addRow(rowData);
+//		}
+//	}
+
 	public static void main(String[] args) {
 		new PlayerTab();
 
