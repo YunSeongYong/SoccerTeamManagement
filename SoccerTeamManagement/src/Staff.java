@@ -11,7 +11,6 @@ public class Staff {
 		this.name = name;
 		this.age = age;
 		this.role = role;
-		
 	}
 	
 	@Override

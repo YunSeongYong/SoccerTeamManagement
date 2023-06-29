@@ -150,6 +150,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		// 수정 버튼
+		// 테이블에서 선택된 값을 가져옴
 		JButton updateBtn = new JButton("수정");
 		updateBtn.setBounds(856, 272, 81, 54);
 		one.add(updateBtn);
