@@ -36,6 +36,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.Font;
 
 public class DirectorGUI extends JFrame implements ChangeListener {
 	JTabbedPane pane;
@@ -992,7 +993,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		나이텍스트필드.setColumns(10);
 
 		포지션텍스트필드 = new JTextField();
-		포지션텍스트필드.setText("포지션 입력");
+		포지션텍스트필드.setText("포지션 입력 예) MF");
 		포지션텍스트필드.setForeground(new Color(192, 192, 192));
 		포지션텍스트필드.setBounds(685, 293, 196, 30);
 		one.add(포지션텍스트필드);
@@ -1023,7 +1024,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		아이디텍스트필드.setColumns(10);
 
 		비밀번호텍스트필드 = new JTextField();
-		비밀번호텍스트필드.setText("비밀번호 입력");
+		비밀번호텍스트필드.setText("문자 포함 4자리 이상 가능");
 		비밀번호텍스트필드.setForeground(new Color(192, 192, 192));
 		비밀번호텍스트필드.setBounds(685, 212, 196, 30);
 		one.add(비밀번호텍스트필드);
@@ -1071,13 +1072,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이미지등록창 = new JPanel();
 		이미지등록창.setBackground(new Color(22, 47, 138));
 		이미지등록창.setForeground(new Color(255, 255, 255));
-		이미지등록창.setBounds(690, 20, 100, 265);
+		이미지등록창.setBounds(690, -50, 121, 187);
 		one.add(이미지등록창);
 		이미지등록창.setLayout(null);
 
-		사용가능유무라벨 = new JLabel("중복확인 버튼을 누르세요");
+		사용가능유무라벨 = new JLabel("중복 확인 버튼을 누르세요");
+		사용가능유무라벨.setFont(new Font("굴림", Font.PLAIN, 15));
 		사용가능유무라벨.setForeground(new Color(255, 255, 255));
-		사용가능유무라벨.setBounds(606, 188, 178, 15);
+		사용가능유무라벨.setBounds(709, 186, 178, 15);
 		one.add(사용가능유무라벨);
 		
 				JButton 중복확인버튼 = new JButton("");
@@ -1125,7 +1127,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_1.setColumns(10);
 
 		textField_2 = new JTextField();
-		textField_2.setText("직책 입력");
+		textField_2.setText("직책 입력, 입력 예) 코치");
 		textField_2.setForeground(new Color(192, 192, 192));
 		textField_2.setBounds(684, 370, 199, 30);
 		two.add(textField_2);
@@ -1175,7 +1177,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		panel = new JPanel();
 		panel.setBackground(new Color(22, 47, 138));
-		panel.setBounds(690, 20, 100, 100);
+		panel.setBounds(690, 20, 100, 123);
 		panel.setVisible(true);//욱진
 		two.add(panel);
 
@@ -1193,9 +1195,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			}
 		});
 
-		lblNewLabel_7 = new JLabel("중복확인 버튼을 누르세요");
+		lblNewLabel_7 = new JLabel("중복 확인 버튼을 누르세요");
+		lblNewLabel_7.setFont(new Font("굴림", Font.PLAIN, 15));
 		lblNewLabel_7.setForeground(new Color(255, 255, 255));
-		lblNewLabel_7.setBounds(606, 188, 239, 15);
+		lblNewLabel_7.setBounds(709, 188, 176, 15);
 		two.add(lblNewLabel_7);
 		
 		JLabel lblNewLabel_9 = new JLabel("New label");
