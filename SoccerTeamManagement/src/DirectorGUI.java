@@ -136,6 +136,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTextField 공동일정등록_끝나는시간텍스트필드;
 	private JLabel lblNewLabel_15;
 	private String 공동일정등록_콤보박스에서선택한날짜;
+	private JTextArea 공동일정등록_내용텍스트박스;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -393,7 +394,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return -1;
 	}
 
-	public void 선수등록메소드() {
+	public void 선수등록_선수등록메소드() {
 		String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -420,13 +421,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
-			이미지를데이터베이스에등록하는메소드(stmt);
+			선수등록_이미지를데이터베이스에등록하는메소드(stmt);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
 	}
 
-	public void identity등록메소드() {
+	public void 선수등록_identity등록메소드() {
 		String sql = "INSERT INTO identity (no, id, password, role) VALUES (?, ?, ?, '선수')";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -452,7 +453,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 이미지를화면에등록하는메소드() {
+	public void 선수등록_이미지를화면에등록하는메소드() {
 		JFileChooser fileChooser = new JFileChooser();
 		int result = fileChooser.showOpenDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -478,7 +479,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 이미지를데이터베이스에등록하는메소드(PreparedStatement stmt) {
+	public void 선수등록_이미지를데이터베이스에등록하는메소드(PreparedStatement stmt) {
 		Connection conn = null;
 		try {
 			conn = DBUtil.getConnection();
@@ -505,7 +506,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 이미지를데이터베이스에수정하는메소드(PreparedStatement stmt) {
+	public void 선수목록_개인정보_이미지를데이터베이스에수정하는메소드(PreparedStatement stmt) {
 		Connection conn = null;
 		try {
 			conn = DBUtil.getConnection();
@@ -532,33 +533,30 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 선수정보콤보박스목록만드는메소드() {
-		if (선수정보콤보박스 == null) {
-			선수정보콤보박스 = new JComboBox<>();
-		} else {
-			선수정보콤보박스.removeAllItems();
-		}
-
-		// 콤보박스 초기화 코드 추가
-
-		Connection conn = null;
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT backnumber, name FROM players";
-			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-				try (ResultSet rs = stmt.executeQuery()) {
-					while (rs.next()) {
-						int backnumber = rs.getInt("backnumber");
-						String name = rs.getString("name");
-						String item = backnumber + " - " + name;
-						선수정보콤보박스.addItem(item);
-					}
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void 선수목록_선수정보콤보박스목록만드는메소드() {
+		
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+		선수정보콤보박스.setModel(model);
+		
+	    Connection conn = null;
+	    try {
+	        conn = DBUtil.getConnection();
+	        String sql = "SELECT backnumber, name FROM players";
+	        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    int backnumber = rs.getInt("backnumber");
+	                    String name = rs.getString("name");
+	                    String item = backnumber + " - " + name;
+	                    선수정보콤보박스.addItem(item);
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	// public void 선수정보콤보박스선택후출력메소드(int backnumber) {
 	// Connection conn = null;
@@ -589,7 +587,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	// }
 	// }
 
-	public List<Player> 선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
+	public List<Player> 선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -629,7 +627,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return playerList;
 	}
 
-	public void 콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(List<Player> playerList) {
+	public void 선수목록_개인정보_콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(List<Player> playerList) {
 		if (!playerList.isEmpty()) {
 			Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
 
@@ -660,7 +658,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 선수수정메소드(List<Player> playerList) {
+	public void 선수목록_개인정보_선수수정메소드(List<Player> playerList) {
 		Player player = playerList.get(0);
 		String sql = "UPDATE players SET backnumber=?, name=?, height=?, weight=?, age=?, position=?, coach=?, doctor=? WHERE backnumber = ?";
 		Connection conn = null;
@@ -689,13 +687,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
-			이미지를데이터베이스에수정하는메소드(stmt);
+			선수목록_개인정보_이미지를데이터베이스에수정하는메소드(stmt);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
 	}
 
-	public void 이미지를화면에수정하는메소드() {
+	public void 선수목록_개인정보_이미지를화면에수정하는메소드() {
+		이미지등록수정창.removeAll();
 		JFileChooser fileChooser = new JFileChooser();
 		int result = fileChooser.showOpenDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
@@ -725,7 +724,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 선수삭제메소드(List<Player> playerList) {
+	public void 선수목록_개인정보_선수삭제메소드(List<Player> playerList) {
 		Player player = playerList.get(0);
 		String sql = "delete from players where backnumber = ?";
 		Connection conn = null;
@@ -745,13 +744,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
-			선수정보의모든텍스트필드값제거메소드();
+			선수목록_개인정보_선수정보의모든텍스트필드값제거메소드();
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
 	}
 
-	public void 선수정보의모든텍스트필드값제거메소드() {
+	public void 선수목록_개인정보_선수정보의모든텍스트필드값제거메소드() {
 		등번호수정텍스트필드.setText("");
 		이름수정텍스트필드.setText("");
 		신장수정텍스트필드.setText("");
@@ -765,7 +764,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이미지등록수정창.repaint();
 	}
 
-	public List<Schedule> 선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(int backnumber) {
+	public List<Schedule> 선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -802,7 +801,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return scheduleList;
 	}
 
-	public void 콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
+	public void 선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
 		List<Schedule> filteredList = new ArrayList<>();
 
 		for (Schedule schedule : scheduleList) {
@@ -834,13 +833,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				int rowIndex = e.getFirstRow();
 				boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 5);
 				if (isChecked) {
-					체크박스선택시각행의값콘솔출력메소드(rowIndex);
 				}
 			}
 		});
 	}
 
-	public void 날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
+	public void 선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
 		try {
 			List<Schedule> filteredList = new ArrayList<>();
 
@@ -874,17 +872,22 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 	}
 
-	public void 체크박스선택시각행의값콘솔출력메소드(int rowIndex) {
-		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-		int columnCount = tableModel.getColumnCount();
+	public void 선수목록_일정_체크박스선택시각행의값콘솔출력메소드() {
+	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+	    int columnCount = tableModel.getColumnCount();
+	    int checkBoxColumnIndex = 6; // 체크박스 컬럼의 인덱스
 
-		for (int j = 0; j < columnCount - 1; j++) {
-			Object value = tableModel.getValueAt(rowIndex, j);
-			System.out.print(value + " ");
-		}
-		System.out.println();
+	    for (int rowIndex = 6; rowIndex < tableModel.getRowCount(); rowIndex++) {
+	        Boolean isSelected = (Boolean) tableModel.getValueAt(rowIndex, checkBoxColumnIndex);
+	        if (isSelected != null && isSelected) {
+	            for (int columnIndex = 0; columnIndex < columnCount - 1; columnIndex++) {
+	                Object value = tableModel.getValueAt(rowIndex, columnIndex);
+	                System.out.print(value + " ");
+	            }
+	            System.out.println();
+	        }
+	    }
 	}
-
 	public void 선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
 		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
 		Connection conn = null;
@@ -1139,7 +1142,32 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 	
-	public void 선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(String date, String startTime, String endTime, String content, String location) {
+	public void 선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
+			String sql = "INSERT INTO comment (number, datetime, doctorcomment, who) VALUES (?, current_timestamp(), ?, '감독')";
+			Connection conn = null;
+			PreparedStatement stmt = null;
+
+			try {
+				conn = DBUtil.getConnection();
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, backNumber);
+				stmt.setString(2, comment);
+
+				int result = stmt.executeUpdate();
+				if (result > 0) {
+					System.out.println("데이터가 성공적으로 저장되었습니다.");
+				} else {
+					System.out.println("데이터 저장에 실패하였습니다.");
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			} finally {
+				DBUtil.close(stmt);
+				DBUtil.close(conn);
+			}
+		}
+	
+	public void 공동일정목록_공동일정입력하고저장버튼누르면데이터베이스로이동하는메소드(String date, String startTime, String endTime, String content, String location) {
 		String sql = "INSERT INTO commonschedule (date, starttime, endtime, content, location) VALUES (?, ?, ?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -1266,7 +1294,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이미지등록버튼 = new JButton("이미지등록");
 		이미지등록버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				이미지를화면에등록하는메소드();
+				선수등록_이미지를화면에등록하는메소드();
 			}
 		});
 		이미지등록버튼.setBounds(64, 347, 126, 23);
@@ -1275,8 +1303,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		저장버튼 = new JButton("저장");
 		저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				identity등록메소드();
-				선수등록메소드();
+				선수등록_identity등록메소드();
+				선수등록_선수등록메소드();
 			}
 		});
 
@@ -1493,7 +1521,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				일정창_콤보박스에서선택한날짜 = selectedDate.format(formatter);
 
 				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 일정창_콤보박스에서선택한날짜);
-				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList,일정창_선수정보콤보박스에서선택한등번호);
@@ -1503,27 +1531,26 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수정보콤보박스 = new JComboBox();
 		선수정보콤보박스.setBounds(756, 26, 117, 21);
 		three.add(선수정보콤보박스);
-		선수정보콤보박스목록만드는메소드();
+		선수목록_선수정보콤보박스목록만드는메소드();
+
 		선수정보콤보박스.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
-				일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItem.split(" - ")[0]);
-				System.out.println(일정창_선수정보콤보박스에서선택한등번호);
-				선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(playerList);
-				선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
-				날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
-				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(conditionList);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(doctorAppointmentList);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				
-
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
+		        일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItem.split(" - ")[0]);
+		        System.out.println(일정창_선수정보콤보박스에서선택한등번호);
+		        선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
+		        선수목록_개인정보_콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(playerList);
+		        선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
+		        선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
+		        선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+		        선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+		        선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(conditionList);
+		        선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+		        선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(doctorAppointmentList);
+		        선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 			}
+			
 		});
 
 		JLabel 날짜라벨 = new JLabel("날짜");
@@ -1694,6 +1721,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			public void actionPerformed(ActionEvent arg0) {
 				String comment = 일정창_코멘트텍스트필드.getText();
 				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+				선수목록_일정_체크박스선택시각행의값콘솔출력메소드();
 			}
 		});
 		일정창_저장버튼.setBounds(626, 293, 135, 73);
@@ -1781,7 +1809,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이미지수정버튼 = new JButton("이미지수정");
 		이미지수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				이미지를화면에수정하는메소드();
+				선수목록_개인정보_이미지를화면에수정하는메소드();
 			}
 		});
 		이미지수정버튼.setBounds(48, 307, 126, 23);
@@ -1790,8 +1818,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		수정버튼 = new JButton("수정버튼");
 		수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				선수수정메소드(playerList);
-
+				선수목록_개인정보_선수수정메소드(playerList);
+				선수목록_선수정보콤보박스목록만드는메소드();
 			}
 		});
 		수정버튼.setBounds(585, 307, 90, 29);
@@ -1820,7 +1848,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
 
 				if (choice == JOptionPane.YES_OPTION) {
-					선수삭제메소드(playerList);
+					선수목록_개인정보_선수삭제메소드(playerList);
 					System.out.println("삭제되었습니다.");
 				} else {
 					System.out.println("삭제가 취소되었습니다.");
@@ -1857,16 +1885,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				공동일정등록_콤보박스에서선택한날짜 = selectedDate.format(formatter);
 
 				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 공동일정등록_콤보박스에서선택한날짜);
-				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList,일정창_선수정보콤보박스에서선택한등번호);
-				
-				공동일정목록_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(date, startTime, endTime, content, location);
-				String 시작시간 = 공동일정등록_시작시간텍스트필드.getText();
-				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
-				String 끝나는시간 = 공동일정등록_끝나는시간텍스트필드.getText();
-				String 내용 = 공동일정등록_내용텍스트박스.getText();
-				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(공동일정등록_콤보박스에서선택한날짜, 시작시간, 끝나는시간, 내용, comment);
 			}
 		});
 		
@@ -1889,7 +1907,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		scrollPane_5.setBounds(292, 172, 264, 55);
 		four.add(scrollPane_5);
 		
-		JTextArea 공동일정등록_내용텍스트박스 = new JTextArea();
+		공동일정등록_내용텍스트박스 = new JTextArea();
 		scrollPane_5.setViewportView(공동일정등록_내용텍스트박스);
 		
 		JLabel 공동일정등록_시작시간라벨 = new JLabel("시작시간");
@@ -1915,6 +1933,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		JButton 공동일정등록_저장버튼 = new JButton("저장");
 		공동일정등록_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String 시작시간 = 공동일정등록_시작시간텍스트필드.getText();
+				String 끝나는시간 = 공동일정등록_끝나는시간텍스트필드.getText();
+				String 내용 = 공동일정등록_내용텍스트박스.getText();
+				String 장소 = 공동일정등록_장소라벨.getText();
+				공동일정목록_공동일정입력하고저장버튼누르면데이터베이스로이동하는메소드(공동일정등록_콤보박스에서선택한날짜, 시작시간, 끝나는시간, 내용, 장소);
 			}
 		});
 		공동일정등록_저장버튼.setBounds(665, 293, 105, 34);
