@@ -42,6 +42,7 @@ import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import java.awt.Color;
 
 public class PlayerTab extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
@@ -97,7 +98,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		comboBox = new JComboBox();
 		comboBox.setBounds(822, 9, 131, 21);
 		LocalDate minusDate = currentDate.minusDays(15);
-		List<LocalDate> calendar = new ArrayList<LocalDate>();
+//		List<LocalDate> calendar = new ArrayList<LocalDate>();
 		for (int i = 0; i < 30; i++) {
 			comboBox.addItem(minusDate.plusDays(i));
 		}
@@ -220,6 +221,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				deleteBtn.setEnabled(true);
 			}
 		});
+		
+//		table.setRowHeight(25);
 
 		// 컨디션 등록 탭
 		// ////////////////////////////////////////////////////////////////////////////
@@ -553,7 +556,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		return conditionList;
 	}
 
-	// 일정 코멘트 & 컨디션 코멘트 & 의사 코멘트 리스트 생성 메소드
+	// 일정 코멘트 & 의사 코멘트 리스트 생성 메소드
 	private static List<Comment> viewComment(int number, String datetime, String sql) {
 		List<Comment> list = new ArrayList<>();
 		Connection conn = null;

@@ -1,8 +1,12 @@
 public class Staff {
 	private int number;
-	private String name;
+	private static String name;
 	private int age;
 	private String role;
+	
+	public Staff() {
+		
+	}
 	
 	
 	public Staff(int number, String name, int age, String role) {

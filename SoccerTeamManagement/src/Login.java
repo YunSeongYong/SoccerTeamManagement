@@ -21,9 +21,9 @@ public class Login {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JLabel lblNewLabel_2;
-	public Player player;
 	private JLabel lblNewLabel_3;
-	
+	public Player player;
+	public Staff staff;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -40,6 +40,7 @@ public class Login {
 
 	public Login() {
 		player = new Player();
+		staff = new Staff();
 		initialize();
 	}
 
@@ -92,6 +93,10 @@ public class Login {
 						player.setBackNumber(checkBackNumber(id));	
 						new PlayerTab();
 					} else if (role.equals("의사")) {
+						String name = checkName(checkNumber(id));
+						staff.setName(name);
+						System.out.println(name);
+						
 						new DoctorSchedule();
 					} else if (role.equals("코치")) {
 						new StaffRegistration();
@@ -157,6 +162,7 @@ public class Login {
 		}
 		return 0;
 	}
+	
 	// 회원정보 번호 찾기
 	private static int checkNumber(String id) {
 		Connection conn = null;
@@ -182,6 +188,7 @@ public class Login {
 		}
 		return 0;
 	}
+	
 	// 등 번호 찾기
 	private static int checkBackNumber(String id) {
 		Connection conn = null;
@@ -206,6 +213,32 @@ public class Login {
 			DBUtil.close(conn);
 		}
 		return 0;
+	}
+	
+	// 회원 정보 번호로 의사 이름 가져오기
+	private static String checkName(int number) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT name FROM staff WHERE number = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1,number);
+		
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("name");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return null;
 	}
 }
 //

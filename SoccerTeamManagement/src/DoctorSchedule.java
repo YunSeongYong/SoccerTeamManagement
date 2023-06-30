@@ -1,14 +1,8 @@
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import dbutil.DBUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,192 +16,290 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import dbutil.DBUtil;
+import javax.swing.JScrollPane;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.BorderFactory;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 public class DoctorSchedule extends JFrame implements ChangeListener {
+	private JTabbedPane pane;
 
-   private Connection con;
-   private Statement stmt;
-   private ResultSet rs;
-   
-   JTabbedPane pane;
-   JLabel lbl;
-   private JTextArea textArea;
-   private JTextField textField;
-   private JTextArea textArea2;
-   private JTextArea textArea3;
-   private JTextArea textArea4;
+	private JTable table_1;
+	private Staff staff;
 
-   public DoctorSchedule() {
-      super();
-      JPanel one, two, three;
-      pane = new JTabbedPane();
-      lbl = new JLabel("              ");
+	private JTextArea textArea;
 
-      one = new JPanel();
-      one.setBackground(Color.pink);
-      pane.addTab("의사일정", one);
-      one.setLayout(null);
+	private JButton btnNewButton;
+	private JTable table_2;
 
-      
+	public DoctorSchedule() {
+		super();
+		staff = new Staff();
+		JPanel one, two, three;
+		pane = new JTabbedPane();
 
-      textArea = new JTextArea();
-      textArea.setBounds(25, 10, 688, 85);
-      one.add(textArea);
-      textArea.setColumns(10);
+		one = new JPanel();
+		pane.addTab("예약목록", one);
+		one.setLayout(null);
 
-      JButton btnNewButton_1 = new JButton("불러오기");
-      btnNewButton_1.setBounds(725, 4, 140, 78);
-      btnNewButton_1.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            try {
-               //textArea 은 텍스트 박스 안에 있는 문장을 여러 문장으로 쓸꺼다
-               textArea.setText("");
-               // 데이터베이스에 연결합니다.
-               Connection connection = DBUtil.getConnection();
-               Statement statement = connection.createStatement();
-               String sql = "SELECT * FROM `condition`"; // 백틱 backtick
-               ResultSet resultSet = statement.executeQuery(sql);
-               while (resultSet.next()) {
-                  int no = resultSet.getInt("no");
-                  int numder = resultSet.getInt("number");
-                  String playername = resultSet.getString("playername");
-                  String plyerconditon = resultSet.getString("playercondition");
-                  LocalDateTime when = resultSet.getTimestamp("when").toLocalDateTime();
-                     //String format = String.format("%d : %d : %s : %s : %s", no, numder, playername, plyerconditon, when);
-                  //여러문장을 이렇게 쓴다 생각 하시면되요
-                  String format = String.format("%d : %d : %s : %s : %s", no, numder, playername, plyerconditon, when);
-                  System.out.println(format);
-                  textArea.append(format+"\n");
-               }
+		// 날짜 콤보 박스
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(810, 32, 145, 27);
+		one.add(comboBox);
 
-            } catch (SQLException e1) {
-               e1.printStackTrace();
-            }
-         }
-      });
-      one.add(btnNewButton_1);
-      
-      JComboBox comboBox = new JComboBox();
-      comboBox.setBounds(876, 4, 61, 34);
-      comboBox.addItem("다른의사");
-      
-      comboBox.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent e) {
-              // 3번째 탭으로 이동
-              JTabbedPane tabbedPane = (JTabbedPane) comboBox.getParent();
-              tabbedPane.setSelectedIndex(2);
-          }
-      });
-      one.add(comboBox);
-      
+		LocalDate currentDate = LocalDate.now();
+		LocalDate minusDate2 = currentDate.minusDays(15);
+		for (int i = 0; i < 15; i++) {
+			comboBox.addItem(currentDate.plusDays(i));
+		}
+		comboBox.setSelectedIndex(0);
 
-      two = new JPanel();
-      two.setBackground(Color.yellow);
-      pane.addTab("Two", two);
-      two.setLayout(null);
-      
-      textField = new JTextField();
-      textField.setBounds(12, 10, 588, 74);
-      two.add(textField);
-      textField.setColumns(10);
-      
-      textArea2 = new JTextArea();
-      textArea2.setBounds(12, 104, 588, 74);
-      two.add(textArea2);
-      textArea2.setColumns(10);
-      
-      textArea3 = new JTextArea();
-      textArea3.setBounds(12, 200, 588, 68);
-      two.add(textArea3);
-      textArea3.setColumns(10);
-      
-      textArea4 = new JTextArea();
-      textArea4.setBounds(12, 299, 588, 60);
-      two.add(textArea4);
-      textArea4.setColumns(10);
-      
-      
-      JButton btnNewButton_2 = new JButton("넣기");
-      btnNewButton_2.setBounds(695, 10, 167, 74);
-      btnNewButton_2.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            Connection conn =null;
-            PreparedStatement statement = null;
-            try {
-               //textArea 은 텍스트 박스 안에 있는 문장을 여러 문장으로 쓸꺼다
-               String string = textField.getText();
-               String string2 = textArea2.getText();
-               String string3 = textArea3.getText();
-               String string4 = textArea4.getText();
-               
-               
-               
-               // 데이터베이스에 연결합니다.
-               conn = DBUtil.getConnection();
-               
-               statement =conn.prepareStatement("INSERT INTO comment (number, datetime, doctorcomment, who) VALUES (?, ?, ?, ?)");
-               statement.setInt(1, Integer.valueOf(string));
-               statement.setTimestamp(2, Timestamp.valueOf(string2));
-               statement.setString(3, string3);
-               statement.setString(4, string4);
-               statement.executeUpdate();
-               
-               
+		comboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox<String> jcb = (JComboBox) e.getSource();
+				String index = String.valueOf(jcb.getSelectedItem());
 
-               
+				List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
+				insertAppointmentTabel(appointmentList, table_1);
 
+//				// 저장 버튼 비활성화
 
-                  // Timestamp timestamp = Timestamp.valueOf(starttime);
-               //   String sql1 = "INSERT INTO comment (number, , doctorcomment, who) VALUES ('" + number + "', '" + starttime + "', '"  + doctorcomment + "', '" + who + "');";
-               //   statement.executeUpdate(sql1);
-               
-            } catch (SQLException e1) {
-               e1.printStackTrace();
-            } finally {
-               try {
-                  conn.close();
-               } catch (SQLException e1) {
-                  // TODO Auto-generated catch block
-                  e1.printStackTrace();
-               }
-            }
-         }
-         
-         });
-      two.add(btnNewButton_2);
-      
-      
+				btnNewButton.setEnabled(false);
 
-      three = new JPanel();
-      three.add(new JLabel("세번째 탭입니다"));
-      three.add(new JTextField("문자를 입력하세요"));
-      three.setBackground(Color.cyan);
-      pane.addTab("Three", three);
+			}
+		});
 
-      pane.setSelectedIndex(0);
-      pane.addChangeListener(this);
-      this.getContentPane().add("North", new JLabel("탭을 사용한 예"));
-      this.getContentPane().add("Center", pane);
-      this.getContentPane().add("South", lbl);
+		btnNewButton = new JButton("저장");
+		btnNewButton.setBounds(717, 478, 97, 23);
+		one.add(btnNewButton);
+		btnNewButton.setEnabled(false);
 
-      this.setSize(981, 781);
-      this.setVisible(true);
-      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-   
-   }// end
+		btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table_1.getSelectedRow();
+				System.out.println(row);
+				TableModel data = table_1.getModel();
+				int number = (Integer) data.getValueAt(row, 1);
+				System.out.println(number);
 
-   
+				insertDoctorComment(number, textArea.getText());
 
-   @Override
-   public void stateChanged(ChangeEvent e) {
-      int index = pane.getSelectedIndex();// 현재탭의 번호를 가져온다
-      String msg = pane.getTitleAt(index); // index 위에 탭 문자열을 가져옴
-      msg += "탭이 선택되었습니다";
-      lbl.setText(msg);
-      pane.setSelectedIndex(index); // 현재 선택한 탭으로 화면 출력 변경
-   }
+			}
+		});
 
-   public static void main(String[] args) {
-      new DoctorSchedule();
-   }
+		// 스크롤 팬 + 테이블
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(58, 143, 515, 307);
+		one.add(scrollPane);
+
+		table_1 = new JTable();
+		table_1.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "\uC2DC\uAC04", "\uB4F1\uBC88\uD638", "\uC774\uB984", "\uC99D\uC0C1" }));
+		scrollPane.setViewportView(table_1);
+
+		// 버튼 활성화, 비활성화 index.equals(currentDate.toString())
+		table_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (table_1.getSelectedRowCount() == 1
+						&& comboBox.getSelectedItem().toString().equals(currentDate.toString())) {
+					btnNewButton.setEnabled(true);
+				} else {
+					btnNewButton.setEnabled(false);
+				}
+			}
+		});
+
+		List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(),
+				comboBox.getSelectedItem().toString());
+		insertAppointmentTabel(appointmentList, table_1);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(617, 143, 300, 312);
+		one.add(scrollPane_1);
+
+		textArea = new JTextArea();
+		scrollPane_1.setViewportView(textArea);
+		textArea.setLineWrap(true);
+
+		two = new JPanel();
+		pane.addTab("병력보기", two);
+		two.setLayout(null);
+
+		JComboBox startComboBox = new JComboBox();
+		startComboBox.setBounds(35, 32, 145, 21);
+		two.add(startComboBox);
+
+		for (int i = 30; i >= 0; i--) {
+			startComboBox.addItem(currentDate.minusDays(i));
+		}
+		startComboBox.setSelectedIndex(0);
+
+		JComboBox endComboBox = new JComboBox();
+		endComboBox.setBounds(204, 32, 150, 21);
+		two.add(endComboBox);
+
+		for (int i = 30; i >= 0; i--) {
+			endComboBox.addItem(currentDate.minusDays(i));
+		}
+		endComboBox.setSelectedIndex(0);
+
+		JComboBox nameComboBox = new JComboBox();
+		nameComboBox.setBounds(378, 32, 150, 21);
+		two.add(nameComboBox);
+
+		JButton btnNewButton_1 = new JButton("조회");
+		btnNewButton_1.setBounds(553, 31, 97, 23);
+		two.add(btnNewButton_1);
+
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(181, 116, 545, 344);
+		two.add(scrollPane_2);
+
+		table_2 = new JTable();
+		table_2.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "\uB0A0\uC9DC", "\uB0B4\uC6A9" }));
+		scrollPane_2.setViewportView(table_2);
+
+		pane.setSelectedIndex(0);
+		pane.addChangeListener(this);
+
+		this.getContentPane().add("Center", pane);
+		this.setSize(1000, 600);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	}
+
+	// 의사 예약 일정 리스트 만들기
+	private static List<DoctorAppointment> makeAppointmentList(String name, String date) {
+		List<DoctorAppointment> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT number, name, `condition`, time FROM appointment \r\n"
+					+ "where doctor = ? AND date = ?;";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+			stmt.setString(2, date);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				// number, name, `condition`, time
+				int number = rs.getInt(1);
+				String nameParse = rs.getString(2);
+				String condition = rs.getString(3);
+				String time = rs.getString(4);
+
+				DoctorAppointment d = new DoctorAppointment(number, nameParse, time, condition);
+				list.add(d);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return list;
+	}
+
+	// 예약 일정 테이블에 넣는 메소드
+	private static void insertAppointmentTabel(List<DoctorAppointment> list, JTable table) {
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
+
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (DoctorAppointment doctor : list) {
+			Object[] rowData = { doctor.getTime(), doctor.getBacknumber(), doctor.getPlayerName(),
+					doctor.getCondition() };
+			tableModel.addRow(rowData);
+		}
+	}
+
+	// 의사 코멘트 데이터베이스에 저장
+	public void insertDoctorComment(int number, String comment) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement("INSERT INTO comment (number, doctorcomment, who) VALUES (?, ?, '의사')");
+			stmt.setInt(1, number);
+			stmt.setString(2, comment);
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	// 담당 선수 가져오는 메소드
+
+//	private static List<DoctorAppointment> makePlayerList(String doctorName) {
+//		List<DoctorAppointment> list = new ArrayList<>();
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//
+//		try {
+//			conn = DBUtil.getConnection();
+//			String sql = "SELECT backnumber, name FROM players WHERE doctor = '김의사'";
+//
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, name);
+//			stmt.setString(2, date);
+//
+//			rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				// number, name, `condition`, time
+//				int number = rs.getInt(1);
+//				String nameParse = rs.getString(2);
+//				String condition = rs.getString(3);
+//				String time = rs.getString(4);
+//
+//				DoctorAppointment d = new DoctorAppointment(number, nameParse, time, condition);
+//				list.add(d);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.close(rs);
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//		return list;
+//	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		int index = pane.getSelectedIndex();// 현재탭의 번호를 가져온다
+		String msg = pane.getTitleAt(index); // index 위에 탭 문자열을 가져옴
+		pane.setSelectedIndex(index); // 현재 선택한 탭으로 화면 출력 변경
+	}
+
+	public static void main(String[] args) {
+		new DoctorSchedule();
+	}
 }
