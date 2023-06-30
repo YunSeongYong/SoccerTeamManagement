@@ -989,7 +989,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-			String sql = "SELECT * FROM soccerteammanagement.condition WHERE number = ?";
+			String sql = "SELECT * FROM `condition` WHERE number = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, backnumber);
 			rs = stmt.executeQuery();
@@ -1084,7 +1084,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-			String sql = "SELECT * FROM soccerteammanagement.appointment WHERE number = ?";
+			String sql = "SELECT * FROM appointment WHERE number = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, backnumber);
 			rs = stmt.executeQuery();
@@ -1159,7 +1159,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-			String sql = "SELECT * FROM soccerteammanagement.comment where number = ?";
+			String sql = "SELECT * FROM comment where number = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, backnumber);
 			rs = stmt.executeQuery();
