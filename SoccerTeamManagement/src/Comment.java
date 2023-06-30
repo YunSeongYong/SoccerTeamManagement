@@ -6,10 +6,17 @@ public class Comment {
 	private String doctorcomment;
 	private String who;
 	
-	Comment(String datetime, String conditioncomment) {
+	public Comment(String datetime, String conditioncomment) {
 		super();
 		this.datetime = datetime;
 		this.conditioncomment = conditioncomment;
+	}
+	
+	public Comment(String datetime, String conditioncomment, String who) {
+		super();
+		this.datetime = datetime;
+		this.conditioncomment = conditioncomment;
+		this.who = who;
 	}
 
 	public Comment(int number, String datetime, String schedulecomment, String conditioncomment, String doctorcomment,

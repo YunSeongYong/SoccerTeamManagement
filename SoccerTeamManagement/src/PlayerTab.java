@@ -39,16 +39,19 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
+import java.awt.Font;
+import javax.swing.JTextField;
 
 public class PlayerTab extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
 	public Player player;
 	public static JTable table;
 	public static JComboBox comboBox;
-	private JTextArea playerconditionText;
 	public static JComboBox dateComboBox;
 	private static JTable conditionCommentTable;
 	private static JTable doctorCommentTable;
+	private JTextArea textArea;
 
 	public PlayerTab() {
 		LocalDate currentDate = LocalDate.now();
@@ -230,11 +233,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(commentLbl_);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(40, 59, 250, 312);
+		scrollPane_1.setBounds(40, 63, 250, 308);
 		two.add(scrollPane_1);
-
-		playerconditionText = new JTextArea();
-		scrollPane_1.setColumnHeaderView(playerconditionText);
+		
+		textArea = new JTextArea();
+		scrollPane_1.setViewportView(textArea);
+		textArea.setLineWrap(true);
 
 		JButton saveBtn = new JButton("저장");
 		saveBtn.setBounds(113, 386, 97, 23);
@@ -295,14 +299,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		// 컨디션 코멘트 테이블
 		conditionCommentTable = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8" }));
+				new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"\uC2DC\uAC04", "\uCF54\uBA58\uD2B8", "\uC791\uC131\uC790"
+			}
+		));
 
-		String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
-				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+//		String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
+//				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
 
-		List<Comment> conditionCommentList = viewComment(player.getBackNumber(),
-				dateComboBox.getSelectedItem().toString(), sql);
-		insertCommentTabel(conditionCommentList, conditionCommentTable);
+		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString());
+		insertConditionCommentTabel(conditionCommentList, conditionCommentTable);
 
 		conditionCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_1.setViewportView(conditionCommentTable);
@@ -312,8 +321,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(lblNewLabel_2);
 
 		JScrollPane scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		scrolledTable_2.setBounds(333, 239, 515, 158);
+		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_2);
 
 		// 의사 코멘트 테이블
@@ -514,7 +523,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 					.prepareStatement("INSERT INTO `condition` (number, playername, playercondition) VALUES (?, ?, ?)");
 			stmt.setInt(1, player.getBackNumber());
 			stmt.setString(2, getPlayerName(player.getBackNumber()));
-			stmt.setString(3, playerconditionText.getText());
+			stmt.setString(3, textArea.getText());
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -588,6 +597,54 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		// filteredList의 데이터를 테이블 모델에 추가
 		for (Comment comment : list) {
 			Object[] rowData = { comment.getDatetime(), comment.getConditioncomment() };
+			tableModel.addRow(rowData);
+		}
+	}
+	
+	// 컨디션 코멘트 리스트 만들기
+	private static List<Comment> viewConditionComment(int number, String datetime) {
+		List<Comment> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment, who FROM comment\r\n" + 
+					"WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, datetime);
+			stmt.setInt(2, number);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				String time = rs.getString(1);
+				String comment = rs.getString(2);
+				String who = rs.getString(3);
+
+				Comment c = new Comment(time, comment, who);
+				list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return list;
+	}
+	
+	// 컨디션 코멘트 테이블에 넣는 메소드
+	private static void insertConditionCommentTabel(List<Comment> list, JTable table) {
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
+
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Comment comment : list) {
+			Object[] rowData = {comment.getDatetime(), comment.getConditioncomment(), comment.getWho()};
 			tableModel.addRow(rowData);
 		}
 	}
