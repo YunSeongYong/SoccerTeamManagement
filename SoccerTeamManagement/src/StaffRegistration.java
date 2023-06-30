@@ -6,6 +6,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +22,12 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import dbutil.DBUtil;
 
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 
 public class StaffRegistration extends JFrame{
@@ -36,7 +40,10 @@ public class StaffRegistration extends JFrame{
 	private List<DoctorAppointment> doctorList = new ArrayList<>();
 	private JComboBox<LocalDate> daycomboBox;
 	private JComboBox<String> doctorcomboBox;
-
+	public Player player;
+	private JSpinner spinner;
+	
+	
 	public StaffRegistration() {
 		JPanel one, two;
 		pane = new JTabbedPane();
@@ -45,6 +52,15 @@ public class StaffRegistration extends JFrame{
 		one = new JPanel();
 		one.setLayout(null);
 		pane.addTab("선수목록", one);
+		
+		
+		
+		
+		
+		
+		
+		
+		//===========================================================================================================================================================
 		
 		two = new JPanel();
 		pane.addTab("예약하기", two);
@@ -60,12 +76,10 @@ public class StaffRegistration extends JFrame{
 		two.add(daycomboBox);
 		
 		LocalDate currentDate = LocalDate.now();
-		LocalDate minusDate = currentDate.minusDays(15);
-		List<LocalDate> calendar = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
-			daycomboBox.addItem(minusDate.plusDays(i));
+			daycomboBox.addItem(currentDate.plusDays(i));
 		}
-		daycomboBox.setSelectedIndex(15);
+		daycomboBox.setSelectedIndex(0);
 		
 		JLabel doctorLbl = new JLabel("의사");
 		doctorLbl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,6 +132,18 @@ public class StaffRegistration extends JFrame{
 		backnumTf.setBounds(123, 333, 116, 21);
 		two.add(backnumTf);
 		
+		backnumTf.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+		            int backNumber = Integer.parseInt(backnumTf.getText().trim());
+		            selectName(backNumber, nameTf);
+		        } catch (NumberFormatException ex) {
+		            // 잘못된 입력 처리 (예: 숫자가 아닌 문자 등)
+		        }
+			}
+		});
+		
 		JLabel playerNameLbl = new JLabel("선수 이름");
 		playerNameLbl.setBounds(251, 336, 57, 15);
 		two.add(playerNameLbl);
@@ -146,7 +172,7 @@ public class StaffRegistration extends JFrame{
 		two.add(timeTf);
 		
 		JButton reservationBtn = new JButton("예약");
-		reservationBtn.setBounds(815, 380, 97, 23);
+		reservationBtn.setBounds(815, 332, 97, 23);
 		two.add(reservationBtn);
 		
 		reservationBtn.addActionListener(new ActionListener() {			
@@ -156,8 +182,41 @@ public class StaffRegistration extends JFrame{
 			}
 		});
 		
+		JButton deleteBtn = new JButton("삭제");
+		deleteBtn.setBounds(815, 398, 97, 23);
+		two.add(deleteBtn);
+		
+		deleteBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if (row >= 0) {
+					TableModel data = table.getModel();
+					int number = (int) data.getValueAt(row, 0);
+					String date = daycomboBox.getSelectedItem().toString();
+					String time = (String) data.getValueAt(row, 2);
+					
+					deleteAppointment(number, date, time); // Delete appointment from the database
+					removeRecord(row); // Remove the selected row from the table
+				}
+			}
+		});
+		
+		JButton changeBtn = new JButton("수정");
+		changeBtn.setBounds(815, 365, 97, 23);
+		two.add(changeBtn);
+		
+		changeBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
 		pane.setSelectedIndex(0);
-	    this.getContentPane().add("North", new JLabel("탭을 사용한 예"));
+	    JLabel label = new JLabel("");
+	    label.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수위-배경.jpg")));
+	    this.getContentPane().add("North", label);
 	    this.getContentPane().add("Center", pane);
 		
 		this.setSize(1000, 600);
@@ -203,7 +262,7 @@ public class StaffRegistration extends JFrame{
 		return doctorList;
 	}
 	
-	// Jtable 만들기
+	// 테이블 기록 가져오기
 	public void doctorSchedule(List<DoctorAppointment> doctorList) {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
@@ -342,8 +401,7 @@ public class StaffRegistration extends JFrame{
 			String selectedDate = daycomboBox.getSelectedItem().toString();
 			String selectedDoctor = (String) doctorcomboBox.getSelectedItem();
 
-			stmt = conn.prepareStatement(
-					"insert into appointment(number, name, date, time,`condition`, doctor) values (?, ?, ?, ?, ?, ?)");
+			stmt = conn.prepareStatement("insert into appointment(number, name, date, time,`condition`, doctor) values (?, ?, ?, ?, ?, ?)");
 			stmt.setInt(1, Integer.valueOf(backnumTf.getText()));
 			stmt.setString(2, nameTf.getText());
 			stmt.setString(3, selectedDate);
@@ -369,5 +427,84 @@ public class StaffRegistration extends JFrame{
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
+	}
+	
+	// 데이터베이스 appointment 데이터 삭제
+	private void deleteAppointment(int number, String date, String time) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement("DELETE FROM appointment WHERE number = ? AND date = ? AND time = ?");
+	        stmt.setInt(1, number);
+	        stmt.setString(2, date);
+	        stmt.setString(3, time);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	}
+		
+	// 테이블 기록 삭제
+	private void removeRecord(int index) {
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    if (index >= 0 && index < model.getRowCount()) {
+	        model.removeRow(index);
+	    }
+	}
+	
+	// 테이블 기록 수정
+	private void updateAppointment(int number, String date, String time, String condition) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement("UPDATE appointment SET condition = ? WHERE number = ? AND date = ? AND time = ?");
+			stmt.setString(1, condition);
+			stmt.setInt(2, number);
+			stmt.setString(3, date);
+			stmt.setString(4, time);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+	
+	// 등번호에 해당하는 선수 찾기
+	private void selectName(int backNumber, JTextField nameField) {
+	    String playerName = "";
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement("SELECT name FROM players WHERE backnumber = ?");
+	        stmt.setInt(1, backNumber);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            playerName = rs.getString("name");
+	            nameField.setText(playerName);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	}
+	
+	private void updateAppointment() {
+		Connection conn = null;
 	}
 }
