@@ -18,7 +18,22 @@ public class DoctorAppointment {
 		this.doctor = doctor;
 		this.coach = coach;
 	}
-
+	
+	public DoctorAppointment(int backnumber, String playerName, String time, String condition) {
+		this.backnumber = backnumber;
+		this.playerName = playerName;
+		this.time = time;
+		this.condition = condition;
+	}
+	
+	public DoctorAppointment(int backnumber, String playerName, String date, String time, String condition) {
+		this.backnumber = backnumber;
+		this.playerName = playerName;
+		this.date = date;
+		this.time = time;
+		this.condition = condition;
+	}
+	
 	public int getBacknumber() {
 		return backnumber;
 	}
