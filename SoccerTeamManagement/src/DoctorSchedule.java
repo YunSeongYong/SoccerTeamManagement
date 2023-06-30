@@ -1,5 +1,6 @@
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,10 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 	private JButton btnNewButton;
 	private JTable table_2;
+
+	private JComboBox nameComboBox;
+	private JComboBox endComboBox;
+	private JButton btnNewButton_1;
 
 	public DoctorSchedule() {
 		super();
@@ -149,22 +154,62 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		}
 		startComboBox.setSelectedIndex(0);
 
-		JComboBox endComboBox = new JComboBox();
+		startComboBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				endComboBox.setEnabled(true);
+				JComboBox<String> jcb = (JComboBox) e.getSource();
+				String index = String.valueOf(jcb.getSelectedItem());
+
+				LocalDate startDate = LocalDate.parse(startComboBox.getSelectedItem().toString());
+				Period period = Period.between(startDate, currentDate);
+				int datePeriod = period.getDays();
+				System.out.println(datePeriod);
+
+				for (int i = 0; i <= datePeriod; i++) {
+					endComboBox.addItem(startDate.plusDays(i));
+				}
+			}
+		});
+
+		endComboBox = new JComboBox();
 		endComboBox.setBounds(204, 32, 150, 21);
 		two.add(endComboBox);
+		endComboBox.setEnabled(false);
+		
+		endComboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnNewButton_1.setEnabled(true);
+			}
+		});
 
-		for (int i = 30; i >= 0; i--) {
-			endComboBox.addItem(currentDate.minusDays(i));
-		}
-		endComboBox.setSelectedIndex(0);
-
-		JComboBox nameComboBox = new JComboBox();
+		nameComboBox = new JComboBox();
 		nameComboBox.setBounds(378, 32, 150, 21);
 		two.add(nameComboBox);
 
-		JButton btnNewButton_1 = new JButton("조회");
+		addPlayer(staff.getName());
+		nameComboBox.setSelectedIndex(0);
+
+		btnNewButton_1 = new JButton("조회");
 		btnNewButton_1.setBounds(553, 31, 97, 23);
 		two.add(btnNewButton_1);
+		btnNewButton_1.setEnabled(false);
+
+		btnNewButton_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String str = nameComboBox.getSelectedItem().toString();
+				String backNumber = str.substring(0, str.indexOf("."));
+				String startDate = startComboBox.getSelectedItem().toString();
+				String endDate = endComboBox.getSelectedItem().toString();
+			
+				List<Comment> list = makeCommentList(backNumber, startDate, endDate);
+				insertCommentTabel(list, table_2);
+			}
+		});
 
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(181, 116, 545, 344);
@@ -202,7 +247,6 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				// number, name, `condition`, time
 				int number = rs.getInt(1);
 				String nameParse = rs.getString(2);
 				String condition = rs.getString(3);
@@ -255,42 +299,84 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		}
 	}
 
-	// 담당 선수 가져오는 메소드
+	// 담당 선수 콤보박스 만드는 메소드
+	public void addPlayer(String doctorName) {
+		List<Player> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
-//	private static List<DoctorAppointment> makePlayerList(String doctorName) {
-//		List<DoctorAppointment> list = new ArrayList<>();
-//		Connection conn = null;
-//		PreparedStatement stmt = null;
-//		ResultSet rs = null;
-//
-//		try {
-//			conn = DBUtil.getConnection();
-//			String sql = "SELECT backnumber, name FROM players WHERE doctor = '김의사'";
-//
-//			stmt = conn.prepareStatement(sql);
-//			stmt.setString(1, name);
-//			stmt.setString(2, date);
-//
-//			rs = stmt.executeQuery();
-//			while (rs.next()) {
-//				// number, name, `condition`, time
-//				int number = rs.getInt(1);
-//				String nameParse = rs.getString(2);
-//				String condition = rs.getString(3);
-//				String time = rs.getString(4);
-//
-//				DoctorAppointment d = new DoctorAppointment(number, nameParse, time, condition);
-//				list.add(d);
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBUtil.close(rs);
-//			DBUtil.close(stmt);
-//			DBUtil.close(conn);
-//		}
-//		return list;
-//	}
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT backnumber, name FROM players WHERE doctor = ?";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, doctorName);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int backNumber = rs.getInt(1);
+				String name = rs.getString(2);
+
+				nameComboBox.addItem(backNumber + ". " + name);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	// 선택된 날짜 + 선수의 의사 코멘트를 리스트로 가지고 오는 메소드
+	private static List<Comment> makeCommentList(String backNumber, String startDate, String endDate) {
+		List<Comment> list = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT SUBSTRING(datetime, 1, 10), doctorcomment FROM comment\r\n"
+					+ "WHERE SUBSTRING(datetime, 1, 10) BETWEEN ? AND ?\r\n"
+					+ "AND number = ? AND NOT doctorcomment IS NULL;";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, startDate);
+			stmt.setString(2, endDate);
+			stmt.setString(3, backNumber);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				String date = rs.getString(1);
+				String comment = rs.getString(2);
+
+				Comment c = new Comment(date, comment);
+				list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return list;
+	}
+
+	// 코멘트 테이블에 넣는 메소드
+	private static void insertCommentTabel(List<Comment> list, JTable table) {
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
+
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Comment comment : list) {
+			Object[] rowData = { comment.getDatetime(), comment.getConditioncomment() };
+			tableModel.addRow(rowData);
+		}
+	}
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
