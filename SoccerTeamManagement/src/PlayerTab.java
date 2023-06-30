@@ -44,6 +44,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.ListSelectionModel;
 import java.awt.Font;
+import java.awt.Graphics;
+
 import javax.swing.JTextField;
 import java.awt.Color;
 
@@ -277,11 +279,29 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
 		two.add(commentLbl_);
 
-		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		JScrollPane scrollPane_1 = new JScrollPane() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				// Make the scroll pane background transparent
+				g.setColor(new Color(0, 0, 0, 0));
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+			}
+		};
 		scrollPane_1.setBounds(40, 63, 250, 308);
+		scrollPane_1.setOpaque(false);
+		scrollPane_1.getViewport().setOpaque(false);
+		//scrollPane_1.setBorder(null);
+		scrollPane_1.setViewportBorder(null);
+		scrollPane_1.getVerticalScrollBar().setOpaque(false);
+		scrollPane_1.getHorizontalScrollBar().setOpaque(false);
 		two.add(scrollPane_1);
 		
 		textArea = new JTextArea();
+		textArea.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+		textArea.setForeground(Color.WHITE);
+		textArea.setOpaque(false); // Set the textArea as transparent
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
 
@@ -339,6 +359,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		JScrollPane scrolledTable_1 = new JScrollPane((Component) null);
 		scrolledTable_1.setBounds(323, 63, 532, 141);
+		scrolledTable_1.setOpaque(false);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_1);
 
@@ -367,6 +388,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		JScrollPane scrolledTable_2 = new JScrollPane((Component) null);
 		scrolledTable_2.setBounds(333, 239, 515, 158);
+		scrolledTable_2.setOpaque(false);
 		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_2);
 
@@ -376,6 +398,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
+		
+		DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+		centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
+
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < table.getColumnCount(); i++) {
+		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 
 		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
 				sql2);
@@ -385,7 +415,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrolledTable_2.setViewportView(doctorCommentTable);
 		
 		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setBounds(163, 13, 57, 15);
+		lblNewLabel_4.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수컨디션등록-배경.jpg")));
+		lblNewLabel_4.setBounds(0, 0, 979, 447);
 		two.add(lblNewLabel_4);
 
 		pane.setSelectedIndex(0);
