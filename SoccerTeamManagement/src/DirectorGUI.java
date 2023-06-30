@@ -1097,7 +1097,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				});
 
 		lblNewLabel_4 = new JLabel("New label");
-		lblNewLabel_4.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수등록화면-배경만-5.jpg")));
+		lblNewLabel_4.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수등록화면-배경만-6.jpg")));
 		lblNewLabel_4.setBounds(0, 0, 979, 431);
 		one.add(lblNewLabel_4);
 
@@ -1146,7 +1146,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_4.setColumns(10);
 
 		textField_5 = new JTextField();
-		textField_5.setText("비밀번호 입력");
+		textField_5.setText("문자 포함 4자리 이상 가능");
 		textField_5.setForeground(new Color(192, 192, 192));
 		textField_5.setBounds(684, 213, 199, 30);
 		two.add(textField_5);
@@ -1172,7 +1172,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		btnNewButton_1.setContentAreaFilled(false);
 		btnNewButton_1.setBorderPainted(false);
 		btnNewButton_1.setFocusPainted(false);
-		btnNewButton_1.setBounds(814, 43, 78, 23);
+		btnNewButton_1.setBounds(815, 65, 78, 23);
 		two.add(btnNewButton_1);
 
 		panel = new JPanel();
@@ -1202,7 +1202,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		two.add(lblNewLabel_7);
 		
 		JLabel lblNewLabel_9 = new JLabel("New label");
-		lblNewLabel_9.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프등록화면.jpg")));
+		lblNewLabel_9.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프등록화면-3.jpg")));
 		lblNewLabel_9.setBounds(0, 0, 979, 431);
 		two.add(lblNewLabel_9);
 		btnNewButton_1.addActionListener(new ActionListener() {
