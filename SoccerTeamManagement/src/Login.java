@@ -23,6 +23,7 @@ public class Login {
 	private JLabel lblNewLabel_2;
 	public Player player;
 	private JLabel lblNewLabel_3;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
