@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +103,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private List<DoctorAppointment> doctorAppointmentList;
 	private List<Comment> commentList;
 	private List<CommonSchedule> commonScheduleList;
-	  private List<String> selectedDates = new ArrayList<>();
-	    private List<String> selectedStartTimes = new ArrayList<>();
+	private List<String> selectedDates = new ArrayList<>();
+	private List<String> selectedStartTimes = new ArrayList<>();
 	private JTextField 담당의사수정텍스트필드;
 	private JTextField 일정창_코멘트텍스트필드;
 	private JScrollPane scrolledTable;
@@ -811,99 +812,98 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(List<Schedule> scheduleList) {
-	    List<Schedule> filteredList = new ArrayList<>();
+		List<Schedule> filteredList = new ArrayList<>();
 
-	    for (Schedule schedule : scheduleList) {
-	        if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
-	            filteredList.add(schedule);
-	        }
-	    }
-
-	    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-	    // 기존의 테이블 데이터 초기화
-	    tableModel.setRowCount(0);
-
-	    // filteredList의 데이터를 테이블 모델에 추가
-	    for (Schedule schedule : filteredList) {
-	        Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-	                schedule.getContent(), false// 체크박스 데이터와 마지막 열 값 추가
-	        };
-	        tableModel.addRow(rowData);
-	    }
-	    
-	    tableModel.addTableModelListener(e -> {
-	        if (e.getColumn() == 4) {
-	            int rowIndex = e.getFirstRow();
-	            boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 4);
-	            if (isChecked) {
-	                System.out.println("거절");
-	            } else {
-	                System.out.println("승인");
-	            }
-	        }
-	    });
-
-	    // 저장 버튼을 누를 때 체크된 행들의 DATE 출력
-	    일정창_저장버튼.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            선수목록_일정_테이블에서체크한date와starttime값출력();
-	            // 이후 저장하는 로직을 추가하시면 됩니다.
-	        }
-	    });
-	}
-	
-	 public void 선수목록_일정_테이블에서체크한date와starttime값출력() {
-	        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-	        int rowCount = tableModel.getRowCount();
-
-	        for (int i = 0; i < rowCount; i++) {
-	            boolean isChecked = (boolean) tableModel.getValueAt(i, 4);
-	            if (isChecked) {
-	                String date = (String) tableModel.getValueAt(i, 0);
-	                String starttime = (String) tableModel.getValueAt(i, 1);
-
-	                selectedDates.add(date);
-	                selectedStartTimes.add(starttime);
-	                System.out.println(selectedDates);
-	                System.out.println(selectedStartTimes);
-	            }
-	        }
-	    }
-	
-	 public void 선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(int backnumber, List<String> selectedDates, List<String> selectedStartTimes) {
-		    String sql = "UPDATE playerschedule SET confirm = '거절' WHERE number = ? and date = ? and starttime = ?";
-		    Connection conn = null;
-		    PreparedStatement stmt = null;
-
-		    try {
-		        conn = DBUtil.getConnection();
-		        stmt = conn.prepareStatement(sql);
-
-		        for (int i = 0; i < selectedDates.size(); i++) {
-		            String date = selectedDates.get(i);
-		            String startTime = selectedStartTimes.get(i);
-
-		            stmt.setInt(1, backnumber);
-		            stmt.setString(2, date);
-		            stmt.setString(3, startTime);
-
-		            int result = stmt.executeUpdate();
-		            if (result > 0) {
-		                System.out.println("데이터가 성공적으로 저장되었습니다.");
-		            } else {
-		                System.out.println("데이터 저장에 실패하였습니다.");
-		            }
-		        }
-		    } catch (SQLException ex) {
-		        ex.printStackTrace();
-		    } finally {
-		        DBUtil.close(stmt);
-		        DBUtil.close(conn);
-		    }
+		for (Schedule schedule : scheduleList) {
+			if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
+				filteredList.add(schedule);
+			}
 		}
 
-	
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
+
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Schedule schedule : filteredList) {
+			Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
+					schedule.getContent(), false// 체크박스 데이터와 마지막 열 값 추가
+			};
+			tableModel.addRow(rowData);
+		}
+
+		tableModel.addTableModelListener(e -> {
+			if (e.getColumn() == 4) {
+				int rowIndex = e.getFirstRow();
+				boolean isChecked = (boolean) tableModel.getValueAt(rowIndex, 4);
+				if (isChecked) {
+					System.out.println("거절");
+				} else {
+					System.out.println("승인");
+				}
+			}
+		});
+
+		// 저장 버튼을 누를 때 체크된 행들의 DATE 출력
+		일정창_저장버튼.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				선수목록_일정_테이블에서체크한date와starttime값출력();
+				// 이후 저장하는 로직을 추가하시면 됩니다.
+			}
+		});
+	}
+
+	public void 선수목록_일정_테이블에서체크한date와starttime값출력() {
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		int rowCount = tableModel.getRowCount();
+
+		for (int i = 0; i < rowCount; i++) {
+			boolean isChecked = (boolean) tableModel.getValueAt(i, 4);
+			if (isChecked) {
+				String date = (String) tableModel.getValueAt(i, 0);
+				String starttime = (String) tableModel.getValueAt(i, 1);
+
+				selectedDates.add(date);
+				selectedStartTimes.add(starttime);
+				System.out.println(selectedDates);
+				System.out.println(selectedStartTimes);
+			}
+		}
+	}
+
+	public void 선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(int backnumber,
+			List<String> selectedDates, List<String> selectedStartTimes) {
+		String sql = "UPDATE playerschedule SET confirm = '거절' WHERE number = ? and date = ? and starttime = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+
+			for (int i = 0; i < selectedDates.size(); i++) {
+				String date = selectedDates.get(i);
+				String startTime = selectedStartTimes.get(i);
+
+				stmt.setInt(1, backnumber);
+				stmt.setString(2, date);
+				stmt.setString(3, startTime);
+
+				int result = stmt.executeUpdate();
+				if (result > 0) {
+					System.out.println("데이터가 성공적으로 저장되었습니다.");
+				} else {
+					System.out.println("데이터 저장에 실패하였습니다.");
+				}
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
 
 	public void 선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
 		try {
@@ -956,29 +956,48 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 //		}
 //	}
 
-	public void 선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
-		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
-		Connection conn = null;
-		PreparedStatement stmt = null;
+	public void 선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment, List<String> selectedStartTimes) {
+	    String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, ?, ?, '감독')";
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
 
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, backNumber);
-			stmt.setString(2, comment);
+	    try {
+	        conn = DBUtil.getConnection();
+	        stmt = conn.prepareStatement(sql);
 
-			int result = stmt.executeUpdate();
-			if (result > 0) {
-				System.out.println("데이터가 성공적으로 저장되었습니다.");
-			} else {
-				System.out.println("데이터 저장에 실패하였습니다.");
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
+	        for (int i = 0; i < selectedDates.size(); i++) {
+	            String selectedDateStr = selectedDates.get(i);
+	            LocalDate selectedDate = LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	            String startTime = selectedStartTimes.get(i);
+
+	            // 'selectedDate'와 'startTime'을 합치기 위해 'HH:mm:ss'를 붙여줌
+	            String dateTimeString = selectedDate.toString() + " " + startTime;
+
+	            // 'dateTimeString'을 'yyyy-MM-dd HH:mm:ss' 형식으로 변환
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	            String formattedDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(formatter);
+
+	            stmt.setInt(1, backNumber);
+	            stmt.setString(2, formattedDateTime);
+	            stmt.setString(3, comment);
+
+	            int result = stmt.executeUpdate();
+	            if (result > 0) {
+	                System.out.println("데이터가 성공적으로 저장되었습니다.");
+	            } else {
+	                System.out.println("데이터 저장에 실패하였습니다.");
+	            }
+	        }
+	    } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+	        // 이미 입력한 경우의 예외 처리
+	        String errorMessage = "이미 코멘트 입력하셨습니다.";
+	        JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
+	    }catch (SQLException ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
 	}
 
 	public List<Condition> 선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(int backnumber) {
@@ -1616,7 +1635,18 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				일정창_콤보박스에서선택한날짜 = selectedDate.format(formatter);
 
-				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 일정창_콤보박스에서선택한날짜);
+				// 현재 날짜 가져오기
+				LocalDate currentDate = LocalDate.now();
+
+				// 선택한 날짜와 현재 날짜 비교
+				if (selectedDate.isBefore(currentDate)) {
+					// 선택한 날짜가 현재 날짜보다 이전인 경우
+					일정창_저장버튼.setEnabled(false); // 저장 버튼 비활성화
+				} else {
+					일정창_저장버튼.setEnabled(true); // 저장 버튼 활성화
+				}
+
+				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
@@ -1660,39 +1690,40 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
-
-		일정창 = new JPanel();
-		일정창.setBounds(192, 57, 787, 376);
-		three.add(일정창);
-		일정창.setLayout(null);
-
-		일정창_코멘트텍스트필드 = new JTextField();
-		일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
-		일정창.add(일정창_코멘트텍스트필드);
-		일정창_코멘트텍스트필드.setColumns(10);
-
-		일정창_저장버튼 = new JButton("저장");
-		일정창_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String comment = 일정창_코멘트텍스트필드.getText();
-				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-				//선수목록_일정_체크박스선택시각행의값콘솔출력메소드();
-				선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates, selectedStartTimes);
-			}
-		});
-		일정창_저장버튼.setBounds(626, 293, 135, 73);
-		일정창.add(일정창_저장버튼);
-
-		scrolledTable = new JScrollPane((Component) null);
-		scrolledTable.setBounds(23, 21, 617, 263);
-		일정창.add(scrolledTable);
-		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		table = new JTable(new DefaultTableModel(new Object[][] {},
-		        new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-		};
-		scrolledTable.setViewportView(table);
-		일정창.setVisible(false);
+		
+				일정창 = new JPanel();
+				일정창.setBounds(192, 57, 787, 376);
+				three.add(일정창);
+				일정창.setLayout(null);
+				
+						일정창_코멘트텍스트필드 = new JTextField();
+						일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
+						일정창.add(일정창_코멘트텍스트필드);
+						일정창_코멘트텍스트필드.setColumns(10);
+						
+								일정창_저장버튼 = new JButton("저장");
+								일정창_저장버튼.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent arg0) {
+										String comment = 일정창_코멘트텍스트필드.getText();
+										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+												selectedStartTimes);
+										일정창_코멘트텍스트필드.setText("");
+									}
+								});
+								일정창_저장버튼.setBounds(626, 293, 135, 73);
+								일정창.add(일정창_저장버튼);
+								
+										scrolledTable = new JScrollPane((Component) null);
+										scrolledTable.setBounds(23, 21, 617, 263);
+										일정창.add(scrolledTable);
+										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+										
+												table = new JTable(new DefaultTableModel(new Object[][] {},
+														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+												};
+												scrolledTable.setViewportView(table);
+												일정창.setVisible(false);
 
 		개인정보창 = new JPanel();
 		개인정보창.setBounds(192, 57, 787, 376);
