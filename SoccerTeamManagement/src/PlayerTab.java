@@ -274,11 +274,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		JLabel commentLbl_ = new JLabel("컨디션 코멘트");
-		commentLbl_.setBounds(323, 25, 97, 28);
-		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
-		two.add(commentLbl_);
-
 		
 		JScrollPane scrollPane_1 = new JScrollPane() {
 			@Override
@@ -305,8 +300,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
 
-		JButton saveBtn = new JButton("저장");
-		saveBtn.setBounds(113, 386, 97, 23);
+		JButton saveBtn = new JButton("");
+		saveBtn.setBounds(137, 386, 59, 28);
+		saveBtn.setOpaque(false);
+		saveBtn.setContentAreaFilled(false);
+		saveBtn.setBorderPainted(false);
+		saveBtn.setFocusPainted(false);
+		
 		two.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
 			@Override
@@ -315,13 +315,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			}
 		});
 
-		JLabel lblNewLabel_1 = new JLabel("오늘의 몸 상태");
-		lblNewLabel_1.setBounds(40, 32, 86, 15);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		two.add(lblNewLabel_1);
-
 		dateComboBox = new JComboBox();
-		dateComboBox.setBounds(837, 10, 92, 21);
+		dateComboBox.setBounds(812, 44, 92, 21);
 		two.add(dateComboBox);
 		LocalDate minusDate2 = currentDate.minusDays(15);
 		List<LocalDate> calendar2 = new ArrayList<LocalDate>();
@@ -358,7 +353,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		JScrollPane scrolledTable_1 = new JScrollPane((Component) null);
-		scrolledTable_1.setBounds(323, 63, 532, 141);
+		scrolledTable_1.setBounds(400, 55, 515, 141);
 		scrolledTable_1.setOpaque(false);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_1);
@@ -382,12 +377,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		conditionCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_1.setViewportView(conditionCommentTable);
 
-		JLabel lblNewLabel_2 = new JLabel("의사 코멘트");
-		lblNewLabel_2.setBounds(343, 214, 77, 15);
-		two.add(lblNewLabel_2);
-
 		JScrollPane scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBounds(333, 239, 515, 158);
+		scrolledTable_2.setBounds(400, 223, 515, 153);
 		scrolledTable_2.setOpaque(false);
 		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_2);
@@ -414,8 +405,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		doctorCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_2.setViewportView(doctorCommentTable);
 		
-		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수컨디션등록-배경.jpg")));
+		JLabel lblNewLabel_4 = new JLabel("  ");
+		lblNewLabel_4.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수컨디션등록-배경-2.jpg")));
 		lblNewLabel_4.setBounds(0, 0, 979, 447);
 		two.add(lblNewLabel_4);
 
