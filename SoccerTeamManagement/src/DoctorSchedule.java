@@ -169,7 +169,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		two.setLayout(null);
 
 		JComboBox startComboBox = new JComboBox();
-		startComboBox.setBounds(35, 32, 145, 21);
+		startComboBox.setBounds(323, 135, 90, 21);
 		two.add(startComboBox);
 
 		for (int i = 30; i >= 0; i--) {
@@ -197,7 +197,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		endComboBox = new JComboBox();
-		endComboBox.setBounds(204, 32, 150, 21);
+		endComboBox.setBounds(441, 135, 90, 21);
 		two.add(endComboBox);
 		endComboBox.setEnabled(false);
 		
@@ -210,14 +210,18 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		nameComboBox = new JComboBox();
-		nameComboBox.setBounds(378, 32, 150, 21);
+		nameComboBox.setBounds(558, 135, 90, 21);
 		two.add(nameComboBox);
 
 		//addPlayer(staff.getName());
 		//nameComboBox.setSelectedIndex(0);
 
-		btnNewButton_1 = new JButton("조회");
-		btnNewButton_1.setBounds(553, 31, 97, 23);
+		btnNewButton_1 = new JButton("");
+		btnNewButton_1.setBounds(677, 85, 63, 23);
+		btnNewButton_1.setOpaque(false);
+		btnNewButton_1.setContentAreaFilled(false);
+		btnNewButton_1.setBorderPainted(false);
+		btnNewButton_1.setFocusPainted(false);
 		two.add(btnNewButton_1);
 		btnNewButton_1.setEnabled(false);
 
@@ -235,12 +239,17 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(181, 116, 545, 344);
+		scrollPane_2.setBounds(203, 160, 570, 250);
 		two.add(scrollPane_2);
 
 		table_2 = new JTable();
 		table_2.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "\uB0A0\uC9DC", "\uB0B4\uC6A9" }));
 		scrollPane_2.setViewportView(table_2);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/병력관리-배경3.jpg")));
+		lblNewLabel_2.setBounds(0, 0, 979, 428);
+		two.add(lblNewLabel_2);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
