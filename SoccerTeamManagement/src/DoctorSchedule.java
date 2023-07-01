@@ -4,7 +4,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-import dbutil.DBUtil;
+//import dbutil.DBUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import dbutil.DBUtil;
+//import dbutil.DBUtil;
 import javax.swing.JScrollPane;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -33,6 +33,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.ImageIcon;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 public class DoctorSchedule extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
@@ -54,6 +58,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		staff = new Staff();
 		JPanel one, two, three;
 		pane = new JTabbedPane();
+		pane.setBounds(0, 85, 984, 476);
 
 		one = new JPanel();
 		pane.addTab("예약목록", one);
@@ -61,7 +66,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 		// 날짜 콤보 박스
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(810, 32, 145, 27);
+		comboBox.setBounds(826, 73, 91, 27);
 		one.add(comboBox);
 
 		LocalDate currentDate = LocalDate.now();
@@ -77,8 +82,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
-				List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
-				insertAppointmentTabel(appointmentList, table_1);
+				//List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
+				//insertAppointmentTabel(appointmentList, table_1);
 
 //				// 저장 버튼 비활성화
 
@@ -87,8 +92,13 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			}
 		});
 
-		btnNewButton = new JButton("저장");
-		btnNewButton.setBounds(717, 478, 97, 23);
+		btnNewButton = new JButton("");
+		btnNewButton.setBounds(736, 368, 62, 23);
+		btnNewButton.setOpaque(false);
+		btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setFocusPainted(false);
+		
 		one.add(btnNewButton);
 		btnNewButton.setEnabled(false);
 
@@ -101,14 +111,14 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				int number = (Integer) data.getValueAt(row, 1);
 				System.out.println(number);
 
-				insertDoctorComment(number, textArea.getText());
+				//insertDoctorComment(number, textArea.getText());
 
 			}
 		});
 
 		// 스크롤 팬 + 테이블
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(58, 143, 515, 307);
+		scrollPane.setBounds(58, 100, 515, 250);
 		one.add(scrollPane);
 
 		table_1 = new JTable();
@@ -129,17 +139,30 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			}
 		});
 
-		List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(),
-				comboBox.getSelectedItem().toString());
-		insertAppointmentTabel(appointmentList, table_1);
+		//List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(),
+			//	comboBox.getSelectedItem().toString());
+		//insertAppointmentTabel(appointmentList, table_1);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(617, 143, 300, 312);
+		scrollPane_1.setBounds(617, 100, 300, 250);
+		scrollPane_1.setViewportBorder(null);
+		scrollPane_1.getVerticalScrollBar().setOpaque(false);
+		scrollPane_1.getHorizontalScrollBar().setOpaque(false);
+		scrollPane_1.setOpaque(false);
+		scrollPane_1.getViewport().setOpaque(false);
 		one.add(scrollPane_1);
 
 		textArea = new JTextArea();
+		textArea.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+		textArea.setForeground(Color.WHITE);
+		textArea.setOpaque(false);
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/의사일정-배경-1.jpg")));
+		lblNewLabel.setBounds(0, 0, 979, 428);
+		one.add(lblNewLabel);
 
 		two = new JPanel();
 		pane.addTab("병력보기", two);
@@ -190,8 +213,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		nameComboBox.setBounds(378, 32, 150, 21);
 		two.add(nameComboBox);
 
-		addPlayer(staff.getName());
-		nameComboBox.setSelectedIndex(0);
+		//addPlayer(staff.getName());
+		//nameComboBox.setSelectedIndex(0);
 
 		btnNewButton_1 = new JButton("조회");
 		btnNewButton_1.setBounds(553, 31, 97, 23);
@@ -206,8 +229,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				String startDate = startComboBox.getSelectedItem().toString();
 				String endDate = endComboBox.getSelectedItem().toString();
 			
-				List<Comment> list = makeCommentList(backNumber, startDate, endDate);
-				insertCommentTabel(list, table_2);
+				//List<Comment> list = makeCommentList(backNumber, startDate, endDate);
+				//insertCommentTabel(list, table_2);
 			}
 		});
 
@@ -223,6 +246,10 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		pane.addChangeListener(this);
 
 		this.getContentPane().add("Center", pane);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/선수위-배경.jpg")));
+		getContentPane().add(lblNewLabel_1, BorderLayout.NORTH);
 		this.setSize(1000, 600);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -230,40 +257,40 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 	}
 
 	// 의사 예약 일정 리스트 만들기
-	private static List<DoctorAppointment> makeAppointmentList(String name, String date) {
-		List<DoctorAppointment> list = new ArrayList<>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+//	private static List<DoctorAppointment> makeAppointmentList(String name, String date) {
+//		List<DoctorAppointment> list = new ArrayList<>();
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
 
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT number, name, `condition`, time FROM appointment \r\n"
-					+ "where doctor = ? AND date = ?;";
-
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, name);
-			stmt.setString(2, date);
-
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				int number = rs.getInt(1);
-				String nameParse = rs.getString(2);
-				String condition = rs.getString(3);
-				String time = rs.getString(4);
-
-				DoctorAppointment d = new DoctorAppointment(number, nameParse, time, condition);
-				list.add(d);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return list;
-	}
+//		try {
+//			conn = DBUtil.getConnection();
+//			String sql = "SELECT number, name, `condition`, time FROM appointment \r\n"
+//					+ "where doctor = ? AND date = ?;";
+//
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, name);
+//			stmt.setString(2, date);
+//
+//			rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				int number = rs.getInt(1);
+//				String nameParse = rs.getString(2);
+//				String condition = rs.getString(3);
+//				String time = rs.getString(4);
+//
+//				DoctorAppointment d = new DoctorAppointment(number, nameParse, time, condition);
+//				list.add(d);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.close(rs);
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//		return list;
+//	}
 
 	// 예약 일정 테이블에 넣는 메소드
 	private static void insertAppointmentTabel(List<DoctorAppointment> list, JTable table) {
@@ -280,90 +307,90 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 	}
 
 	// 의사 코멘트 데이터베이스에 저장
-	public void insertDoctorComment(int number, String comment) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("INSERT INTO comment (number, doctorcomment, who) VALUES (?, ?, '의사')");
-			stmt.setInt(1, number);
-			stmt.setString(2, comment);
-
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-	}
+//	public void insertDoctorComment(int number, String comment) {
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//
+//		try {
+//			conn = DBUtil.getConnection();
+//			stmt = conn.prepareStatement("INSERT INTO comment (number, doctorcomment, who) VALUES (?, ?, '의사')");
+//			stmt.setInt(1, number);
+//			stmt.setString(2, comment);
+//
+//			stmt.executeUpdate();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//	}
 
 	// 담당 선수 콤보박스 만드는 메소드
-	public void addPlayer(String doctorName) {
-		List<Player> list = new ArrayList<>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT backnumber, name FROM players WHERE doctor = ?";
-
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, doctorName);
-
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				int backNumber = rs.getInt(1);
-				String name = rs.getString(2);
-
-				nameComboBox.addItem(backNumber + ". " + name);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-	}
+//	public void addPlayer(String doctorName) {
+//		List<Player> list = new ArrayList<>();
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//
+//		try {
+//			conn = DBUtil.getConnection();
+//			String sql = "SELECT backnumber, name FROM players WHERE doctor = ?";
+//
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, doctorName);
+//
+//			rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				int backNumber = rs.getInt(1);
+//				String name = rs.getString(2);
+//
+//				nameComboBox.addItem(backNumber + ". " + name);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.close(rs);
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//	}
 
 	// 선택된 날짜 + 선수의 의사 코멘트를 리스트로 가지고 오는 메소드
-	private static List<Comment> makeCommentList(String backNumber, String startDate, String endDate) {
-		List<Comment> list = new ArrayList<>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-
-		try {
-			conn = DBUtil.getConnection();
-			String sql = "SELECT SUBSTRING(datetime, 1, 10), doctorcomment FROM comment\r\n"
-					+ "WHERE SUBSTRING(datetime, 1, 10) BETWEEN ? AND ?\r\n"
-					+ "AND number = ? AND NOT doctorcomment IS NULL;";
-
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, startDate);
-			stmt.setString(2, endDate);
-			stmt.setString(3, backNumber);
-
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				String date = rs.getString(1);
-				String comment = rs.getString(2);
-
-				Comment c = new Comment(date, comment);
-				list.add(c);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(stmt);
-			DBUtil.close(conn);
-		}
-		return list;
-	}
+//	private static List<Comment> makeCommentList(String backNumber, String startDate, String endDate) {
+//		List<Comment> list = new ArrayList<>();
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//
+//		try {
+//			conn = DBUtil.getConnection();
+//			String sql = "SELECT SUBSTRING(datetime, 1, 10), doctorcomment FROM comment\r\n"
+//					+ "WHERE SUBSTRING(datetime, 1, 10) BETWEEN ? AND ?\r\n"
+//					+ "AND number = ? AND NOT doctorcomment IS NULL;";
+//
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, startDate);
+//			stmt.setString(2, endDate);
+//			stmt.setString(3, backNumber);
+//
+//			rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				String date = rs.getString(1);
+//				String comment = rs.getString(2);
+//
+//				Comment c = new Comment(date, comment);
+//				list.add(c);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBUtil.close(rs);
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//		return list;
+//	}
 
 	// 코멘트 테이블에 넣는 메소드
 	private static void insertCommentTabel(List<Comment> list, JTable table) {
