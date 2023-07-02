@@ -984,13 +984,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	            int result = stmt.executeUpdate();
 	            if (result > 0) {
 	                System.out.println("데이터가 성공적으로 저장되었습니다.");
+	                String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
+	                JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
 	            } else {
 	                System.out.println("데이터 저장에 실패하였습니다.");
 	            }
 	        }
 	    } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-	        // 이미 입력한 경우의 예외 처리
-	        String errorMessage = "이미 코멘트 입력하셨습니다.";
+	        String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
 	        JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
 	    }catch (SQLException ex) {
 	        ex.printStackTrace();
@@ -1113,7 +1114,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				String playerName = rs.getString("name");
 				String condition = rs.getString("condition");
 				String doctor = rs.getString("doctor");
-				String coach = rs.getString("kochi");
+				String coach = rs.getString("coach");
 				String date = rs.getString("date");
 				String time = rs.getString("time");
 
