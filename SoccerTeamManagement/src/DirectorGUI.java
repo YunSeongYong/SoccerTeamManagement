@@ -1569,7 +1569,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		pane.addTab("선수목록", three);
 		three.setLayout(null);
 
-		JButton 개인정보버튼 = new JButton("개인정보");
+		JButton 개인정보버튼 = new JButton("");
+		개인정보버튼.setOpaque(false);
+		개인정보버튼.setContentAreaFilled(false);
+		개인정보버튼.setBorderPainted(false);
+		개인정보버튼.setFocusPainted(false);
 		개인정보버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				날짜콤보박스.setVisible(false);
@@ -1582,10 +1586,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(false);
 			}
 		});
-		개인정보버튼.setBounds(32, 91, 120, 46);
+		개인정보버튼.setBounds(0, 104, 118, 45);
 		three.add(개인정보버튼);
 
-		JButton 일정버튼 = new JButton("일정");
+		JButton 일정버튼 = new JButton("");
+		일정버튼.setOpaque(false);
+		일정버튼.setContentAreaFilled(false);
+		일정버튼.setBorderPainted(false);
+		일정버튼.setFocusPainted(false);
 		일정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				날짜콤보박스.setVisible(true);
@@ -1598,10 +1606,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(false);
 			}
 		});
-		일정버튼.setBounds(32, 159, 120, 46);
+		일정버튼.setBounds(0, 161, 118, 45);
 		three.add(일정버튼);
 
-		JButton 컨디션버튼 = new JButton("컨디션");
+		JButton 컨디션버튼 = new JButton("");
+		컨디션버튼.setOpaque(false);
+		컨디션버튼.setContentAreaFilled(false);
+		컨디션버튼.setBorderPainted(false);
+		컨디션버튼.setFocusPainted(false);
 		컨디션버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				날짜콤보박스.setVisible(true);
@@ -1614,10 +1626,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(false);
 			}
 		});
-		컨디션버튼.setBounds(32, 243, 120, 46);
+		컨디션버튼.setBounds(0, 219, 118, 45);
 		three.add(컨디션버튼);
 
-		JButton 의사소견버튼 = new JButton("의사소견");
+		JButton 의사소견버튼 = new JButton("");
+		의사소견버튼.setOpaque(false);
+		의사소견버튼.setContentAreaFilled(false);
+		의사소견버튼.setBorderPainted(false);
+		의사소견버튼.setFocusPainted(false);
 		의사소견버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				날짜콤보박스.setVisible(true);
@@ -1630,7 +1646,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(true);
 			}
 		});
-		의사소견버튼.setBounds(32, 324, 117, 46);
+		의사소견버튼.setBounds(-1, 273, 118, 45);
 		three.add(의사소견버튼);
 
 		날짜콤보박스 = new JComboBox();
@@ -1706,43 +1722,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
-		
-				일정창 = new JPanel();
-				일정창.setBounds(192, 57, 787, 376);
-				three.add(일정창);
-				일정창.setLayout(null);
-				
-						일정창_코멘트텍스트필드 = new JTextField();
-						일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
-						일정창.add(일정창_코멘트텍스트필드);
-						일정창_코멘트텍스트필드.setColumns(10);
-						
-								일정창_저장버튼 = new JButton("저장");
-								일정창_저장버튼.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent arg0) {
-										String comment = 일정창_코멘트텍스트필드.getText();
-										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
-										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
-												selectedStartTimes);
-										일정창_코멘트텍스트필드.setText("");
-									}
-								});
-								일정창_저장버튼.setBounds(626, 293, 135, 73);
-								일정창.add(일정창_저장버튼);
-								
-										scrolledTable = new JScrollPane((Component) null);
-										scrolledTable.setBounds(23, 21, 617, 263);
-										일정창.add(scrolledTable);
-										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-										
-												table = new JTable(new DefaultTableModel(new Object[][] {},
-														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-												};
-												scrolledTable.setViewportView(table);
-												일정창.setVisible(false);
 
 		개인정보창 = new JPanel();
-		개인정보창.setBounds(192, 57, 787, 376);
+		개인정보창.setBounds(139, 57, 840, 376);
 		three.add(개인정보창);
 		개인정보창.setLayout(null);
 		개인정보창.setBackground(Color.WHITE);
@@ -1862,6 +1844,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		});
 		선수삭제버튼.setBounds(367, 301, 90, 34);
 		개인정보창.add(선수삭제버튼);
+		
+		JLabel lblNewLabel_1 = new JLabel("이미지");
+		lblNewLabel_1.setBounds(1, 0, 842, 376);
+		개인정보창.add(lblNewLabel_1);
 		개인정보창.setVisible(false);
 
 		의사소견창 = new JPanel();
@@ -2099,6 +2085,45 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		lblNewLabel_15.setBounds(487, 138, 246, 15);
 		four.add(lblNewLabel_15);
 		three.setLayout(null);
+		
+				일정창 = new JPanel();
+				일정창.setBounds(192, 57, 787, 376);
+				three.add(일정창);
+				일정창.setLayout(null);
+				
+						일정창_코멘트텍스트필드 = new JTextField();
+						일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
+						일정창.add(일정창_코멘트텍스트필드);
+						일정창_코멘트텍스트필드.setColumns(10);
+						
+								일정창_저장버튼 = new JButton("저장");
+								일정창_저장버튼.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent arg0) {
+										String comment = 일정창_코멘트텍스트필드.getText();
+										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+												selectedStartTimes);
+										일정창_코멘트텍스트필드.setText("");
+									}
+								});
+								일정창_저장버튼.setBounds(626, 293, 135, 73);
+								일정창.add(일정창_저장버튼);
+								
+										scrolledTable = new JScrollPane((Component) null);
+										scrolledTable.setBounds(23, 21, 617, 263);
+										일정창.add(scrolledTable);
+										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+										
+												table = new JTable(new DefaultTableModel(new Object[][] {},
+														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+												};
+												scrolledTable.setViewportView(table);
+												
+												JLabel lblNewLabel_2 = new JLabel("");
+												lblNewLabel_2.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록-전체배경.jpg")));
+												lblNewLabel_2.setBounds(0, 0, 979, 433);
+												three.add(lblNewLabel_2);
+												일정창.setVisible(false);
 
 		// =======================================================================
 
