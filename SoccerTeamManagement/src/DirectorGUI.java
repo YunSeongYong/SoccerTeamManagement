@@ -1301,55 +1301,63 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		이름텍스트필드 = new JTextField();
 		이름텍스트필드.setText("이름 입력");
-		이름텍스트필드.setForeground(new Color(192, 192, 192));
-		이름텍스트필드.setBounds(430, 294, 98, 29);
+		이름텍스트필드.setBorder(null); 
+		이름텍스트필드.setForeground(Color.DARK_GRAY);
+		이름텍스트필드.setBounds(420, 294, 98, 29);
 		one.add(이름텍스트필드);
 		이름텍스트필드.setColumns(10);
 
 		신장텍스트필드 = new JTextField();
 		신장텍스트필드.setText("신장 입력");
-		신장텍스트필드.setForeground(new Color(192, 192, 192));
-		신장텍스트필드.setBounds(430, 332, 98, 29);
+		신장텍스트필드.setBorder(null); 
+		신장텍스트필드.setForeground(Color.DARK_GRAY);
+		신장텍스트필드.setBounds(420, 332, 98, 29);
 		one.add(신장텍스트필드);
 		신장텍스트필드.setColumns(10);
 
 		몸무게텍스트필드 = new JTextField();
 		몸무게텍스트필드.setText("몸무게 입력");
-		몸무게텍스트필드.setForeground(new Color(192, 192, 192));
-		몸무게텍스트필드.setBounds(430, 370, 98, 29);
+		몸무게텍스트필드.setBorder(null); 
+		몸무게텍스트필드.setForeground(Color.DARK_GRAY);
+		몸무게텍스트필드.setBounds(420, 370, 98, 29);
 		one.add(몸무게텍스트필드);
 		몸무게텍스트필드.setColumns(10);
 
 		나이텍스트필드 = new JTextField();
 		나이텍스트필드.setText("나이 입력");
-		나이텍스트필드.setForeground(new Color(192, 192, 192));
+		나이텍스트필드.setBorder(null); 
+		나이텍스트필드.setForeground(Color.DARK_GRAY);
 		나이텍스트필드.setBounds(685, 255, 196, 30);
 		one.add(나이텍스트필드);
 		나이텍스트필드.setColumns(10);
 
 		포지션텍스트필드 = new JTextField();
 		포지션텍스트필드.setText("포지션 입력 예) MF");
-		포지션텍스트필드.setForeground(new Color(192, 192, 192));
+		포지션텍스트필드.setBorder(null); 
+		포지션텍스트필드.setForeground(Color.DARK_GRAY);
 		포지션텍스트필드.setBounds(685, 293, 196, 30);
 		one.add(포지션텍스트필드);
 		포지션텍스트필드.setColumns(10);
 
 		담당코치텍스트필드 = new JTextField();
 		담당코치텍스트필드.setText("담당코치 이름 입력");
-		담당코치텍스트필드.setForeground(new Color(192, 192, 192));
+		담당코치텍스트필드.setBorder(null); 
+		담당코치텍스트필드.setForeground(Color.DARK_GRAY);
 		담당코치텍스트필드.setBounds(685, 331, 196, 30);
 		one.add(담당코치텍스트필드);
 		담당코치텍스트필드.setColumns(10);
 
 		담당의사텍스트필드 = new JTextField();
 		담당의사텍스트필드.setText("담당의사 이름 입력");
-		담당의사텍스트필드.setForeground(new Color(192, 192, 192));
+		담당의사텍스트필드.setBorder(null); 
+		담당의사텍스트필드.setForeground(Color.DARK_GRAY);
 		담당의사텍스트필드.setBounds(685, 371, 196, 30);
 		one.add(담당의사텍스트필드);
 		담당의사텍스트필드.setColumns(10);
 
 		아이디텍스트필드 = new JTextField(15);
-		아이디텍스트필드.setForeground(new Color(192, 192, 192));
+		아이디텍스트필드.setForeground(Color.DARK_GRAY);
+		아이디텍스트필드.setBorder(null); 
 		아이디텍스트필드.setText("아이디 입력");
 		아이디텍스트필드.setOpaque(false);
 
@@ -1359,7 +1367,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		비밀번호텍스트필드 = new JTextField();
 		비밀번호텍스트필드.setText("문자 포함 4자리 이상 가능");
-		비밀번호텍스트필드.setForeground(new Color(192, 192, 192));
+		비밀번호텍스트필드.setBorder(null); 
+		비밀번호텍스트필드.setForeground(Color.DARK_GRAY);
 		비밀번호텍스트필드.setBounds(685, 212, 196, 30);
 		one.add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
@@ -1397,8 +1406,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		등번호텍스트필드 = new JTextField();
 		등번호텍스트필드.setText("등번호 입력");
-		등번호텍스트필드.setForeground(new Color(192, 192, 192));
-		등번호텍스트필드.setBounds(430, 254, 98, 29);
+		등번호텍스트필드.setOpaque(false);
+		등번호텍스트필드.setBorder(null); 
+		등번호텍스트필드.setForeground(Color.DARK_GRAY);
+		등번호텍스트필드.setBounds(420, 254, 98, 29);
 		one.add(등번호텍스트필드);
 		등번호텍스트필드.setColumns(10);
 
@@ -1447,21 +1458,24 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		textField = new JTextField();
 		textField.setText("이름 입력");
-		textField.setForeground(new Color(192, 192, 192));
+		textField.setBorder(null);
+		textField.setForeground(Color.DARK_GRAY);
 		textField.setBounds(684, 293, 199, 30);
 		two.add(textField);
 		textField.setColumns(10);
 
 		textField_1 = new JTextField();
 		textField_1.setText("나이 입력");
-		textField_1.setForeground(new Color(192, 192, 192));
+		textField_1.setBorder(null);
+		textField_1.setForeground(Color.DARK_GRAY);
 		textField_1.setBounds(684, 332, 199, 30);
 		two.add(textField_1);
 		textField_1.setColumns(10);
 
 		textField_2 = new JTextField();
 		textField_2.setText("직책 입력, 입력 예) 코치");
-		textField_2.setForeground(new Color(192, 192, 192));
+		textField_2.setBorder(null);
+		textField_2.setForeground(Color.DARK_GRAY);
 		textField_2.setBounds(684, 370, 199, 30);
 		two.add(textField_2);
 		textField_2.setColumns(10);
@@ -1473,14 +1487,16 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		textField_4 = new JTextField();
 		textField_4.setText("아이디 입력");
-		textField_4.setForeground(new Color(192, 192, 192));
+		textField_4.setBorder(null);
+		textField_4.setForeground(Color.DARK_GRAY);
 		textField_4.setBounds(684, 148, 103, 30);
 		two.add(textField_4);
 		textField_4.setColumns(10);
 
 		textField_5 = new JTextField();
 		textField_5.setText("문자 포함 4자리 이상 가능");
-		textField_5.setForeground(new Color(192, 192, 192));
+		textField_5.setBorder(null);
+		textField_5.setForeground(Color.DARK_GRAY);
 		textField_5.setBounds(684, 213, 199, 30);
 		two.add(textField_5);
 		textField_5.setColumns(10);
