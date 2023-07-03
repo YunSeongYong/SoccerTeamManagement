@@ -77,13 +77,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JComboBox 선수정보콤보박스;
 	private int backnumber;
 	private JPanel 개인정보창;
-	private JLabel 이름수정라벨;
-	private JLabel 신장수정라벨;
-	private JLabel 몸무게수정라벨;
-	private JLabel 나이수정라벨;
-	private JLabel 포지션수정라벨;
-	private JLabel 담당코치수정라벨;
-	private JLabel 담당의사수정라벨;
 	private JTextField 이름수정텍스트필드;
 	private JTextField 신장수정텍스트필드;
 	private JTextField 몸무게수정텍스트필드;
@@ -92,7 +85,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTextField 담당코치수정텍스트필드;
 	private JButton 이미지수정버튼;
 	private JButton 수정버튼;
-	private JLabel 등번호수정라벨;
 	private JTextField 등번호수정텍스트필드;
 	private JPanel 이미지등록수정창;
 	private JLabel 선수정보수정라벨;
@@ -1724,111 +1716,94 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수정보라벨.setVisible(false);
 
 		개인정보창 = new JPanel();
-		개인정보창.setBounds(139, 57, 840, 376);
+		개인정보창.setBounds(164, 82, 840, 376);
 		three.add(개인정보창);
 		개인정보창.setLayout(null);
 		개인정보창.setBackground(Color.WHITE);
 
-		이름수정라벨 = new JLabel("이름");
-		이름수정라벨.setBounds(544, 55, 52, 15);
-		개인정보창.add(이름수정라벨);
-
-		신장수정라벨 = new JLabel("신장");
-		신장수정라벨.setBounds(267, 106, 62, 15);
-		개인정보창.add(신장수정라벨);
-
-		몸무게수정라벨 = new JLabel("몸무게");
-		몸무게수정라벨.setBounds(532, 106, 64, 15);
-		개인정보창.add(몸무게수정라벨);
-
-		나이수정라벨 = new JLabel("나이");
-		나이수정라벨.setBounds(267, 166, 62, 15);
-		개인정보창.add(나이수정라벨);
-
-		포지션수정라벨 = new JLabel("포지션");
-		포지션수정라벨.setBounds(532, 166, 81, 15);
-		개인정보창.add(포지션수정라벨);
-
-		담당코치수정라벨 = new JLabel("담당 코치");
-		담당코치수정라벨.setBounds(267, 218, 81, 15);
-		개인정보창.add(담당코치수정라벨);
-
-		담당의사수정라벨 = new JLabel("담당 의사");
-		담당의사수정라벨.setBounds(523, 218, 90, 15);
-		개인정보창.add(담당의사수정라벨);
-
 		이름수정텍스트필드 = new JTextField();
 		이름수정텍스트필드.setColumns(10);
-		이름수정텍스트필드.setBounds(623, 52, 116, 21);
+		이름수정텍스트필드.setBounds(139, 215, 116, 21);
 		개인정보창.add(이름수정텍스트필드);
 
 		신장수정텍스트필드 = new JTextField();
 		신장수정텍스트필드.setColumns(10);
-		신장수정텍스트필드.setBounds(341, 103, 116, 21);
+		신장수정텍스트필드.setBounds(473, 119, 116, 21);
 		개인정보창.add(신장수정텍스트필드);
 
 		몸무게수정텍스트필드 = new JTextField();
 		몸무게수정텍스트필드.setColumns(10);
-		몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
+		몸무게수정텍스트필드.setBounds(473, 151, 116, 21);
 		개인정보창.add(몸무게수정텍스트필드);
 
 		나이수정텍스트필드 = new JTextField();
 		나이수정텍스트필드.setColumns(10);
-		나이수정텍스트필드.setBounds(341, 163, 116, 21);
+		나이수정텍스트필드.setBounds(473, 92, 116, 21);
 		개인정보창.add(나이수정텍스트필드);
 
 		포지션수정텍스트필드 = new JTextField();
 		포지션수정텍스트필드.setColumns(10);
-		포지션수정텍스트필드.setBounds(625, 163, 116, 21);
+		포지션수정텍스트필드.setBounds(473, 183, 116, 21);
 		개인정보창.add(포지션수정텍스트필드);
 
 		담당코치수정텍스트필드 = new JTextField();
 		담당코치수정텍스트필드.setColumns(10);
-		담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
+		담당코치수정텍스트필드.setBounds(473, 215, 116, 21);
 		개인정보창.add(담당코치수정텍스트필드);
 
 		담당의사수정텍스트필드 = new JTextField();
 		담당의사수정텍스트필드.setColumns(10);
-		담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
+		담당의사수정텍스트필드.setBounds(474, 247, 116, 21);
 		개인정보창.add(담당의사수정텍스트필드);
 
-		이미지수정버튼 = new JButton("이미지수정");
+		이미지수정버튼 = new JButton("");
+		이미지수정버튼.setOpaque(false);
+		이미지수정버튼.setContentAreaFilled(false);
+		이미지수정버튼.setBorderPainted(false);
+		이미지수정버튼.setFocusPainted(false);
 		이미지수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				선수목록_개인정보_이미지를화면에수정하는메소드();
 			}
 		});
-		이미지수정버튼.setBounds(48, 307, 126, 23);
+		이미지수정버튼.setBounds(155, 263, 97, 42);
 		개인정보창.add(이미지수정버튼);
 
-		수정버튼 = new JButton("수정버튼");
+		수정버튼 = new JButton("");
+		수정버튼.setOpaque(false);
+		수정버튼.setContentAreaFilled(false);
+		수정버튼.setBorderPainted(false);
+		수정버튼.setFocusPainted(false);
 		수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				선수목록_개인정보_선수수정메소드(playerList);
 				선수목록_선수정보콤보박스목록만드는메소드();
 			}
 		});
-		수정버튼.setBounds(585, 307, 90, 29);
+		수정버튼.setBounds(632, 118, 79, 34);
 		개인정보창.add(수정버튼);
 
-		등번호수정라벨 = new JLabel("등번호");
-		등번호수정라벨.setBounds(267, 55, 64, 15);
-		개인정보창.add(등번호수정라벨);
-
 		등번호수정텍스트필드 = new JTextField();
+		등번호수정텍스트필드.setForeground(Color.WHITE);
+		등번호수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 10));
+		등번호수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
 		등번호수정텍스트필드.setColumns(10);
-		등번호수정텍스트필드.setBounds(341, 52, 116, 21);
+		등번호수정텍스트필드.setBounds(115, 58, 24, 25);
 		개인정보창.add(등번호수정텍스트필드);
 
 		이미지등록수정창 = new JPanel();
-		이미지등록수정창.setBounds(26, 55, 164, 207);
+		이미지등록수정창.setBounds(-116, 54, 164, 207);
 		개인정보창.add(이미지등록수정창);
 
 		선수정보수정라벨 = new JLabel("선수정보수정");
 		선수정보수정라벨.setBounds(377, 10, 116, 15);
 		개인정보창.add(선수정보수정라벨);
 
-		JButton 선수삭제버튼 = new JButton("선수삭제");
+		JButton 선수삭제버튼 = new JButton("");
+		선수삭제버튼.setOpaque(false);
+		선수삭제버튼.setContentAreaFilled(false);
+		선수삭제버튼.setBorderPainted(false);
+		선수삭제버튼.setFocusPainted(false);
 		선수삭제버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
@@ -1842,11 +1817,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				}
 			}
 		});
-		선수삭제버튼.setBounds(367, 301, 90, 34);
+		선수삭제버튼.setBounds(632, 216, 78, 32);
 		개인정보창.add(선수삭제버튼);
 		
-		JLabel lblNewLabel_1 = new JLabel("이미지");
-		lblNewLabel_1.setBounds(1, 0, 842, 376);
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록화면-안쪽디자인-3.jpg")));
+		lblNewLabel_1.setBounds(0, 0, 842, 351);
 		개인정보창.add(lblNewLabel_1);
 		개인정보창.setVisible(false);
 
