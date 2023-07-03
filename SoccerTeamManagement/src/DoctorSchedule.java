@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -82,8 +83,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				insertAppointmentTabel(appointmentList, table_1);
 
 //				// 저장 버튼 비활성화
-
 				btnNewButton.setEnabled(false);
+				textArea.setEnabled(false);
 
 			}
 		});
@@ -96,13 +97,17 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int row = table_1.getSelectedRow();
-				System.out.println("선택된 행수" + row);
-				TableModel data = table_1.getModel();
-				int number = (Integer) data.getValueAt(row, 1);
-				System.out.println("선택된 번호" + number);
-
-				insertDoctorComment(number, textArea.getText());
+				if (textArea.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "내용을 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else {
+					int row = table_1.getSelectedRow();
+					TableModel data = table_1.getModel();
+					int number = (Integer) data.getValueAt(row, 1);
+					insertDoctorComment(number, textArea.getText());
+					JOptionPane.showMessageDialog(null, "저장되었습니다", "확인", JOptionPane.INFORMATION_MESSAGE);
+					textArea.setText(null);
+				}
+				
 
 			}
 		});
@@ -124,8 +129,10 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				if (table_1.getSelectedRowCount() == 1
 						&& comboBox.getSelectedItem().toString().equals(currentDate.toString())) {
 					btnNewButton.setEnabled(true);
+					textArea.setEnabled(true);
 				} else {
 					btnNewButton.setEnabled(false);
+					textArea.setEnabled(false);
 				}
 			}
 		});
@@ -141,6 +148,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		textArea = new JTextArea();
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
+		textArea.setEnabled(false);
 
 		two = new JPanel();
 		pane.addTab("병력보기", two);
@@ -167,6 +175,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				Period period = Period.between(startDate, currentDate);
 				int datePeriod = period.getDays();
 				System.out.println("기간" + datePeriod);
+				
+				endComboBox.removeAllItems();
 
 				for (int i = 0; i <= datePeriod; i++) {
 					endComboBox.addItem(startDate.plusDays(i));
@@ -178,9 +188,9 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		endComboBox.setBounds(204, 32, 150, 21);
 		two.add(endComboBox);
 		endComboBox.setEnabled(false);
-		
+
 		endComboBox.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				btnNewButton_1.setEnabled(true);
@@ -192,7 +202,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		two.add(nameComboBox);
 
 		addPlayer(staff.getName());
-//		nameComboBox.setSelectedIndex(0);
+		nameComboBox.setSelectedIndex(0);
 
 		btnNewButton_1 = new JButton("조회");
 		btnNewButton_1.setBounds(553, 31, 97, 23);
@@ -206,7 +216,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				String backNumber = str.substring(0, str.indexOf("."));
 				String startDate = startComboBox.getSelectedItem().toString();
 				String endDate = endComboBox.getSelectedItem().toString();
-			
+
 				List<Comment> list = makeCommentList(backNumber, startDate, endDate);
 				insertCommentTabel(list, table_2);
 			}

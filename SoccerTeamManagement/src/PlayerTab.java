@@ -88,19 +88,18 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		commonScheduleTp.setFont(new Font("맑은 고딕", Font.BOLD, 17));
 		commonScheduleTp.setOpaque(false);
 		List<CommonSchedule> scTodayList = viewCommonSchedule(currentDate.toString());
-		
+
 		String csStr = printCommonSchedule(scTodayList);
 
 		commonScheduleTp.setText(csStr);
 		commonScheduleTp.setEditable(false);
-		
-		
+
 		JScrollPane scrollPane2 = new JScrollPane(commonScheduleTp);
 		scrollPane2.setBounds(45, 50, 870, 80);
 		scrollPane2.setOpaque(false);
 		scrollPane2.getViewport().setOpaque(false);
 		scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		
+
 		one.add(scrollPane2);
 		one.setOpaque(true);
 
@@ -122,7 +121,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				String index = String.valueOf(jcb.getSelectedItem());
 
 				List<CommonSchedule> csList = viewCommonSchedule(index);
-				
+
 				String csStr = printCommonSchedule(csList);
 				commonScheduleTp.setText(csStr);
 
@@ -130,13 +129,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
 
 				List<Comment> cmtList = viewComment(player.getBackNumber(), index, scheduleSql);
-			
+
 				String coStr = printComment(cmtList);
 				commentTp.setText(coStr);
 
 				List<Schedule> scList = viewPersonalSchedule(player.getBackNumber(), index);
 				insertTabel(scList);
-				
+
 				// 버튼 비활성화!!!!!!
 				LocalDate startDate = LocalDate.parse(comboBox.getSelectedItem().toString());
 				Period period = Period.between(currentDate, startDate);
@@ -146,8 +145,9 @@ public class PlayerTab extends JFrame implements ChangeListener {
 					regiBtn.setEnabled(false);
 				} else {
 					regiBtn.setEnabled(true);
+
 				}
-				
+
 			}
 		});
 
@@ -159,7 +159,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT schedulecomment IS NULL;";
 		List<Comment> scCommentList = viewComment(player.getBackNumber(), comboBox.getSelectedItem().toString(),
 				scheduleSql);
-		
+
 		String coStr = printComment(scCommentList);
 		commentTp.setEditable(false);
 
@@ -167,8 +167,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrollPane.setBounds(45, 195, 267, 170);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setOpaque(false);
-		//scrollPane.setBorder(null);
-		
+		// scrollPane.setBorder(null);
+
 		one.add(scrollPane);
 
 		// 등록 버튼 누르면 새 창 열림
@@ -178,7 +178,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		regiBtn.setBorderPainted(false);
 		regiBtn.setBounds(493, 385, 90, 36);
 		one.add(regiBtn);
-		regiBtn.setEnabled(false);
+		regiBtn.setEnabled(true);
 
 		regiBtn.addActionListener(new ActionListener() {
 			@Override
@@ -207,7 +207,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				deletePersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString(), startTime);
 
 				removeRecord(row);
-				
+
 				// 버튼 비활성화!!
 				if (table.getRowCount() == 0) {
 					updateBtn.setEnabled(false);
@@ -245,36 +245,53 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		// JTabel
 		JScrollPane scrolledTable = new JScrollPane((Component) null);
 		scrolledTable.setOpaque(false);
-		
-		
+
 		scrolledTable.setBounds(377, 165, 550, 210);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		one.add(scrolledTable);
 
-		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04",
-				"\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9", "\uC2B9\uC778\uC5EC\uBD80" }));
+		// table 수정 못하게
+		DefaultTableModel mod = new DefaultTableModel(new Object[][] {}, new String[] {"시작 시간", "종료 시간", "내용", "승인여부"}) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+		
+		table = new JTable(mod);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
+
+//		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04",
+//				"\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9", "\uC2B9\uC778\uC5EC\uBD80" }));
 		table.setFillsViewportHeight(true);
 		table.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 		table.setForeground(new Color(22, 47, 136));
 		table.setBackground(new Color(255, 255, 255));
-		
+		table.getColumnModel().getColumn(0).setMaxWidth(70);
+        table.getColumnModel().getColumn(0).setMinWidth(70);
+        table.getColumnModel().getColumn(0).setWidth(70);
+        table.getColumnModel().getColumn(1).setMaxWidth(70);
+        table.getColumnModel().getColumn(1).setMinWidth(70);
+        table.getColumnModel().getColumn(1).setWidth(70);
+        table.getColumnModel().getColumn(3).setMaxWidth(70);
+        table.getColumnModel().getColumn(3).setMinWidth(70);
+        table.getColumnModel().getColumn(3).setWidth(70);
+		table.setRowHeight(20);
+
 		// Create a custom TableCellRenderer to center the text
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
 		// Apply the custom renderer to each column of the table
 		for (int i = 0; i < table.getColumnCount(); i++) {
-		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
-		
-		
 
 		List<Schedule> psList = viewPersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString());
 		insertTabel(psList);
 
 		scrolledTable.setViewportView(table);
-		
-		
+
 		JLabel lblNewLabel_3 = new JLabel("New label");
 		lblNewLabel_3.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/축구장-배경12.jpg")));
 		lblNewLabel_3.setBounds(0, 0, 979, 447);
@@ -291,13 +308,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 					updateBtn.setEnabled(true);
 					deleteBtn.setEnabled(true);
 					regiBtn.setEnabled(true);
-				} else if (table.getSelectedRowCount() == 0){
+				} else if (table.getSelectedRowCount() == 0) {
 					updateBtn.setEnabled(false);
 					deleteBtn.setEnabled(false);
-				} 
+				}
 			}
 		});
-		
 
 		// 컨디션 등록 탭
 		// ////////////////////////////////////////////////////////////////////////////
@@ -305,7 +321,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		
 		JScrollPane scrollPane_1 = new JScrollPane() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -318,12 +333,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrollPane_1.setBounds(40, 63, 250, 308);
 		scrollPane_1.setOpaque(false);
 		scrollPane_1.getViewport().setOpaque(false);
-		//scrollPane_1.setBorder(null);
+		// scrollPane_1.setBorder(null);
 		scrollPane_1.setViewportBorder(null);
 		scrollPane_1.getVerticalScrollBar().setOpaque(false);
 		scrollPane_1.getHorizontalScrollBar().setOpaque(false);
 		two.add(scrollPane_1);
-		
+
 		textArea = new JTextArea();
 		textArea.setFont(new Font("맑은 고딕", Font.BOLD, 17));
 		textArea.setForeground(Color.WHITE);
@@ -337,16 +352,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		saveBtn.setContentAreaFilled(false);
 		saveBtn.setBorderPainted(false);
 		saveBtn.setFocusPainted(false);
-		
+
 		two.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				insertCondition(player);
-				
-				JOptionPane.showMessageDialog(null, "저장되었습니다.", "확인", JOptionPane.INFORMATION_MESSAGE);
-				textArea.setText(null);
-				
+				if (textArea.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "내용을 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else {
+					insertCondition(player);
+					JOptionPane.showMessageDialog(null, "저장되었습니다", "확인", JOptionPane.INFORMATION_MESSAGE);
+					textArea.setText(null);
+				}
+
 			}
 		});
 
@@ -380,8 +398,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				if (!index.equals(currentDate.toString())) {
 					saveBtn.setEnabled(false);
+					textArea.setEnabled(false);
 				} else {
 					saveBtn.setEnabled(true);
+					textArea.setEnabled(true);
 				}
 
 			}
@@ -394,19 +414,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(scrolledTable_1);
 
 		// 컨디션 코멘트 테이블
-		conditionCommentTable = new JTable(
-				new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"\uC2DC\uAC04", "\uCF54\uBA58\uD2B8", "\uC791\uC131\uC790"
-			}
-		));
+		conditionCommentTable = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8", "\uC791\uC131\uC790" }));
 
 //		String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
 //				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
 
-		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString());
+		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(),
+				dateComboBox.getSelectedItem().toString());
 		insertConditionCommentTabel(conditionCommentList, conditionCommentTable);
 
 		conditionCommentTable.setBounds(0, 0, 457, 1);
@@ -424,13 +439,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
-		
+
 		DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
 		centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
 
 		// Apply the custom renderer to each column of the table
 		for (int i = 0; i < table.getColumnCount(); i++) {
-		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
 
 		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
@@ -439,7 +454,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		doctorCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_2.setViewportView(doctorCommentTable);
-		
+
 		JLabel lblNewLabel_4 = new JLabel("  ");
 		lblNewLabel_4.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수컨디션등록-배경-2.jpg")));
 		lblNewLabel_4.setBounds(0, 0, 979, 447);
@@ -706,7 +721,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			tableModel.addRow(rowData);
 		}
 	}
-	
+
 	// 컨디션 코멘트 리스트 만들기
 	private static List<Comment> viewConditionComment(int number, String datetime) {
 		List<Comment> list = new ArrayList<>();
@@ -716,8 +731,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment, who FROM comment\r\n" + 
-					"WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment, who FROM comment\r\n"
+					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, datetime);
@@ -741,7 +756,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		}
 		return list;
 	}
-	
+
 	// 컨디션 코멘트 테이블에 넣는 메소드
 	private static void insertConditionCommentTabel(List<Comment> list, JTable table) {
 		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
@@ -750,30 +765,30 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		// filteredList의 데이터를 테이블 모델에 추가
 		for (Comment comment : list) {
-			Object[] rowData = {comment.getDatetime(), comment.getConditioncomment(), comment.getWho()};
+			Object[] rowData = { comment.getDatetime(), comment.getConditioncomment(), comment.getWho() };
 			tableModel.addRow(rowData);
 		}
 	}
-	
+
 	// 공동일정 보여주는 메소드
-	private static String printCommonSchedule (List<CommonSchedule> list) {
+	private static String printCommonSchedule(List<CommonSchedule> list) {
 		String str = "";
 		for (CommonSchedule cs : list) {
-			str = cs.getDate() + " " + cs.getStartTime() + "~" + cs.getEndTime() + 
-					"\n장소 : " + cs.getLocation() +  "\n내용 : " + cs.getContent() + "\n";
+			str = cs.getDate() + " " + cs.getStartTime() + "~" + cs.getEndTime() + "\n장소 : " + cs.getLocation()
+					+ "\n내용 : " + cs.getContent() + "\n";
 		}
 		return str;
 	}
-	
+
 	// 일정 코멘트 보여주는 메소드
-	private static String printComment (List<Comment> list) {
+	private static String printComment(List<Comment> list) {
 		String str = "";
 		for (Comment comment : list) {
 			str = comment.getDatetime() + " : " + comment.getConditioncomment() + "\n";
 		}
 		return str;
 	}
-	
+
 	public static void main(String[] args) {
 		new PlayerTab();
 

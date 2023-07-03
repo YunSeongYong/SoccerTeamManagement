@@ -4,21 +4,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import dbutil.DBUtil;
 
-public class UpdateSchedule extends JFrame{
+public class UpdateSchedule extends JFrame {
 	public static JTextField startTxt;
 	public static JTextField endTxt;
-	public static JTextField contentTxt;
+	public static JTextArea contentTxt;
 	public PlayerTab playerTab;
 	public Player player;
 
@@ -48,11 +53,12 @@ public class UpdateSchedule extends JFrame{
 		lblNewLabel_2.setBounds(39, 64, 35, 15);
 		getContentPane().add(lblNewLabel_2);
 
-		contentTxt = new JTextField();
+		contentTxt = new JTextArea();
 		contentTxt.setBounds(39, 89, 341, 129);
 		getContentPane().add(contentTxt);
 		contentTxt.setColumns(10);
-		
+		contentTxt.setLineWrap(true);
+
 		startTxt.setText(schedule.getStartTime());
 		endTxt.setText(schedule.getEndTime());
 		contentTxt.setText(schedule.getContent());
@@ -64,17 +70,34 @@ public class UpdateSchedule extends JFrame{
 		updateBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				updateSchedule(startTxt.getText(), endTxt.getText(), contentTxt.getText() , player.getBackNumber(), schedule.getStartTime(), schedule.getEndTime());
-				
-				JTable table = playerTab.table;
-				DefaultTableModel model = (DefaultTableModel) table.getModel();
-				int index = table.getSelectedRow();
-				model.setValueAt(startTxt.getText(), index, 0);
-				model.setValueAt(endTxt.getText(), index, 1);
-				model.setValueAt(contentTxt.getText(), index, 2);
-				
-				dispose();
+				String startTime = startTxt.getText();
+				String endTime = endTxt.getText();
+				String content = contentTxt.getText();
+
+				if (startTime.equals("") || content.equals("")) {
+					JOptionPane.showMessageDialog(null, "시작 시간과 내용을 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else if (!timeFormat(startTime) || !timeFormat(endTime)) {
+					JOptionPane.showMessageDialog(null, "시간을 정확히 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else if (startTime != "" && content != "" && timeFormat(startTime) && timeFormat(endTime)) {
+					LocalTime startTimeParse = LocalTime.parse(startTxt.getText());
+					LocalTime endTimeParse = LocalTime.parse(endTxt.getText());
+					if (startTimeParse.isAfter(endTimeParse) || startTimeParse.equals(endTimeParse)
+							|| !timeFormat(startTime) || !timeFormat(endTime)) {
+						JOptionPane.showMessageDialog(null, "시간을 정확히 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+					} else {
+						updateSchedule(startTxt.getText(), endTxt.getText(), contentTxt.getText(), player.getBackNumber(),
+								schedule.getStartTime(), schedule.getEndTime());
+
+						JTable table = playerTab.table;
+						DefaultTableModel model = (DefaultTableModel) table.getModel();
+						int index = table.getSelectedRow();
+						model.setValueAt(startTxt.getText(), index, 0);
+						model.setValueAt(endTxt.getText(), index, 1);
+						model.setValueAt(contentTxt.getText(), index, 2);
+
+						dispose();
+					}
+				}
 			}
 		});
 
@@ -82,16 +105,17 @@ public class UpdateSchedule extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
-	
+
 	// 스케줄 업데이트 메소드
-	private static void updateSchedule(String newStartTime, String newEndTime, String newContent, int number, String startTime, String endTime) {
+	private static void updateSchedule(String newStartTime, String newEndTime, String newContent, int number,
+			String startTime, String endTime) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "UPDATE playerschedule SET starttime = ?, endtime = ?, content = ?\r\n" + 
-					"WHERE number = ? AND starttime = ? AND endtime = ?;";
+			String sql = "UPDATE playerschedule SET starttime = ?, endtime = ?, content = ?\r\n"
+					+ "WHERE number = ? AND starttime = ? AND endtime = ?;";
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, newStartTime);
@@ -110,6 +134,13 @@ public class UpdateSchedule extends JFrame{
 		}
 	}
 
+	// 24시간 시간 입력 정규표현식
+	private static boolean timeFormat(String input) {
+		Pattern p = Pattern.compile("^([01][0-9]|2[0-3]):([0-5][0-9])$");
+
+		Matcher m = p.matcher(input);
+
+		return m.matches();
+	}
+
 }
-
-
