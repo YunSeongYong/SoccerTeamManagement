@@ -36,6 +36,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
 
@@ -165,6 +167,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JScrollPane scrollPane_7;
 	private JTextArea 스태프목록_담당선수텍스트박스;
 	private JScrollPane scrollPane_8;
+	private JLabel lblNewLabel_9_1;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -1608,6 +1611,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이름텍스트필드.setBounds(420, 294, 98, 29);
 		one.add(이름텍스트필드);
 		이름텍스트필드.setColumns(10);
+		이름텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	이름텍스트필드.setText("");
+		    	이름텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		신장텍스트필드 = new JTextField();
 		신장텍스트필드.setText("신장 입력");
@@ -1616,6 +1626,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		신장텍스트필드.setBounds(420, 332, 98, 29);
 		one.add(신장텍스트필드);
 		신장텍스트필드.setColumns(10);
+		신장텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	신장텍스트필드.setText("");
+		    	신장텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		몸무게텍스트필드 = new JTextField();
 		몸무게텍스트필드.setText("몸무게 입력");
@@ -1624,6 +1641,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		몸무게텍스트필드.setBounds(420, 370, 98, 29);
 		one.add(몸무게텍스트필드);
 		몸무게텍스트필드.setColumns(10);
+		몸무게텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	몸무게텍스트필드.setText("");
+		    	몸무게텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		나이텍스트필드 = new JTextField();
 		나이텍스트필드.setText("나이 입력");
@@ -1632,6 +1656,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		나이텍스트필드.setBounds(685, 255, 196, 30);
 		one.add(나이텍스트필드);
 		나이텍스트필드.setColumns(10);
+		나이텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	나이텍스트필드.setText("");
+		    	나이텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		포지션텍스트필드 = new JTextField();
 		포지션텍스트필드.setText("포지션 입력 예) MF");
@@ -1640,6 +1671,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		포지션텍스트필드.setBounds(685, 293, 196, 30);
 		one.add(포지션텍스트필드);
 		포지션텍스트필드.setColumns(10);
+		포지션텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	포지션텍스트필드.setText("");
+		    	포지션텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		담당코치텍스트필드 = new JTextField();
 		담당코치텍스트필드.setText("담당코치 이름 입력");
@@ -1648,6 +1686,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		담당코치텍스트필드.setBounds(685, 331, 196, 30);
 		one.add(담당코치텍스트필드);
 		담당코치텍스트필드.setColumns(10);
+		담당코치텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	담당코치텍스트필드.setText("");
+		    	담당코치텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		담당의사텍스트필드 = new JTextField();
 		담당의사텍스트필드.setText("담당의사 이름 입력");
@@ -1656,12 +1701,26 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		담당의사텍스트필드.setBounds(685, 371, 196, 30);
 		one.add(담당의사텍스트필드);
 		담당의사텍스트필드.setColumns(10);
+		담당의사텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	담당의사텍스트필드.setText("");
+		    	담당의사텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		아이디텍스트필드 = new JTextField(15);
 		아이디텍스트필드.setForeground(Color.DARK_GRAY);
 		아이디텍스트필드.setBorder(null);
 		아이디텍스트필드.setText("아이디 입력");
 		아이디텍스트필드.setOpaque(false);
+		아이디텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	아이디텍스트필드.setText("");
+		    	아이디텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		아이디텍스트필드.setBounds(685, 147, 99, 31);
 		one.add(아이디텍스트필드);
@@ -1674,6 +1733,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		비밀번호텍스트필드.setBounds(685, 212, 196, 30);
 		one.add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
+		비밀번호텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		    	비밀번호텍스트필드.setText("");
+		    	비밀번호텍스트필드.removeMouseListener(this);
+		    }
+		});
 
 		저장버튼 = new JButton("");
 		저장버튼.addActionListener(new ActionListener() {
@@ -1714,6 +1780,15 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		등번호텍스트필드.setBounds(420, 254, 98, 29);
 		one.add(등번호텍스트필드);
 		등번호텍스트필드.setColumns(10);
+		
+		등번호텍스트필드.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        등번호텍스트필드.setText("");
+		        등번호텍스트필드.removeMouseListener(this);
+		    }
+		});
+
 
 		이미지등록창 = new JPanel();
 		이미지등록창.setBackground(new Color(22, 47, 138));
@@ -1932,7 +2007,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				의사소견창.setVisible(true);
 			}
 		});
-		의사소견버튼.setBounds(32, 324, 117, 46);
+		의사소견버튼.setBounds(32, 318, 117, 46);
 		three.add(의사소견버튼);
 
 		날짜콤보박스 = new JComboBox();
@@ -2008,44 +2083,120 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
-
-		일정창 = new JPanel();
-		일정창.setBounds(192, 57, 787, 376);
-		three.add(일정창);
-		일정창.setLayout(null);
-
-		일정창_코멘트텍스트필드 = new JTextField();
-		일정창_코멘트텍스트필드.setBounds(631, 225, 513, 77);
-		일정창.add(일정창_코멘트텍스트필드);
-		일정창_코멘트텍스트필드.setColumns(10);
-
-		일정창_저장버튼 = new JButton("저장");
-		일정창_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String comment = 일정창_코멘트텍스트필드.getText();
-				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
-				선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
-						selectedStartTimes);
-				일정창_코멘트텍스트필드.setText("");
-			}
-		});
-		일정창_저장버튼.setBounds(626, 293, 135, 73);
-		일정창.add(일정창_저장버튼);
-
-		scrolledTable = new JScrollPane((Component) null);
-		scrolledTable.setBounds(23, 21, 617, 263);
-		일정창.add(scrolledTable);
-		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		table = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-		};
-		scrolledTable.setViewportView(table);
+				
+						일정창 = new JPanel();
+						일정창.setBounds(192, 57, 787, 376);
+						three.add(일정창);
+						일정창.setLayout(null);
+						
+								일정창_저장버튼 = new JButton("저장");
+								일정창_저장버튼.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent arg0) {
+										String comment = 일정창_코멘트텍스트필드.getText();
+										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+												selectedStartTimes);
+										일정창_코멘트텍스트필드.setText("");
+									}
+								});
+								일정창_저장버튼.setBounds(626, 293, 135, 73);
+								일정창.add(일정창_저장버튼);
+								
+										scrolledTable = new JScrollPane((Component) null);
+										scrolledTable.setBounds(23, 21, 617, 263);
+										일정창.add(scrolledTable);
+										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+										
+												table = new JTable(new DefaultTableModel(new Object[][] {},
+														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+												};
+												scrolledTable.setViewportView(table);
+												
+												scrollPane_8 = new JScrollPane();
+												scrollPane_8.setBounds(78, 278, 513, 77);
+												일정창.add(scrollPane_8);
+												
+														일정창_코멘트텍스트필드 = new JTextField();
+														scrollPane_8.setViewportView(일정창_코멘트텍스트필드);
+														일정창_코멘트텍스트필드.setColumns(10);
+														일정창.setVisible(false);
 		
-		scrollPane_8 = new JScrollPane();
-		scrollPane_8.setBounds(78, 278, 513, 77);
-		일정창.add(scrollPane_8);
-		일정창.setVisible(false);
+				의사소견창 = new JPanel();
+				의사소견창.setBounds(192, 57, 787, 376);
+				three.add(의사소견창);
+				의사소견창.setLayout(null);
+				
+						scrollPane_2 = new JScrollPane();
+						scrollPane_2.setBounds(32, 177, 206, 149);
+						의사소견창.add(scrollPane_2);
+						
+								선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
+								scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
+								
+										lblNewLabel_4 = new JLabel("");
+										lblNewLabel_4.setBounds(69, 196, 57, 15);
+										의사소견창.add(lblNewLabel_4);
+										
+												선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
+												선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
+												선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
+												의사소견창.add(선수목록_의사소견_의사소견라벨);
+												
+														scrollPane_3 = new JScrollPane();
+														scrollPane_3.setBounds(310, 177, 217, 156);
+														의사소견창.add(scrollPane_3);
+														
+																선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
+																scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
+																
+																		lblNewLabel_10 = new JLabel("선수 컨디션");
+																		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
+																		lblNewLabel_10.setBounds(86, 152, 82, 15);
+																		의사소견창.add(lblNewLabel_10);
+																		
+																				scrolledTable_2 = new JScrollPane((Component) null);
+																				scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+																				scrolledTable_2.setBounds(84, 18, 616, 124);
+																				의사소견창.add(scrolledTable_2);
+																				
+																						doctorAppointmentTable = new JTable(new DefaultTableModel(new Object[][] {},
+																								new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04",
+																										"\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58" }));
+																						scrolledTable_2.setViewportView(doctorAppointmentTable);
+																						
+																								scrollPane_4 = new JScrollPane();
+																								scrollPane_4.setBounds(567, 177, 185, 156);
+																								의사소견창.add(scrollPane_4);
+																								
+																										선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
+																										scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
+																										
+																												선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
+																												선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																												선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
+																												의사소견창.add(선수목록_의사소견_감독코멘트라벨);
+																												
+																														선수목록_의사소견_저장버튼 = new JButton("저장");
+																														선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
+																															public void actionPerformed(ActionEvent arg0) {
+
+																																String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
+																																선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+																															}
+																														});
+																														선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
+																														의사소견창.add(선수목록_의사소견_저장버튼);
+																														
+																																lblNewLabel_9_1 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+																																lblNewLabel_9_1.setHorizontalAlignment(SwingConstants.CENTER);
+																																lblNewLabel_9_1.setBounds(203, 0, 372, 15);
+																																의사소견창.add(lblNewLabel_9_1);
+																																
+																																		lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
+																																		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+																																		lblNewLabel_12.setBounds(12, 336, 377, 15);
+																																		의사소견창.add(lblNewLabel_12);
+																																		의사소견창.setVisible(false);
 
 		개인정보창 = new JPanel();
 		개인정보창.setBounds(192, 57, 787, 376);
@@ -2169,83 +2320,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수삭제버튼.setBounds(367, 301, 90, 34);
 		개인정보창.add(선수삭제버튼);
 		개인정보창.setVisible(false);
-
-		의사소견창 = new JPanel();
-		의사소견창.setBounds(192, 57, 787, 376);
-		three.add(의사소견창);
-		의사소견창.setLayout(null);
-
-		scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(32, 177, 206, 149);
-		의사소견창.add(scrollPane_2);
-
-		선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
-		scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
-
-		lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setBounds(69, 196, 57, 15);
-		의사소견창.add(lblNewLabel_4);
-
-		선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
-		선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
-		의사소견창.add(선수목록_의사소견_의사소견라벨);
-
-		scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(310, 177, 217, 156);
-		의사소견창.add(scrollPane_3);
-
-		선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
-		scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
-
-		lblNewLabel_10 = new JLabel("선수 컨디션");
-		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_10.setBounds(86, 152, 82, 15);
-		의사소견창.add(lblNewLabel_10);
-
-		scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable_2.setBounds(84, 18, 616, 124);
-		의사소견창.add(scrolledTable_2);
-
-		doctorAppointmentTable = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04",
-						"\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58" }));
-		scrolledTable_2.setViewportView(doctorAppointmentTable);
-
-		scrollPane_4 = new JScrollPane();
-		scrollPane_4.setBounds(567, 177, 185, 156);
-		의사소견창.add(scrollPane_4);
-
-		선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
-		scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
-
-		선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
-		선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
-		의사소견창.add(선수목록_의사소견_감독코멘트라벨);
-
-		선수목록_의사소견_저장버튼 = new JButton("저장");
-		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
-				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-			}
-		});
-		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
-		의사소견창.add(선수목록_의사소견_저장버튼);
-
-		lblNewLabel_9 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
-		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_9.setBounds(203, 0, 372, 15);
-		의사소견창.add(lblNewLabel_9);
-
-		lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
-		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_12.setBounds(12, 336, 377, 15);
-		의사소견창.add(lblNewLabel_12);
-		의사소견창.setVisible(false);
 
 		컨디션창 = new JPanel();
 		컨디션창.setBounds(192, 57, 787, 376);
@@ -2424,6 +2498,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		스태프목록_담당선수텍스트박스 = new JTextArea();
 		scrollPane_7.setViewportView(스태프목록_담당선수텍스트박스);
 		스태프목록_담당선수텍스트박스.setLineWrap(true);
+		스태프목록_담당선수텍스트박스.setEditable(false);
 
 		// ====================================================================
 

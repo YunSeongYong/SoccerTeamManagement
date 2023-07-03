@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JTabbedPane;
 
 import javax.swing.event.ChangeEvent;
@@ -35,12 +36,16 @@ import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.ListSelectionModel;
 import java.awt.Font;
+import java.awt.Graphics;
+
 import javax.swing.JTextField;
 import java.awt.Color;
 
@@ -61,6 +66,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		player = new Player();
 
 		JTextPane commentTp = new JTextPane();
+		commentTp.setForeground(new Color(255, 62, 82));
+		commentTp.setOpaque(false);
+		commentTp.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		commentTp.setBackground(new Color(204, 204, 204));
 
 		JPanel one, two;
 		pane = new JTabbedPane();
@@ -71,19 +80,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("개인일정", one);
 		one.setLayout(null);
 
-		// 개인일정 탭
-		// 라벨
-		JLabel label = new JLabel("공동일정");
-		label.setBounds(56, 15, 57, 42);
-		one.add(label);
-
-		JLabel commentLbl = new JLabel("코멘트");
-		commentLbl.setBounds(152, 376, 49, 61);
-		one.add(commentLbl);
-
 		// 공동일정 스크롤
 		JTextPane commonScheduleTp = new JTextPane();
-		
+		commonScheduleTp.setForeground(new Color(255, 255, 255));
+		commonScheduleTp.setBackground(new Color(22, 47, 136));
+		commonScheduleTp.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+		commonScheduleTp.setOpaque(false);
 		List<CommonSchedule> scTodayList = viewCommonSchedule(currentDate.toString());
 		
 		String csStr = printCommonSchedule(scTodayList);
@@ -93,12 +95,18 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		
 		
 		JScrollPane scrollPane2 = new JScrollPane(commonScheduleTp);
-		scrollPane2.setBounds(125, 9, 653, 54);
+		scrollPane2.setBounds(45, 50, 870, 80);
+		scrollPane2.setOpaque(false);
+		scrollPane2.getViewport().setOpaque(false);
+		scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		
 		one.add(scrollPane2);
+		one.setOpaque(true);
 
 		// 콤보박스
 		comboBox = new JComboBox();
-		comboBox.setBounds(822, 9, 131, 21);
+		comboBox.setBackground(new Color(255, 255, 255));
+		comboBox.setBounds(825, 29, 90, 21);
 		LocalDate minusDate = currentDate.minusDays(15);
 //		List<LocalDate> calendar = new ArrayList<LocalDate>();
 		for (int i = 0; i < 30; i++) {
@@ -152,19 +160,24 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				scheduleSql);
 		
 		String coStr = printComment(scCommentList);
-
-		commentTp.setText(coStr);
 		commentTp.setEditable(false);
 
 		JScrollPane scrollPane = new JScrollPane(commentTp);
-		scrollPane.setBounds(56, 115, 267, 269);
+		scrollPane.setBounds(45, 195, 267, 170);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setOpaque(false);
+		//scrollPane.setBorder(null);
+		
 		one.add(scrollPane);
 
 		// 등록 버튼 누르면 새 창 열림
-		regiBtn = new JButton("등록");
-		regiBtn.setBounds(856, 122, 81, 48);
+		regiBtn = new JButton("");
+		regiBtn.setFocusPainted(false);
+		regiBtn.setContentAreaFilled(false);
+		regiBtn.setBorderPainted(false);
+		regiBtn.setBounds(493, 385, 90, 36);
 		one.add(regiBtn);
-		regiBtn.setEnabled(true);
+		regiBtn.setEnabled(false);
 
 		regiBtn.addActionListener(new ActionListener() {
 			@Override
@@ -174,8 +187,12 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		// 삭제 버튼
-		JButton deleteBtn = new JButton("삭제");
-		deleteBtn.setBounds(856, 200, 81, 48);
+		JButton deleteBtn = new JButton("");
+		deleteBtn.setBounds(726, 385, 83, 36);
+		deleteBtn.setOpaque(false);
+		deleteBtn.setContentAreaFilled(false);
+		deleteBtn.setBorderPainted(false);
+		deleteBtn.setFocusPainted(false);
 		one.add(deleteBtn);
 		deleteBtn.setEnabled(false);
 
@@ -201,8 +218,11 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			}
 		});
 
-		updateBtn = new JButton("수정");
-		updateBtn.setBounds(856, 272, 81, 54);
+		updateBtn = new JButton("");
+		updateBtn.setFocusPainted(false);
+		updateBtn.setContentAreaFilled(false);
+		updateBtn.setBorderPainted(false);
+		updateBtn.setBounds(614, 385, 83, 36);
 		one.add(updateBtn);
 		updateBtn.setEnabled(false);
 
@@ -223,17 +243,41 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		// JTabel
 		JScrollPane scrolledTable = new JScrollPane((Component) null);
-		scrolledTable.setBounds(377, 112, 477, 306);
+		scrolledTable.setOpaque(false);
+		
+		
+		scrolledTable.setBounds(377, 165, 550, 210);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		one.add(scrolledTable);
 
 		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04",
 				"\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9", "\uC2B9\uC778\uC5EC\uBD80" }));
+		table.setFillsViewportHeight(true);
+		table.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table.setForeground(new Color(22, 47, 136));
+		table.setBackground(new Color(255, 255, 255));
+		
+		// Create a custom TableCellRenderer to center the text
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < table.getColumnCount(); i++) {
+		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+		
+		
 
 		List<Schedule> psList = viewPersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString());
 		insertTabel(psList);
 
 		scrolledTable.setViewportView(table);
+		
+		
+		JLabel lblNewLabel_3 = new JLabel("New label");
+		lblNewLabel_3.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/축구장-배경12.jpg")));
+		lblNewLabel_3.setBounds(0, 0, 979, 447);
+		one.add(lblNewLabel_3);
 
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -259,21 +303,39 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		pane.addTab("컨디션", two);
 		two.setLayout(null);
 
-		JLabel commentLbl_ = new JLabel("컨디션 코멘트");
-		commentLbl_.setBounds(323, 25, 97, 28);
-		commentLbl_.setHorizontalAlignment(SwingConstants.CENTER);
-		two.add(commentLbl_);
-
-		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		JScrollPane scrollPane_1 = new JScrollPane() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				// Make the scroll pane background transparent
+				g.setColor(new Color(0, 0, 0, 0));
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+			}
+		};
 		scrollPane_1.setBounds(40, 63, 250, 308);
+		scrollPane_1.setOpaque(false);
+		scrollPane_1.getViewport().setOpaque(false);
+		//scrollPane_1.setBorder(null);
+		scrollPane_1.setViewportBorder(null);
+		scrollPane_1.getVerticalScrollBar().setOpaque(false);
+		scrollPane_1.getHorizontalScrollBar().setOpaque(false);
 		two.add(scrollPane_1);
 		
 		textArea = new JTextArea();
+		textArea.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+		textArea.setForeground(Color.WHITE);
+		textArea.setOpaque(false); // Set the textArea as transparent
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
 
-		JButton saveBtn = new JButton("저장");
-		saveBtn.setBounds(113, 386, 97, 23);
+		JButton saveBtn = new JButton("");
+		saveBtn.setBounds(137, 386, 59, 28);
+		saveBtn.setOpaque(false);
+		saveBtn.setContentAreaFilled(false);
+		saveBtn.setBorderPainted(false);
+		saveBtn.setFocusPainted(false);
+		
 		two.add(saveBtn);
 		saveBtn.addActionListener(new ActionListener() {
 			@Override
@@ -282,13 +344,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			}
 		});
 
-		JLabel lblNewLabel_1 = new JLabel("오늘의 몸 상태");
-		lblNewLabel_1.setBounds(40, 32, 86, 15);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		two.add(lblNewLabel_1);
-
 		dateComboBox = new JComboBox();
-		dateComboBox.setBounds(837, 10, 92, 21);
+		dateComboBox.setBounds(812, 44, 92, 21);
 		two.add(dateComboBox);
 		LocalDate minusDate2 = currentDate.minusDays(15);
 		List<LocalDate> calendar2 = new ArrayList<LocalDate>();
@@ -325,7 +382,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		});
 
 		JScrollPane scrolledTable_1 = new JScrollPane((Component) null);
-		scrolledTable_1.setBounds(323, 63, 532, 141);
+		scrolledTable_1.setBounds(400, 55, 515, 141);
+		scrolledTable_1.setOpaque(false);
 		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_1);
 
@@ -348,12 +406,9 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		conditionCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_1.setViewportView(conditionCommentTable);
 
-		JLabel lblNewLabel_2 = new JLabel("의사 코멘트");
-		lblNewLabel_2.setBounds(343, 214, 77, 15);
-		two.add(lblNewLabel_2);
-
 		JScrollPane scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBounds(333, 239, 515, 158);
+		scrolledTable_2.setBounds(400, 223, 515, 153);
+		scrolledTable_2.setOpaque(false);
 		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		two.add(scrolledTable_2);
 
@@ -363,6 +418,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
+		
+		DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
+		centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
+
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < table.getColumnCount(); i++) {
+		    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 
 		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
 				sql2);
@@ -370,6 +433,11 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		doctorCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_2.setViewportView(doctorCommentTable);
+		
+		JLabel lblNewLabel_4 = new JLabel("  ");
+		lblNewLabel_4.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수컨디션등록-배경-2.jpg")));
+		lblNewLabel_4.setBounds(0, 0, 979, 447);
+		two.add(lblNewLabel_4);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
