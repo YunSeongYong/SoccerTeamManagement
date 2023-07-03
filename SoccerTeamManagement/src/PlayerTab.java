@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.time.LocalDate;
-
+import java.time.Period;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -53,6 +53,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	private static JTable conditionCommentTable;
 	private static JTable doctorCommentTable;
 	private JTextArea textArea;
+	private JButton regiBtn;
+	private JButton updateBtn;
 
 	public PlayerTab() {
 		LocalDate currentDate = LocalDate.now();
@@ -110,7 +112,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
-				// 수정수정!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				List<CommonSchedule> csList = viewCommonSchedule(index);
 				
 				String csStr = printCommonSchedule(csList);
@@ -126,6 +127,18 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				List<Schedule> scList = viewPersonalSchedule(player.getBackNumber(), index);
 				insertTabel(scList);
+				
+				// 버튼 비활성화!!!!!!
+				LocalDate startDate = LocalDate.parse(comboBox.getSelectedItem().toString());
+				Period period = Period.between(currentDate, startDate);
+				int datePeriod = period.getDays();
+				System.out.println(datePeriod);
+				if (datePeriod < 0) {
+					regiBtn.setEnabled(false);
+				} else {
+					regiBtn.setEnabled(true);
+				}
+				
 			}
 		});
 
@@ -148,9 +161,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		one.add(scrollPane);
 
 		// 등록 버튼 누르면 새 창 열림
-		JButton regiBtn = new JButton("등록");
+		regiBtn = new JButton("등록");
 		regiBtn.setBounds(856, 122, 81, 48);
 		one.add(regiBtn);
+		regiBtn.setEnabled(true);
 
 		regiBtn.addActionListener(new ActionListener() {
 			@Override
@@ -175,12 +189,19 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				deletePersonalSchedule(player.getBackNumber(), comboBox.getSelectedItem().toString(), startTime);
 
 				removeRecord(row);
+				
+				System.out.println(table.getRowCount());
+				if (table.getRowCount() == 0) {
+					updateBtn.setEnabled(false);
+					deleteBtn.setEnabled(false);
+				} else {
+					updateBtn.setEnabled(true);
+					deleteBtn.setEnabled(true);
+				}
 			}
 		});
 
-		// 수정 버튼
-		// 테이블에서 선택된 값을 가져옴
-		JButton updateBtn = new JButton("수정");
+		updateBtn = new JButton("수정");
 		updateBtn.setBounds(856, 272, 81, 54);
 		one.add(updateBtn);
 		updateBtn.setEnabled(false);
@@ -217,12 +238,20 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				updateBtn.setEnabled(true);
-				deleteBtn.setEnabled(true);
+				LocalDate startDate = LocalDate.parse(comboBox.getSelectedItem().toString());
+				Period period = Period.between(currentDate, startDate);
+				int datePeriod = period.getDays();
+				if (table.getSelectedRowCount() == 1 && datePeriod >= 0) {
+					updateBtn.setEnabled(true);
+					deleteBtn.setEnabled(true);
+					regiBtn.setEnabled(true);
+				} else if (table.getSelectedRowCount() == 0){
+					updateBtn.setEnabled(false);
+					deleteBtn.setEnabled(false);
+				} 
 			}
 		});
 		
-//		table.setRowHeight(25);
 
 		// 컨디션 등록 탭
 		// ////////////////////////////////////////////////////////////////////////////
