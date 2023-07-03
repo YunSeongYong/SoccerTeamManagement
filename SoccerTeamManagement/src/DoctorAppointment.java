@@ -34,6 +34,16 @@ public class DoctorAppointment {
 		this.condition = condition;
 	}
 	
+	public DoctorAppointment(int backnumber, String playerName, String condition, String doctor, String date,
+			String time) {
+		this.backnumber = backnumber;
+		this.playerName = playerName;
+		this.date = date;
+		this.time = time;
+		this.condition = condition;
+		this.doctor = doctor;
+	}
+
 	public int getBacknumber() {
 		return backnumber;
 	}
