@@ -10,6 +10,8 @@ public class Player {
 	private String coach;
 	private String doctor;
 	private Image image;
+	private int no;
+	
 	
 	public Player() {
 		
@@ -24,7 +26,7 @@ public class Player {
 
 
 	public Player(int backNumber, String name, double height, double weight, int age, String position, String coach,
-			String doctor, Image image) {
+			String doctor, Image image, int no) {
 		this.backNumber = backNumber;
 		this.name = name;
 		this.height = height;
@@ -34,6 +36,11 @@ public class Player {
 		this.coach = coach;
 		this.doctor = doctor;
 		this.image = image;
+		this.no = no;
+	}
+	
+	public int getNo() {
+		return no;
 	}
 
 	public int getBackNumber() {

@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,7 +76,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel 사용가능유무라벨;
 	private JPanel 일정창;
 	private JPanel 컨디션창;
-	private JPanel 의사소견창;
 	private JComboBox 선수정보콤보박스;
 	private int backnumber;
 	private JPanel 개인정보창;
@@ -106,10 +106,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private List<Comment> commentList;
 	private List<CommonSchedule> commonScheduleList;
 	private List<Staff> staffList;
+	private List<Identity> identityList;
 	private List<String> selectedDates = new ArrayList<>();
 	private List<String> selectedStartTimes = new ArrayList<>();
 	private JTextField 담당의사수정텍스트필드;
-	private JTextField 일정창_코멘트텍스트필드;
 	private JScrollPane scrolledTable;
 	private JTable table;
 	private JComboBox 날짜콤보박스;
@@ -119,27 +119,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JScrollPane scrolledTable_1;
 	private JTable conditionTable;
 	private JTextArea 선수목록_컨디션_선수컨디션텍스트박스;
-	private JLabel 선수컨디션라벨;
 	private JScrollPane scrollPane_1;
 	private JTextArea 선수목록_컨디션_코멘트텍스트박스;
 	private JLabel 코멘트작성라벨;
-	private JScrollPane scrollPane_2;
 	private JLabel lblNewLabel_4;
-	private JTextArea 선수목록_의사소견_선수컨디션텍스트박스;
-	private JLabel 선수목록_의사소견_의사소견라벨;
-	private JScrollPane scrollPane_3;
-	private JTextArea 선수목록_의사소견_의사소견텍스트박스;
-	private JLabel lblNewLabel_10;
-	private JScrollPane scrolledTable_2;
-	private JTable doctorAppointmentTable;
-	private JScrollPane scrollPane_4;
-	private JLabel 선수목록_의사소견_감독코멘트라벨;
-	private JTextArea 선수목록_의사소견_감독코멘트텍스트박스;
-	private JButton 선수목록_의사소견_저장버튼;
 	private JLabel lblNewLabel_9;
 	private JLabel lblNewLabel_11;
-	private JLabel lblNewLabel_12;
-	private JLabel lblNewLabel_13;
 	private JTextField 공동일정등록_시작시간텍스트필드;
 	private JTextField 공동일정등록_장소텍스트필드;
 	private JComboBox 공동일정등록_날짜콤보박스;
@@ -166,8 +151,15 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel lblNewLabel_16;
 	private JScrollPane scrollPane_7;
 	private JTextArea 스태프목록_담당선수텍스트박스;
-	private JScrollPane scrollPane_8;
-	private JLabel lblNewLabel_9_1;
+	private JButton 중복확인버튼;
+	boolean identityChecked = false;
+	boolean identityChecked2 = false;
+	private JTextField 스태프등록_경력텍스트필드;
+	private JTextArea 선수목록_일정_감독코멘트박스;
+	private JScrollPane scrollPane;
+	private JLabel 선수목록_의사소견_의사소견라벨_1;
+	private JTextArea 선수목록_의사소견_의사소견텍스트박스;
+	private JButton 선수목록_컨디션_저장버튼;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -201,7 +193,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("insert into staff(number, name, age, role) values (?, ?, ?, ?)");
+			stmt = conn.prepareStatement("insert into staff(number, name, age, role, career) values (?, ?, ?, ?, ?)");
 			String role = textField_2.getText();
 			if (role.equals("코치")) {
 				stmt.setInt(1, countStaff("코치") + 200);
@@ -211,6 +203,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			stmt.setString(2, textField.getText());
 			stmt.setInt(3, Integer.valueOf(textField_1.getText()));
 			stmt.setString(4, textField_2.getText());
+			stmt.setString(5, 스태프등록_경력텍스트필드.getText());
 
 			stmt.executeUpdate();
 
@@ -425,7 +418,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return -1;
 	}
 
-	public void 선수등록_선수등록메소드() {
+	public void 선수등록_선수등록메소드()
+			throws java.sql.SQLIntegrityConstraintViolationException, java.lang.NumberFormatException {
 		String sql = "INSERT INTO players (backnumber, name, height, weight, age, position, coach, doctor, no) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -449,6 +443,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			} else {
 				System.out.println("데이터 저장에 실패하였습니다.");
 			}
+
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -458,7 +453,16 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 선수등록_identity등록메소드() {
+	public void 선수등록_identity등록메소드() throws SQLIntegrityConstraintViolationException {
+		String id = 아이디텍스트필드.getText();
+		String password = 비밀번호텍스트필드.getText();
+
+		if (id.isEmpty() || password.isEmpty()) {
+			// 아이디 또는 비밀번호가 비어있을 때 경고 메시지를 표시합니다.
+			JOptionPane.showMessageDialog(null, "값을 올바르게 넣어주세요", "경고", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
 		String sql = "INSERT INTO identity (no, id, password, role) VALUES (?, ?, ?, '선수')";
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -467,8 +471,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			conn = DBUtil.getConnection();
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, 선수인원확인메소드() + 1);
-			stmt.setString(2, 아이디텍스트필드.getText());
-			stmt.setString(3, 비밀번호텍스트필드.getText());
+			stmt.setString(2, id);
+			stmt.setString(3, password);
 
 			int result = stmt.executeUpdate();
 			if (result > 0) {
@@ -479,6 +483,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		} finally {
+			선수등록_선수등록메소드();
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
@@ -510,7 +515,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
-	public void 선수등록_이미지를데이터베이스에등록하는메소드(PreparedStatement stmt) {
+	public void 선수등록_이미지를데이터베이스에등록하는메소드(PreparedStatement stmt) throws java.lang.NullPointerException {
 		Connection conn = null;
 		try {
 			conn = DBUtil.getConnection();
@@ -592,7 +597,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_선수정보콤보박스목록만드는메소드() {
-
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 		선수정보콤보박스.setModel(model);
 
@@ -613,6 +617,16 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		// 컴포넌트들이 null인지 확인 후 작업 수행
+		if (선수정보콤보박스 != null) {
+			선수정보콤보박스.setSelectedIndex(-1);
+		}
+		if (이미지등록수정창 != null) {
+			선수목록_개인정보_선수정보의모든텍스트필드값제거메소드();
+		}
+
+		System.out.println("체크박스 목록 추가 후 체크 해제");
 	}
 
 	public void 스태프목록_스태프목록콤보박스목록만드는메소드() {
@@ -690,8 +704,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				String doctor = rs.getString("doctor");
 				Blob imagePath = rs.getBlob("image");
 				Image image = ImageIO.read(imagePath.getBinaryStream());
+				int no = rs.getInt("no");
 
-				playerList.add(new Player(backnumber1, name, height, weight, age, position, coach, doctor, image));
+				playerList.add(new Player(backnumber1, name, height, weight, age, position, coach, doctor, image, no));
 				System.out.println(playerList);
 			}
 
@@ -705,6 +720,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 		return playerList;
 	}
+
+//	public List<Player> 선수목록_개인정보_선수정보콤보박스의등번호로선수정보의no를리스트에저장하는메소드(int backnumber) {
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//		ResultSet rs = null;
+//		playerList = new ArrayList<>();
+//
+//		try {
+//			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+//			String sql = "SELECT no from players where backnumber = ?";
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setInt(1, backnumber);
+//			rs = stmt.executeQuery();
+//
+//			while (rs.next()) {
+//				int backnumber1 = rs.getInt("no");
+//				
+//				playerList.add(new Identity(backnumber1));
+//			}
+//			System.out.println(playerList);
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			// 사용한 자원을 닫아주어야 합니다.
+//			DBUtil.close(rs);
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//		return playerList;
+//	}
 
 	public List<Staff> 스태프목록_스태프정보콤보박스의이름으로스태프의모든정보를리스트에저장하는메소드(String name) {
 		Connection conn = null;
@@ -931,30 +977,81 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_개인정보_선수삭제메소드(List<Player> playerList) {
+		if (playerList.isEmpty()) {
+			System.out.println("선수 목록이 비어있습니다.");
+			return;
+		}
+
 		Player player = playerList.get(0);
-		String sql = "delete from players where backnumber = ?";
+		String sqlDeleteIdentity = "delete from identity where no = ?";
+		String sqlDeletePlayer = "delete from players where backnumber = ?";
 		Connection conn = null;
-		PreparedStatement stmt = null;
+		PreparedStatement stmtDeleteIdentity = null;
+		PreparedStatement stmtDeletePlayer = null;
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, player.getBackNumber());
+			// 트랜잭션 시작
+			conn.setAutoCommit(false);
 
-			int result = stmt.executeUpdate();
-			if (result > 0) {
+			// players 테이블에서 해당 선수 삭제
+			stmtDeletePlayer = conn.prepareStatement(sqlDeletePlayer);
+			stmtDeletePlayer.setInt(1, player.getBackNumber());
+			int resultPlayer = stmtDeletePlayer.executeUpdate();
+
+			// identity 테이블에서 해당 선수를 참조하는 모든 행 삭제
+			stmtDeleteIdentity = conn.prepareStatement(sqlDeleteIdentity);
+			stmtDeleteIdentity.setInt(1, player.getNo());
+			int resultIdentity = stmtDeleteIdentity.executeUpdate();
+
+			// 모든 작업이 성공적으로 완료되면 트랜잭션 커밋
+			conn.commit();
+
+			if (resultPlayer > 0 && resultIdentity > 0) {
 				System.out.println("데이터가 성공적으로 삭제되었습니다.");
 			} else {
 				System.out.println("데이터 삭제에 실패하였습니다.");
 			}
 		} catch (SQLException ex) {
+			// 롤백
+			try {
+				conn.rollback();
+			} catch (SQLException rollbackEx) {
+				rollbackEx.printStackTrace();
+			}
 			ex.printStackTrace();
 		} finally {
-			선수목록_개인정보_선수정보의모든텍스트필드값제거메소드();
-			DBUtil.close(stmt);
+			DBUtil.close(stmtDeleteIdentity);
+			DBUtil.close(stmtDeletePlayer);
 			DBUtil.close(conn);
 		}
 	}
+
+//	public void 선수목록_개인정보_선수삭제시identity테이블에서도삭제되게하는메소드(List<Identity> identityList) {
+//		Identity identity = identityList.get(0);
+//		String sql = "delete from identity where no = ?";
+//		Connection conn = null;
+//		PreparedStatement stmt = null;
+//
+//		try {
+//			conn = DBUtil.getConnection();
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setInt(1, identity.getNo());
+//
+//			int result = stmt.executeUpdate();
+//			if (result > 0) {
+//				System.out.println("데이터가 성공적으로 삭제되었습니다.");
+//			} else {
+//				System.out.println("데이터 삭제에 실패하였습니다.");
+//			}
+//		} catch (SQLException ex) {
+//			ex.printStackTrace();
+//		} finally {
+//			선수목록_개인정보_선수정보의모든텍스트필드값제거메소드();
+//			DBUtil.close(stmt);
+//			DBUtil.close(conn);
+//		}
+//	}
 
 	public void 스태프목록_스태프삭제메소드(List<Staff> staffList) {
 		Staff staff = staffList.get(0);
@@ -1004,6 +1101,33 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
+	}
+
+	public void 선수등록_저장버튼누른후모든텍스트필드값제거메소드() {
+		등번호텍스트필드.setText("");
+		이름텍스트필드.setText("");
+		신장텍스트필드.setText("");
+		몸무게텍스트필드.setText("");
+		아이디텍스트필드.setText("");
+		비밀번호텍스트필드.setText("");
+		나이텍스트필드.setText("");
+		포지션텍스트필드.setText("");
+		담당코치텍스트필드.setText("");
+		담당의사텍스트필드.setText("");
+		이미지등록창.removeAll();
+		이미지등록창.revalidate();
+		이미지등록창.repaint();
+	}
+
+	public void 스태프등록_저장버튼누른후모든텍스트필드값제거메소드() {
+		textField_2.setText("");
+		textField_1.setText("");
+		textField.setText("");
+		textField_5.setText("");
+		textField_4.setText("");
+		panel.removeAll();
+		panel.revalidate();
+		panel.repaint();
 	}
 
 	public void 선수목록_개인정보_선수정보의모든텍스트필드값제거메소드() {
@@ -1162,36 +1286,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
-		try {
-			List<Schedule> filteredList = new ArrayList<>();
+//		try {
+		List<Schedule> filteredList = new ArrayList<>();
 
-			for (Schedule schedule : scheduleList) {
-				if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
-					filteredList.add(schedule);
-				}
+		for (Schedule schedule : scheduleList) {
+			if (schedule.getDate().equals(일정창_콤보박스에서선택한날짜)) {
+				filteredList.add(schedule);
 			}
-
-			DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-			// 기존의 테이블 데이터 초기화
-			tableModel.setRowCount(0);
-
-			// filteredList의 데이터를 테이블 모델에 추가
-			for (Schedule schedule : filteredList) {
-				Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
-						schedule.getContent(), false // 체크박스 데이터 추가
-				};
-				tableModel.addRow(rowData);
-			}
-
-			// 체크박스 컬럼 추가
-			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-					.setCellRenderer(table.getDefaultRenderer(Boolean.class));
-			table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
-					.setCellEditor(table.getDefaultEditor(Boolean.class));
-
-		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
+
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+		// 기존의 테이블 데이터 초기화
+		tableModel.setRowCount(0);
+
+		// filteredList의 데이터를 테이블 모델에 추가
+		for (Schedule schedule : filteredList) {
+			Object[] rowData = { schedule.getDate(), schedule.getStartTime(), schedule.getEndTime(),
+					schedule.getContent(), false // 체크박스 데이터 추가
+			};
+			tableModel.addRow(rowData);
+		}
+
+		// 체크박스 컬럼 추가
+		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+				.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
+				.setCellEditor(table.getDefaultEditor(Boolean.class));
+
+//		 } 
+//		catch (NullPointerException e) {
+//			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
+//		}
 
 	}
 
@@ -1223,16 +1348,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			for (int i = 0; i < selectedDates.size(); i++) {
 				String selectedDateStr = selectedDates.get(i);
-				LocalDate selectedDate = LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 				String startTime = selectedStartTimes.get(i);
+				String dateTimeString = selectedDateStr + " " + startTime;
 
-				// 'selectedDate'와 'startTime'을 합치기 위해 'HH:mm:ss'를 붙여줌
-				String dateTimeString = selectedDate.toString() + " " + startTime;
-
-				// 'dateTimeString'을 'yyyy-MM-dd HH:mm:ss' 형식으로 변환
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				String formattedDateTime = LocalDateTime
-						.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(formatter);
+				String formattedDateTime = LocalDateTime.parse(dateTimeString, formatter).format(formatter);
 
 				stmt.setInt(1, backNumber);
 				stmt.setString(2, formattedDateTime);
@@ -1240,18 +1360,19 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 				int result = stmt.executeUpdate();
 				if (result > 0) {
-					System.out.println("데이터가 성공적으로 저장되었습니다.");
-					String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
-					JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
+					String successMessage = "코멘트 등록 및 수정 완료되었습니다.";
+					JOptionPane.showMessageDialog(null, successMessage, "알림", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					System.out.println("데이터 저장에 실패하였습니다.");
 				}
 			}
-		} catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-			String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
-			JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
 		} catch (SQLException ex) {
-			ex.printStackTrace();
+			if (ex instanceof SQLIntegrityConstraintViolationException) {
+				String errorMessage = "이미 해당 시간에 코멘트가 등록되어 있습니다.";
+				JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
+			} else {
+				ex.printStackTrace();
+			}
 		} finally {
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
@@ -1292,15 +1413,18 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return conditionList;
 	}
 
-	public void 선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
+	public void 선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
 		DefaultTableModel model = (DefaultTableModel) conditionTable.getModel();
 		model.setRowCount(0);
 
 		for (Condition condition : conditionList) {
 			if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
-				Object[] rowData = { condition.getNumber(), condition.getPlayerName(), condition.getPlayercondition(),
-						condition.getDate() };
-				model.addRow(rowData);
+				// Check if the condition's date matches the selectedDate
+				if (condition.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
+					Object[] rowData = { condition.getNumber(), condition.getPlayerName(),
+							condition.getPlayercondition(), condition.getDate() };
+					model.addRow(rowData);
+				}
 			}
 		}
 	}
@@ -1329,7 +1453,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment) {
-		String sql = "INSERT INTO comment (number, datetime, conditioncomment, who) VALUES (?, current_timestamp(), ?, '감독')";
+		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, current_timestamp(), ?, '감독')";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -1371,12 +1495,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				String playerName = rs.getString("name");
 				String condition = rs.getString("condition");
 				String doctor = rs.getString("doctor");
-				String coach = rs.getString("coach");
 				String date = rs.getString("date");
 				String time = rs.getString("time");
 
 				doctorAppointmentList
-						.add(new DoctorAppointment(backnumber1, playerName, condition, doctor, coach, date, time));
+						.add(new DoctorAppointment(backnumber1, playerName, condition, doctor, date, time));
 				System.out.println(doctorAppointmentList);
 			}
 
@@ -1391,19 +1514,19 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return doctorAppointmentList;
 	}
 
-	public void 선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(List<DoctorAppointment> doctorAppointmentList) {
-		DefaultTableModel model = (DefaultTableModel) doctorAppointmentTable.getModel();
-		model.setRowCount(0);
-
-		for (DoctorAppointment doctorAppointment : doctorAppointmentList) {
-			if (doctorAppointment.getBacknumber() == 일정창_선수정보콤보박스에서선택한등번호) {
-				Object[] rowData = { doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
-						doctorAppointment.getDate(), doctorAppointment.getTime(), doctorAppointment.getCondition(),
-						doctorAppointment.getDoctor(), doctorAppointment.getCoach() };
-				model.addRow(rowData);
-			}
-		}
-	}
+//	public void 선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(List<DoctorAppointment> doctorAppointmentList) {
+//		DefaultTableModel model = (DefaultTableModel) doctorAppointmentTable.getModel();
+//		model.setRowCount(0);
+//
+//		for (DoctorAppointment doctorAppointment : doctorAppointmentList) {
+//			if (doctorAppointment.getBacknumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+//				Object[] rowData = { doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
+//						doctorAppointment.getDate(), doctorAppointment.getTime(), doctorAppointment.getCondition(),
+//						doctorAppointment.getDoctor(), doctorAppointment.getCoach() };
+//				model.addRow(rowData);
+//			}
+//		}
+//	}
 
 	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<DoctorAppointment> doctorAppointmentList) {
 		try {
@@ -1420,7 +1543,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			for (DoctorAppointment condition : doctorAppointment1) {
 				sb.append(condition.getCondition()).append("\n");
 			}
-			선수목록_의사소견_선수컨디션텍스트박스.setText(sb.toString());
+			선수목록_의사소견_의사소견텍스트박스.setText(sb.toString());
 
 		} catch (NullPointerException e) {
 			System.out.println("괜찮음 계속 하세요");
@@ -1467,11 +1590,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(List<Comment> commentList, int backnumber) {
 		try {
+			선수목록_의사소견_의사소견텍스트박스.setText("");
 			List<Comment> comment1 = new ArrayList<>();
 
 			for (Comment comment : commentList) {
-				if (comment.getWho().equals("의사") && comment.getNumber() == backnumber) {
-
+				if (comment.getWho().equals("의사") && comment.getNumber() == backnumber
+						&& comment.getDatetime().startsWith(일정창_콤보박스에서선택한날짜)) {
 					comment1.add(comment);
 				}
 			}
@@ -1484,7 +1608,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		} catch (NullPointerException e) {
 			System.out.println("괜찮음 계속 하세요");
-			;
+			// Handle the NullPointerException here if needed.
 		}
 	}
 
@@ -1612,11 +1736,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(이름텍스트필드);
 		이름텍스트필드.setColumns(10);
 		이름텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	이름텍스트필드.setText("");
-		    	이름텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				이름텍스트필드.setText("");
+				이름텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		신장텍스트필드 = new JTextField();
@@ -1627,11 +1751,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(신장텍스트필드);
 		신장텍스트필드.setColumns(10);
 		신장텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	신장텍스트필드.setText("");
-		    	신장텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				신장텍스트필드.setText("");
+				신장텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		몸무게텍스트필드 = new JTextField();
@@ -1642,11 +1766,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(몸무게텍스트필드);
 		몸무게텍스트필드.setColumns(10);
 		몸무게텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	몸무게텍스트필드.setText("");
-		    	몸무게텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				몸무게텍스트필드.setText("");
+				몸무게텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		나이텍스트필드 = new JTextField();
@@ -1657,11 +1781,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(나이텍스트필드);
 		나이텍스트필드.setColumns(10);
 		나이텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	나이텍스트필드.setText("");
-		    	나이텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				나이텍스트필드.setText("");
+				나이텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		포지션텍스트필드 = new JTextField();
@@ -1672,11 +1796,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(포지션텍스트필드);
 		포지션텍스트필드.setColumns(10);
 		포지션텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	포지션텍스트필드.setText("");
-		    	포지션텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				포지션텍스트필드.setText("");
+				포지션텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		담당코치텍스트필드 = new JTextField();
@@ -1687,11 +1811,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(담당코치텍스트필드);
 		담당코치텍스트필드.setColumns(10);
 		담당코치텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	담당코치텍스트필드.setText("");
-		    	담당코치텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				담당코치텍스트필드.setText("");
+				담당코치텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		담당의사텍스트필드 = new JTextField();
@@ -1702,11 +1826,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(담당의사텍스트필드);
 		담당의사텍스트필드.setColumns(10);
 		담당의사텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	담당의사텍스트필드.setText("");
-		    	담당의사텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				담당의사텍스트필드.setText("");
+				담당의사텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		아이디텍스트필드 = new JTextField(15);
@@ -1715,11 +1839,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		아이디텍스트필드.setText("아이디 입력");
 		아이디텍스트필드.setOpaque(false);
 		아이디텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	아이디텍스트필드.setText("");
-		    	아이디텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				아이디텍스트필드.setText("");
+				아이디텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		아이디텍스트필드.setBounds(685, 147, 99, 31);
@@ -1734,18 +1858,46 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		one.add(비밀번호텍스트필드);
 		비밀번호텍스트필드.setColumns(10);
 		비밀번호텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		    	비밀번호텍스트필드.setText("");
-		    	비밀번호텍스트필드.removeMouseListener(this);
-		    }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				비밀번호텍스트필드.setText("");
+				비밀번호텍스트필드.removeMouseListener(this);
+			}
 		});
 
 		저장버튼 = new JButton("");
 		저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				선수등록_identity등록메소드();
-				선수등록_선수등록메소드();
+				if (!identityChecked) {
+					// 중복확인을 하지 않았을 때 경고 메시지를 표시합니다.
+					JOptionPane.showMessageDialog(null, "중복확인을 해주세요", "경고", JOptionPane.WARNING_MESSAGE);
+				} else {
+					if (사용가능유무라벨.getText().equals("아이디가 이미 존재합니다.")) {
+						// 이미 아이디가 존재하는 경우 경고 메시지를 표시합니다.
+						JOptionPane.showMessageDialog(null, "이미 사용중인 아이디입니다", "경고", JOptionPane.WARNING_MESSAGE);
+					} else if (이미지등록창.getComponentCount() == 0) {
+						// 이미지등록창이 비어있을 때 "이미지를 등록하세요" 경고 메시지를 표시합니다.
+						JOptionPane.showMessageDialog(null, "이미지를 등록하세요", "경고", JOptionPane.WARNING_MESSAGE);
+					} else {
+						try {
+							선수등록_identity등록메소드();
+							선수등록_저장버튼누른후모든텍스트필드값제거메소드();
+							선수목록_선수정보콤보박스목록만드는메소드();
+							사용가능유무라벨.setText("중복 확인 버튼을 누르세요");
+							사용가능유무라벨.setForeground(Color.WHITE);
+							JOptionPane.showMessageDialog(null, "저장되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
+						} catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+							JOptionPane.showMessageDialog(null, "이미 존재하는 선수입니다", "경고", JOptionPane.WARNING_MESSAGE);
+							ex.printStackTrace();
+						} catch (java.lang.NumberFormatException ex) {
+							JOptionPane.showMessageDialog(null, "값을 올바르게 넣어주세요", "경고", JOptionPane.WARNING_MESSAGE);
+							ex.printStackTrace();
+						} catch (SQLException ex) {
+							// 데이터베이스 처리 관련 예외 처리
+							ex.printStackTrace();
+						}
+					}
+				}
 			}
 		});
 
@@ -1780,15 +1932,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		등번호텍스트필드.setBounds(420, 254, 98, 29);
 		one.add(등번호텍스트필드);
 		등번호텍스트필드.setColumns(10);
-		
-		등번호텍스트필드.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        등번호텍스트필드.setText("");
-		        등번호텍스트필드.removeMouseListener(this);
-		    }
-		});
 
+		등번호텍스트필드.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				등번호텍스트필드.setText("");
+				등번호텍스트필드.removeMouseListener(this);
+			}
+		});
 
 		이미지등록창 = new JPanel();
 		이미지등록창.setBackground(new Color(22, 47, 138));
@@ -1803,7 +1954,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		사용가능유무라벨.setBounds(709, 186, 178, 15);
 		one.add(사용가능유무라벨);
 
-		JButton 중복확인버튼 = new JButton("");
+		중복확인버튼 = new JButton("");
 		중복확인버튼.setBounds(808, 151, 74, 25);
 		중복확인버튼.setBorderPainted(false);
 		중복확인버튼.setOpaque(false);
@@ -1814,6 +1965,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				아이디중복확인();
+				identityChecked = true;
 			}
 		});
 
@@ -1826,6 +1978,16 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		two = new JPanel();
 		two.setForeground(Color.WHITE);
+
+		JLabel lblNewLabel_17 = new JLabel("경력");
+		lblNewLabel_17.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_17.setBounds(301, 272, 57, 15);
+		two.add(lblNewLabel_17);
+
+		스태프등록_경력텍스트필드 = new JTextField();
+		스태프등록_경력텍스트필드.setBounds(169, 297, 389, 21);
+		two.add(스태프등록_경력텍스트필드);
+		스태프등록_경력텍스트필드.setColumns(10);
 		two.add(new JLabel("두번째 탭입니다"));
 		two.add(new JTextField("문자를 입력하세요"));
 
@@ -1840,6 +2002,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField.setBounds(684, 293, 199, 30);
 		two.add(textField);
 		textField.setColumns(10);
+		textField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField.setText("");
+				textField.removeMouseListener(this);
+			}
+		});
 
 		textField_1 = new JTextField();
 		textField_1.setText("나이 입력");
@@ -1848,6 +2017,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_1.setBounds(684, 332, 199, 30);
 		two.add(textField_1);
 		textField_1.setColumns(10);
+		textField_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_1.setText("");
+				textField_1.removeMouseListener(this);
+			}
+		});
 
 		textField_2 = new JTextField();
 		textField_2.setText("직책 입력, 입력 예) 코치");
@@ -1856,6 +2032,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_2.setBounds(684, 370, 199, 30);
 		two.add(textField_2);
 		textField_2.setColumns(10);
+		textField_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_2.setText("");
+				textField_2.removeMouseListener(this);
+			}
+		});
 
 		// textField_3 = new JTextField();
 		// textField_3.setBounds(515, 51, 116, 21);
@@ -1869,6 +2052,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_4.setBounds(684, 148, 103, 30);
 		two.add(textField_4);
 		textField_4.setColumns(10);
+		textField_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_4.setText("");
+				textField_4.removeMouseListener(this);
+			}
+		});
 
 		textField_5 = new JTextField();
 		textField_5.setText("문자 포함 4자리 이상 가능");
@@ -1877,6 +2067,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField_5.setBounds(684, 213, 199, 30);
 		two.add(textField_5);
 		textField_5.setColumns(10);
+		textField_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				textField_5.setText("");
+				textField_5.removeMouseListener(this);
+			}
+		});
 
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setOpaque(false);
@@ -1888,9 +2085,31 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				insertStaffID();
-				insertStaff();
+				if (!identityChecked2) {
+					// 중복확인을 하지 않았을 때 경고 메시지를 표시합니다.
+					JOptionPane.showMessageDialog(null, "중복확인을 해주세요", "경고", JOptionPane.WARNING_MESSAGE);
+				} else {
+					if (lblNewLabel_7.getText().equals("아이디가 이미 존재합니다.")) {
+						// 이미 아이디가 존재하는 경우 경고 메시지를 표시합니다.
+						JOptionPane.showMessageDialog(null, "이미 사용중인 아이디입니다", "경고", JOptionPane.WARNING_MESSAGE);
+					} else if (panel.getComponentCount() == 0) {
+						// 이미지등록창이 비어있을 때 "이미지를 등록하세요" 경고 메시지를 표시합니다.
+						JOptionPane.showMessageDialog(null, "이미지를 등록하세요", "경고", JOptionPane.WARNING_MESSAGE);
+					}
+					try {
+						insertStaffID();
+						insertStaff();
+						스태프등록_저장버튼누른후모든텍스트필드값제거메소드();
+						선수목록_선수정보콤보박스목록만드는메소드();
+						lblNewLabel_7.setText("중복 확인 버튼을 누르세요");
+						lblNewLabel_7.setForeground(Color.WHITE);
 
+					} catch (java.lang.NumberFormatException ex) {
+						JOptionPane.showMessageDialog(null, "값을 올바르게 넣어주세요", "경고", JOptionPane.WARNING_MESSAGE);
+						ex.printStackTrace();
+					}
+
+				}
 			}
 		});
 		JButton btnNewButton_1 = new JButton("");
@@ -1918,6 +2137,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				checkDuplicateID();
+				identityChecked2 = true;
 			}
 		});
 
@@ -1956,10 +2176,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				개인정보창.setVisible(true);
 				일정창.setVisible(false);
 				컨디션창.setVisible(false);
-				의사소견창.setVisible(false);
 			}
 		});
-		개인정보버튼.setBounds(32, 91, 120, 46);
+		개인정보버튼.setBounds(32, 112, 120, 46);
 		three.add(개인정보버튼);
 
 		JButton 일정버튼 = new JButton("일정");
@@ -1972,13 +2191,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				개인정보창.setVisible(false);
 				일정창.setVisible(true);
 				컨디션창.setVisible(false);
-				의사소견창.setVisible(false);
 			}
 		});
-		일정버튼.setBounds(32, 159, 120, 46);
+		일정버튼.setBounds(32, 203, 120, 46);
 		three.add(일정버튼);
 
-		JButton 컨디션버튼 = new JButton("컨디션");
+		JButton 컨디션버튼 = new JButton("컨디션/의사소견");
 		컨디션버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				날짜콤보박스.setVisible(true);
@@ -1988,27 +2206,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				개인정보창.setVisible(false);
 				일정창.setVisible(false);
 				컨디션창.setVisible(true);
-				의사소견창.setVisible(false);
 			}
 		});
-		컨디션버튼.setBounds(32, 243, 120, 46);
+		컨디션버튼.setBounds(28, 296, 137, 46);
 		three.add(컨디션버튼);
-
-		JButton 의사소견버튼 = new JButton("의사소견");
-		의사소견버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				날짜콤보박스.setVisible(true);
-				날짜라벨.setVisible(true);
-				선수정보콤보박스.setVisible(true);
-				선수정보라벨.setVisible(true);
-				개인정보창.setVisible(false);
-				일정창.setVisible(false);
-				컨디션창.setVisible(false);
-				의사소견창.setVisible(true);
-			}
-		});
-		의사소견버튼.setBounds(32, 318, 117, 46);
-		three.add(의사소견버튼);
 
 		날짜콤보박스 = new JComboBox();
 		날짜콤보박스.setBounds(424, 26, 127, 21);
@@ -2035,15 +2236,22 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				if (selectedDate.isBefore(currentDate)) {
 					// 선택한 날짜가 현재 날짜보다 이전인 경우
 					일정창_저장버튼.setEnabled(false); // 저장 버튼 비활성화
+					선수목록_컨디션_저장버튼.setEnabled(false);
 				} else {
 					일정창_저장버튼.setEnabled(true); // 저장 버튼 활성화
+					선수목록_컨디션_저장버튼.setEnabled(true);
 				}
 
 				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
+				선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				
+
 			}
 		});
 		날짜콤보박스.setVisible(false);
@@ -2056,19 +2264,24 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수정보콤보박스.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String selectedItem = (String) 선수정보콤보박스.getSelectedItem();
-				일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItem.split(" - ")[0]);
-				System.out.println(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_개인정보_콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(playerList);
-				선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
-				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
-				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_컨디션_컨디션리스트를바탕으로JTable에목록을띄우는메소드(conditionList);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_의사소견리스트를바탕으로JTable에목록을띄우는메소드(doctorAppointmentList);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				Object selectedItem = 선수정보콤보박스.getSelectedItem();
+				if (selectedItem != null) {
+					String selectedItemStr = (String) selectedItem;
+					일정창_선수정보콤보박스에서선택한등번호 = Integer.parseInt(selectedItemStr.split(" - ")[0]);
+					System.out.println(일정창_선수정보콤보박스에서선택한등번호);
+
+					선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
+					선수목록_개인정보_콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(playerList);
+					선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(일정창_선수정보콤보박스에서선택한등번호);
+					선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
+					선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+					선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+					선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+					선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
+					선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+					선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+					선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				}
 			}
 
 		});
@@ -2083,120 +2296,100 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
-				
-						일정창 = new JPanel();
-						일정창.setBounds(192, 57, 787, 376);
-						three.add(일정창);
-						일정창.setLayout(null);
-						
-								일정창_저장버튼 = new JButton("저장");
-								일정창_저장버튼.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent arg0) {
-										String comment = 일정창_코멘트텍스트필드.getText();
-										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
-										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
-												selectedStartTimes);
-										일정창_코멘트텍스트필드.setText("");
-									}
-								});
-								일정창_저장버튼.setBounds(626, 293, 135, 73);
-								일정창.add(일정창_저장버튼);
-								
-										scrolledTable = new JScrollPane((Component) null);
-										scrolledTable.setBounds(23, 21, 617, 263);
-										일정창.add(scrolledTable);
-										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-										
-												table = new JTable(new DefaultTableModel(new Object[][] {},
-														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-												};
-												scrolledTable.setViewportView(table);
-												
-												scrollPane_8 = new JScrollPane();
-												scrollPane_8.setBounds(78, 278, 513, 77);
-												일정창.add(scrollPane_8);
-												
-														일정창_코멘트텍스트필드 = new JTextField();
-														scrollPane_8.setViewportView(일정창_코멘트텍스트필드);
-														일정창_코멘트텍스트필드.setColumns(10);
-														일정창.setVisible(false);
-		
-				의사소견창 = new JPanel();
-				의사소견창.setBounds(192, 57, 787, 376);
-				three.add(의사소견창);
-				의사소견창.setLayout(null);
-				
-						scrollPane_2 = new JScrollPane();
-						scrollPane_2.setBounds(32, 177, 206, 149);
-						의사소견창.add(scrollPane_2);
-						
-								선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
-								scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
-								
-										lblNewLabel_4 = new JLabel("");
-										lblNewLabel_4.setBounds(69, 196, 57, 15);
-										의사소견창.add(lblNewLabel_4);
-										
-												선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
-												선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-												선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
-												의사소견창.add(선수목록_의사소견_의사소견라벨);
-												
-														scrollPane_3 = new JScrollPane();
-														scrollPane_3.setBounds(310, 177, 217, 156);
-														의사소견창.add(scrollPane_3);
-														
-																선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
-																scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
-																
-																		lblNewLabel_10 = new JLabel("선수 컨디션");
-																		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-																		lblNewLabel_10.setBounds(86, 152, 82, 15);
-																		의사소견창.add(lblNewLabel_10);
-																		
-																				scrolledTable_2 = new JScrollPane((Component) null);
-																				scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-																				scrolledTable_2.setBounds(84, 18, 616, 124);
-																				의사소견창.add(scrolledTable_2);
-																				
-																						doctorAppointmentTable = new JTable(new DefaultTableModel(new Object[][] {},
-																								new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04",
-																										"\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58" }));
-																						scrolledTable_2.setViewportView(doctorAppointmentTable);
-																						
-																								scrollPane_4 = new JScrollPane();
-																								scrollPane_4.setBounds(567, 177, 185, 156);
-																								의사소견창.add(scrollPane_4);
-																								
-																										선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
-																										scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
-																										
-																												선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
-																												선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-																												선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
-																												의사소견창.add(선수목록_의사소견_감독코멘트라벨);
-																												
-																														선수목록_의사소견_저장버튼 = new JButton("저장");
-																														선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
-																															public void actionPerformed(ActionEvent arg0) {
 
-																																String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
-																																선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-																															}
-																														});
-																														선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
-																														의사소견창.add(선수목록_의사소견_저장버튼);
-																														
-																																lblNewLabel_9_1 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
-																																lblNewLabel_9_1.setHorizontalAlignment(SwingConstants.CENTER);
-																																lblNewLabel_9_1.setBounds(203, 0, 372, 15);
-																																의사소견창.add(lblNewLabel_9_1);
-																																
-																																		lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
-																																		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
-																																		lblNewLabel_12.setBounds(12, 336, 377, 15);
-																																		의사소견창.add(lblNewLabel_12);
-																																		의사소견창.setVisible(false);
+		컨디션창 = new JPanel();
+		컨디션창.setBounds(192, 57, 787, 376);
+		three.add(컨디션창);
+		컨디션창.setLayout(null);
+
+		scrolledTable_1 = new JScrollPane((Component) null);
+		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		scrolledTable_1.setBounds(23, 28, 694, 151);
+		컨디션창.add(scrolledTable_1);
+
+		conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "number", "playername", "playercondition", "when" }));
+		scrolledTable_1.setViewportView(conditionTable);
+
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(387, 228, 195, 138);
+		컨디션창.add(scrollPane_1);
+
+		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
+		선수목록_컨디션_코멘트텍스트박스.setLineWrap(true);
+		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
+
+		코멘트작성라벨 = new JLabel("감독 코멘트 작성");
+		코멘트작성라벨.setHorizontalAlignment(SwingConstants.CENTER);
+		코멘트작성라벨.setBounds(404, 203, 162, 15);
+		컨디션창.add(코멘트작성라벨);
+
+		선수목록_컨디션_저장버튼 = new JButton("저장");
+		선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String comment = 선수목록_컨디션_코멘트텍스트박스.getText();
+				선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+				선수목록_컨디션_코멘트텍스트박스.setText("");
+			}
+		});
+		선수목록_컨디션_저장버튼.setBounds(645, 305, 130, 41);
+		컨디션창.add(선수목록_컨디션_저장버튼);
+
+		lblNewLabel_11 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_11.setBounds(201, 3, 372, 15);
+		컨디션창.add(lblNewLabel_11);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(123, 228, 195, 138);
+		컨디션창.add(scrollPane);
+
+		선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
+		선수목록_의사소견_의사소견텍스트박스.setLineWrap(true);
+		scrollPane.setViewportView(선수목록_의사소견_의사소견텍스트박스);
+
+		선수목록_의사소견_의사소견라벨_1 = new JLabel("의사소견");
+		선수목록_의사소견_의사소견라벨_1.setHorizontalAlignment(SwingConstants.CENTER);
+		선수목록_의사소견_의사소견라벨_1.setBounds(176, 203, 82, 15);
+		컨디션창.add(선수목록_의사소견_의사소견라벨_1);
+		컨디션창.setVisible(false);
+
+		일정창 = new JPanel();
+		일정창.setBounds(192, 57, 787, 376);
+		three.add(일정창);
+		일정창.setLayout(null);
+
+		일정창_저장버튼 = new JButton("저장");
+		일정창_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String comment = 선수목록_일정_감독코멘트박스.getText();
+				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+				선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+						selectedStartTimes);
+				선수목록_일정_감독코멘트박스.setText("");
+			}
+		});
+		일정창_저장버튼.setBounds(626, 293, 135, 73);
+		일정창.add(일정창_저장버튼);
+
+		scrolledTable = new JScrollPane((Component) null);
+		scrolledTable.setBounds(23, 21, 617, 263);
+		일정창.add(scrolledTable);
+		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		table = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+		};
+		scrolledTable.setViewportView(table);
+
+		JScrollPane scrollPane_8 = new JScrollPane();
+		scrollPane_8.setBounds(110, 293, 445, 62);
+		일정창.add(scrollPane_8);
+
+		선수목록_일정_감독코멘트박스 = new JTextArea();
+		scrollPane_8.setViewportView(선수목록_일정_감독코멘트박스);
+		일정창.setVisible(false);
+		선수목록_일정_감독코멘트박스.setLineWrap(true);
 
 		개인정보창 = new JPanel();
 		개인정보창.setBounds(192, 57, 787, 376);
@@ -2281,8 +2474,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				선수목록_개인정보_선수수정메소드(playerList);
 				선수목록_선수정보콤보박스목록만드는메소드();
+				JOptionPane.showMessageDialog(frame, "수정되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
+
 		수정버튼.setBounds(585, 307, 90, 29);
 		개인정보창.add(수정버튼);
 
@@ -2306,12 +2501,17 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		JButton 선수삭제버튼 = new JButton("선수삭제");
 		선수삭제버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
+				int choice = JOptionPane.showConfirmDialog(frame, "해당 선수의 identity정보도 함께 삭제됩니다. 정말 삭제하시겠습니까?", "경고",
+						JOptionPane.YES_NO_OPTION);
 
 				if (choice == JOptionPane.YES_OPTION) {
 					선수목록_개인정보_선수삭제메소드(playerList);
 					System.out.println("삭제되었습니다.");
 					선수목록_선수정보콤보박스목록만드는메소드();
+					System.out.println("텍스트삭제완료");
+
+					// 삭제가 완료되면 메시지 다이얼로그를 띄워 "삭제되었습니다"를 보여줍니다.
+					JOptionPane.showMessageDialog(frame, "삭제되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					System.out.println("삭제가 취소되었습니다.");
 				}
@@ -2320,65 +2520,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수삭제버튼.setBounds(367, 301, 90, 34);
 		개인정보창.add(선수삭제버튼);
 		개인정보창.setVisible(false);
-
-		컨디션창 = new JPanel();
-		컨디션창.setBounds(192, 57, 787, 376);
-		three.add(컨디션창);
-		컨디션창.setLayout(null);
-
-		scrolledTable_1 = new JScrollPane((Component) null);
-		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable_1.setBounds(23, 28, 694, 110);
-		컨디션창.add(scrolledTable_1);
-
-		conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "number", "playername", "playercondition", "when" }));
-		scrolledTable_1.setViewportView(conditionTable);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(146, 177, 195, 138);
-		컨디션창.add(scrollPane);
-
-		선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
-		scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
-
-		선수컨디션라벨 = new JLabel("선수 컨디션");
-		선수컨디션라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수컨디션라벨.setBounds(194, 152, 96, 15);
-		컨디션창.add(선수컨디션라벨);
-
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(489, 177, 195, 138);
-		컨디션창.add(scrollPane_1);
-
-		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
-		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
-
-		코멘트작성라벨 = new JLabel("코멘트 작성");
-		코멘트작성라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		코멘트작성라벨.setBounds(539, 152, 96, 15);
-		컨디션창.add(코멘트작성라벨);
-
-		JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
-		선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String comment = 선수목록_컨디션_코멘트텍스트박스.getText();
-				선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-			}
-		});
-		선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
-		컨디션창.add(선수목록_컨디션_저장버튼);
-
-		lblNewLabel_11 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
-		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_11.setBounds(201, 3, 372, 15);
-		컨디션창.add(lblNewLabel_11);
-
-		lblNewLabel_13 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수 컨디션이 나옵니다");
-		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_13.setBounds(49, 338, 355, 15);
-		컨디션창.add(lblNewLabel_13);
-		컨디션창.setVisible(false);
 
 		// =======================================================================
 		five = new JPanel();
