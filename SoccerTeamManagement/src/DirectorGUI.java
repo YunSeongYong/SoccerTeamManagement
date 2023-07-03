@@ -103,6 +103,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private List<DoctorAppointment> doctorAppointmentList;
 	private List<Comment> commentList;
 	private List<CommonSchedule> commonScheduleList;
+	private List<Staff> staffList;
 	private List<String> selectedDates = new ArrayList<>();
 	private List<String> selectedStartTimes = new ArrayList<>();
 	private JTextField 담당의사수정텍스트필드;
@@ -148,6 +149,22 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel 선수정보라벨;
 	private String 체크박스에서선택된date;
 	private String 체크박스에서선택된starttime;
+	private JPanel 스태프목록_이미지등록창;
+	private JButton 스태프목록_이미지등록버튼;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_3;
+	private JTextField 스태프목록_이름텍스트필드;
+	private JTextField 스태프목록_나이텍스트필드;
+	private JScrollPane scrollPane_6;
+	private JTextArea 스태프목록_경력텍스트박스;
+	private JTextField 스태프목록_직책텍스트필드;
+	private JComboBox 스태프목록_스태프목록콤보박스;
+	private String 스태프목록_스태프목록콤보박스에서선택한이름;
+	private JLabel lblNewLabel_16;
+	private JScrollPane scrollPane_7;
+	private JTextArea 스태프목록_담당선수텍스트박스;
+	private JScrollPane scrollPane_8;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -544,6 +561,33 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
+	public void 스태프목록_이미지를데이터베이스에수정하는메소드(PreparedStatement stmt) {
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			// 이미지를 바이트 배열로 변환
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			BufferedImage bufferedImage = new BufferedImage(selectedImage.getWidth(null), selectedImage.getHeight(null),
+					BufferedImage.TYPE_INT_RGB);
+			Graphics2D graphics = bufferedImage.createGraphics();
+			graphics.drawImage(selectedImage, 0, 0, null);
+			graphics.dispose();
+			ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+			byte[] imageData = byteArrayOutputStream.toByteArray();
+
+			// 선수 이미지를 업데이트하는 쿼리 실행
+			String updateQuery = "UPDATE staff SET image = ? WHERE name = ?";
+			stmt = conn.prepareStatement(updateQuery);
+			stmt.setBytes(1, imageData);
+			stmt.setString(2, 스태프목록_이름텍스트필드.getText());
+			stmt.executeUpdate();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void 선수목록_선수정보콤보박스목록만드는메소드() {
 
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -560,6 +604,28 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 						String name = rs.getString("name");
 						String item = backnumber + " - " + name;
 						선수정보콤보박스.addItem(item);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void 스태프목록_스태프목록콤보박스목록만드는메소드() {
+
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+		스태프목록_스태프목록콤보박스.setModel(model);
+
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			String sql = "SELECT name FROM staff;";
+			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+				try (ResultSet rs = stmt.executeQuery()) {
+					while (rs.next()) {
+						String name = rs.getString("name");
+						스태프목록_스태프목록콤보박스.addItem(name);
 					}
 				}
 			}
@@ -637,6 +703,43 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		return playerList;
 	}
 
+	public List<Staff> 스태프목록_스태프정보콤보박스의이름으로스태프의모든정보를리스트에저장하는메소드(String name) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		staffList = new ArrayList<>();
+
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT * from staff where name = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				int number = rs.getInt("number");
+				String name1 = rs.getString("name");
+				int age = rs.getInt("age");
+				String role = rs.getString("role");
+				String career = rs.getString("career");
+				Blob imagePath = rs.getBlob("image");
+				Image image = ImageIO.read(imagePath.getBinaryStream());
+
+				staffList.add(new Staff(number, name1, age, role, career, image));
+				System.out.println(staffList);
+			}
+
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return staffList;
+	}
+
 	public void 선수목록_개인정보_콤보박스에서선택한등번호로선수정보의모든텍스트필드에추가하는메소드(List<Player> playerList) {
 		if (!playerList.isEmpty()) {
 			Player player = playerList.get(0); // 첫 번째 Player 객체 가져오기
@@ -661,6 +764,34 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				이미지등록수정창.add(imageLabel);
 				이미지등록수정창.revalidate();
 				이미지등록수정창.repaint();
+			});
+
+			// 이미지 변수 설정
+			selectedImage = image;
+		}
+	}
+
+	public void 스태프목록_콤보박스에서선택한이름으로스태프정보의모든텍스트필드에추가하는메소드(List<Staff> staffList) {
+		if (!staffList.isEmpty()) {
+			Staff staff = staffList.get(0); // 첫 번째 Player 객체 가져오기
+
+			스태프목록_이름텍스트필드.setText(staff.getName());
+			스태프목록_나이텍스트필드.setText(String.valueOf(staff.getAge()));
+			스태프목록_직책텍스트필드.setText(staff.getRole());
+			스태프목록_경력텍스트박스.setText(staff.getCareer());
+			스태프목록_담당선수텍스트박스.setText("");
+
+			// 이미지 표시를 위한 JLabel 생성
+			Image image = staff.getImage();
+			JLabel imageLabel = new JLabel(new ImageIcon(image));
+
+			// 이미지를 추가하기 전에 이전에 추가한 이미지 제거
+			스태프목록_이미지등록창.removeAll();
+
+			SwingUtilities.invokeLater(() -> {
+				스태프목록_이미지등록창.add(imageLabel);
+				스태프목록_이미지등록창.revalidate();
+				스태프목록_이미지등록창.repaint();
 			});
 
 			// 이미지 변수 설정
@@ -703,6 +834,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
+	public void 스태프목록_스태프수정메소드(List<Staff> staffList) {
+		Staff staff = staffList.get(0);
+		String sql = "UPDATE staff SET name=?, age=?, career=?, role=? WHERE name = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, 스태프목록_이름텍스트필드.getText());
+			stmt.setInt(2, Integer.valueOf(스태프목록_나이텍스트필드.getText()));
+			stmt.setString(3, 스태프목록_경력텍스트박스.getText());
+			stmt.setString(4, 스태프목록_직책텍스트필드.getText());
+			stmt.setString(5, staff.getName());
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 저장되었습니다.");
+
+			} else {
+				System.out.println("데이터 저장에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			스태프목록_이미지를데이터베이스에수정하는메소드(stmt);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
 	public void 선수목록_개인정보_이미지를화면에수정하는메소드() {
 		이미지등록수정창.removeAll();
 		JFileChooser fileChooser = new JFileChooser();
@@ -734,6 +896,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
+	public void 스태프목록_이미지를화면에수정하는메소드() {
+		스태프목록_이미지등록창.removeAll();
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showOpenDialog(frame);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			selectedFile = fileChooser.getSelectedFile(); // 선택한 파일 가져오기
+
+			// 이미지 아이콘 설정
+			ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+			selectedImage = imageIcon.getImage().getScaledInstance(187, 275, Image.SCALE_SMOOTH);
+
+			// 이미지 라벨이 이미 추가되어 있는지 확인하고, 있다면 제거
+			if (이미지라벨 != null) {
+				스태프목록_이미지등록창.remove(이미지라벨);
+			}
+
+			// 새로운 이미지 라벨 생성
+			이미지라벨 = new JLabel(new ImageIcon(selectedImage));
+			이미지라벨.setBounds(12, 38, 136, 187);
+
+			// 이미지 라벨을 패널에 추가
+			스태프목록_이미지등록창.add(이미지라벨);
+
+			// 패널 갱신
+			스태프목록_이미지등록창.revalidate();
+			스태프목록_이미지등록창.repaint();
+
+			selectedImage = selectedImage;
+		}
+	}
+
 	public void 선수목록_개인정보_선수삭제메소드(List<Player> playerList) {
 		Player player = playerList.get(0);
 		String sql = "delete from players where backnumber = ?";
@@ -760,6 +953,56 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
+	public void 스태프목록_스태프삭제메소드(List<Staff> staffList) {
+		Staff staff = staffList.get(0);
+		String sql = "delete from staff where name = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, staff.getName());
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 삭제되었습니다.");
+			} else {
+				System.out.println("데이터 삭제에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			스태프목록_스태프삭제시담당하던선수의스태프도삭제되도록하는메소드(스태프목록_스태프목록콤보박스에서선택한이름);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
+	public void 스태프목록_스태프삭제시담당하던선수의스태프도삭제되도록하는메소드(String name) {
+		String sql = "update players set coach = null where coach = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("데이터가 성공적으로 삭제되었습니다.");
+			} else {
+				System.out.println("데이터 삭제에 실패하였습니다.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+	}
+
 	public void 선수목록_개인정보_선수정보의모든텍스트필드값제거메소드() {
 		등번호수정텍스트필드.setText("");
 		이름수정텍스트필드.setText("");
@@ -772,6 +1015,16 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		이미지등록수정창.removeAll();
 		이미지등록수정창.revalidate();
 		이미지등록수정창.repaint();
+	}
+
+	public void 스태프목록_스태프정보의모든텍스트필드값제거메소드() {
+		스태프목록_이름텍스트필드.setText("");
+		스태프목록_나이텍스트필드.setText("");
+		스태프목록_경력텍스트박스.setText("");
+		스태프목록_직책텍스트필드.setText("");
+		스태프목록_이미지등록창.removeAll();
+		스태프목록_이미지등록창.revalidate();
+		스태프목록_이미지등록창.repaint();
 	}
 
 	public List<Schedule> 선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(int backnumber) {
@@ -957,48 +1210,49 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 //	}
 
 	public void 선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(int backNumber, String comment, List<String> selectedStartTimes) {
-	    String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, ?, ?, '감독')";
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
+		String sql = "INSERT INTO comment (number, datetime, schedulecomment, who) VALUES (?, ?, ?, '감독')";
+		Connection conn = null;
+		PreparedStatement stmt = null;
 
-	    try {
-	        conn = DBUtil.getConnection();
-	        stmt = conn.prepareStatement(sql);
+		try {
+			conn = DBUtil.getConnection();
+			stmt = conn.prepareStatement(sql);
 
-	        for (int i = 0; i < selectedDates.size(); i++) {
-	            String selectedDateStr = selectedDates.get(i);
-	            LocalDate selectedDate = LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-	            String startTime = selectedStartTimes.get(i);
+			for (int i = 0; i < selectedDates.size(); i++) {
+				String selectedDateStr = selectedDates.get(i);
+				LocalDate selectedDate = LocalDate.parse(selectedDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				String startTime = selectedStartTimes.get(i);
 
-	            // 'selectedDate'와 'startTime'을 합치기 위해 'HH:mm:ss'를 붙여줌
-	            String dateTimeString = selectedDate.toString() + " " + startTime;
+				// 'selectedDate'와 'startTime'을 합치기 위해 'HH:mm:ss'를 붙여줌
+				String dateTimeString = selectedDate.toString() + " " + startTime;
 
-	            // 'dateTimeString'을 'yyyy-MM-dd HH:mm:ss' 형식으로 변환
-	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            String formattedDateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(formatter);
+				// 'dateTimeString'을 'yyyy-MM-dd HH:mm:ss' 형식으로 변환
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				String formattedDateTime = LocalDateTime
+						.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(formatter);
 
-	            stmt.setInt(1, backNumber);
-	            stmt.setString(2, formattedDateTime);
-	            stmt.setString(3, comment);
+				stmt.setInt(1, backNumber);
+				stmt.setString(2, formattedDateTime);
+				stmt.setString(3, comment);
 
-	            int result = stmt.executeUpdate();
-	            if (result > 0) {
-	                System.out.println("데이터가 성공적으로 저장되었습니다.");
-	                String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
-	                JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
-	            } else {
-	                System.out.println("데이터 저장에 실패하였습니다.");
-	            }
-	        }
-	    } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
-	        String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
-	        JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
-	    }catch (SQLException ex) {
-	        ex.printStackTrace();
-	    } finally {
-	        DBUtil.close(stmt);
-	        DBUtil.close(conn);
-	    }
+				int result = stmt.executeUpdate();
+				if (result > 0) {
+					System.out.println("데이터가 성공적으로 저장되었습니다.");
+					String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
+					JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
+				} else {
+					System.out.println("데이터 저장에 실패하였습니다.");
+				}
+			}
+		} catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+			String errorMessage = "코멘트 등록 및 수정 완료되었습니다.";
+			JOptionPane.showMessageDialog(null, errorMessage, "경고", JOptionPane.WARNING_MESSAGE);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
 	}
 
 	public List<Condition> 선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(int backnumber) {
@@ -1285,11 +1539,58 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		}
 	}
 
+	public List<Player> 스태프목록_콤보박스선택시담당선수리스트만드는메소드(String name) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		playerList = new ArrayList<>();
+
+		try {
+			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+			String sql = "SELECT name FROM players where coach = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, name);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				String playerName = rs.getString("name");
+
+				playerList.add(new Player(playerName));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용한 자원을 닫아주어야 합니다.
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		}
+		return playerList;
+	}
+
+	public void 스태프목록_콤보박스에서선택한스태프이름으로스태프의담당선수텍스트필드에추가하는메소드(List<Player> playerList) {
+		if (!playerList.isEmpty()) {
+			StringBuilder names = new StringBuilder();
+
+			for (Player player : playerList) {
+				names.append(player.getName()).append(", ");
+			}
+
+			// 마지막 쉼표와 공백 제거
+			if (names.length() > 0) {
+				names.setLength(names.length() - 2);
+			}
+
+			스태프목록_담당선수텍스트박스.setText(names.toString());
+		}
+	}
+
 	// ======================================================================
 
 	public DirectorGUI() {
 
-		JPanel one, two, three, four;
+		JPanel one, two, three, four, five;
 		pane = new JTabbedPane();
 		pane.setBounds(0, 101, 984, 460);
 		lbl = new JLabel("              ");
@@ -1302,7 +1603,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		이름텍스트필드 = new JTextField();
 		이름텍스트필드.setText("이름 입력");
-		이름텍스트필드.setBorder(null); 
+		이름텍스트필드.setBorder(null);
 		이름텍스트필드.setForeground(Color.DARK_GRAY);
 		이름텍스트필드.setBounds(420, 294, 98, 29);
 		one.add(이름텍스트필드);
@@ -1310,7 +1611,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		신장텍스트필드 = new JTextField();
 		신장텍스트필드.setText("신장 입력");
-		신장텍스트필드.setBorder(null); 
+		신장텍스트필드.setBorder(null);
 		신장텍스트필드.setForeground(Color.DARK_GRAY);
 		신장텍스트필드.setBounds(420, 332, 98, 29);
 		one.add(신장텍스트필드);
@@ -1318,7 +1619,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		몸무게텍스트필드 = new JTextField();
 		몸무게텍스트필드.setText("몸무게 입력");
-		몸무게텍스트필드.setBorder(null); 
+		몸무게텍스트필드.setBorder(null);
 		몸무게텍스트필드.setForeground(Color.DARK_GRAY);
 		몸무게텍스트필드.setBounds(420, 370, 98, 29);
 		one.add(몸무게텍스트필드);
@@ -1326,7 +1627,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		나이텍스트필드 = new JTextField();
 		나이텍스트필드.setText("나이 입력");
-		나이텍스트필드.setBorder(null); 
+		나이텍스트필드.setBorder(null);
 		나이텍스트필드.setForeground(Color.DARK_GRAY);
 		나이텍스트필드.setBounds(685, 255, 196, 30);
 		one.add(나이텍스트필드);
@@ -1334,7 +1635,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		포지션텍스트필드 = new JTextField();
 		포지션텍스트필드.setText("포지션 입력 예) MF");
-		포지션텍스트필드.setBorder(null); 
+		포지션텍스트필드.setBorder(null);
 		포지션텍스트필드.setForeground(Color.DARK_GRAY);
 		포지션텍스트필드.setBounds(685, 293, 196, 30);
 		one.add(포지션텍스트필드);
@@ -1342,7 +1643,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		담당코치텍스트필드 = new JTextField();
 		담당코치텍스트필드.setText("담당코치 이름 입력");
-		담당코치텍스트필드.setBorder(null); 
+		담당코치텍스트필드.setBorder(null);
 		담당코치텍스트필드.setForeground(Color.DARK_GRAY);
 		담당코치텍스트필드.setBounds(685, 331, 196, 30);
 		one.add(담당코치텍스트필드);
@@ -1350,7 +1651,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		담당의사텍스트필드 = new JTextField();
 		담당의사텍스트필드.setText("담당의사 이름 입력");
-		담당의사텍스트필드.setBorder(null); 
+		담당의사텍스트필드.setBorder(null);
 		담당의사텍스트필드.setForeground(Color.DARK_GRAY);
 		담당의사텍스트필드.setBounds(685, 371, 196, 30);
 		one.add(담당의사텍스트필드);
@@ -1358,7 +1659,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		아이디텍스트필드 = new JTextField(15);
 		아이디텍스트필드.setForeground(Color.DARK_GRAY);
-		아이디텍스트필드.setBorder(null); 
+		아이디텍스트필드.setBorder(null);
 		아이디텍스트필드.setText("아이디 입력");
 		아이디텍스트필드.setOpaque(false);
 
@@ -1368,7 +1669,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		비밀번호텍스트필드 = new JTextField();
 		비밀번호텍스트필드.setText("문자 포함 4자리 이상 가능");
-		비밀번호텍스트필드.setBorder(null); 
+		비밀번호텍스트필드.setBorder(null);
 		비밀번호텍스트필드.setForeground(Color.DARK_GRAY);
 		비밀번호텍스트필드.setBounds(685, 212, 196, 30);
 		one.add(비밀번호텍스트필드);
@@ -1408,7 +1709,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		등번호텍스트필드 = new JTextField();
 		등번호텍스트필드.setText("등번호 입력");
 		등번호텍스트필드.setOpaque(false);
-		등번호텍스트필드.setBorder(null); 
+		등번호텍스트필드.setBorder(null);
 		등번호텍스트필드.setForeground(Color.DARK_GRAY);
 		등번호텍스트필드.setBounds(420, 254, 98, 29);
 		one.add(등번호텍스트필드);
@@ -1707,40 +2008,44 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
+
+		일정창 = new JPanel();
+		일정창.setBounds(192, 57, 787, 376);
+		three.add(일정창);
+		일정창.setLayout(null);
+
+		일정창_코멘트텍스트필드 = new JTextField();
+		일정창_코멘트텍스트필드.setBounds(631, 225, 513, 77);
+		일정창.add(일정창_코멘트텍스트필드);
+		일정창_코멘트텍스트필드.setColumns(10);
+
+		일정창_저장버튼 = new JButton("저장");
+		일정창_저장버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String comment = 일정창_코멘트텍스트필드.getText();
+				선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+				선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+						selectedStartTimes);
+				일정창_코멘트텍스트필드.setText("");
+			}
+		});
+		일정창_저장버튼.setBounds(626, 293, 135, 73);
+		일정창.add(일정창_저장버튼);
+
+		scrolledTable = new JScrollPane((Component) null);
+		scrolledTable.setBounds(23, 21, 617, 263);
+		일정창.add(scrolledTable);
+		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		table = new JTable(new DefaultTableModel(new Object[][] {},
+				new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+		};
+		scrolledTable.setViewportView(table);
 		
-				일정창 = new JPanel();
-				일정창.setBounds(192, 57, 787, 376);
-				three.add(일정창);
-				일정창.setLayout(null);
-				
-						일정창_코멘트텍스트필드 = new JTextField();
-						일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
-						일정창.add(일정창_코멘트텍스트필드);
-						일정창_코멘트텍스트필드.setColumns(10);
-						
-								일정창_저장버튼 = new JButton("저장");
-								일정창_저장버튼.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent arg0) {
-										String comment = 일정창_코멘트텍스트필드.getText();
-										선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
-										선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
-												selectedStartTimes);
-										일정창_코멘트텍스트필드.setText("");
-									}
-								});
-								일정창_저장버튼.setBounds(626, 293, 135, 73);
-								일정창.add(일정창_저장버튼);
-								
-										scrolledTable = new JScrollPane((Component) null);
-										scrolledTable.setBounds(23, 21, 617, 263);
-										일정창.add(scrolledTable);
-										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-										
-												table = new JTable(new DefaultTableModel(new Object[][] {},
-														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-												};
-												scrolledTable.setViewportView(table);
-												일정창.setVisible(false);
+		scrollPane_8 = new JScrollPane();
+		scrollPane_8.setBounds(78, 278, 513, 77);
+		일정창.add(scrollPane_8);
+		일정창.setVisible(false);
 
 		개인정보창 = new JPanel();
 		개인정보창.setBounds(192, 57, 787, 376);
@@ -2001,6 +2306,125 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		컨디션창.add(lblNewLabel_13);
 		컨디션창.setVisible(false);
 
+		// =======================================================================
+		five = new JPanel();
+		five.setBackground(Color.WHITE);
+		pane.addTab("스태프 목록", five);
+		five.setLayout(null);
+
+		스태프목록_이미지등록창 = new JPanel();
+		스태프목록_이미지등록창.setBounds(245, 72, 152, 190);
+		five.add(스태프목록_이미지등록창);
+
+		스태프목록_이미지등록버튼 = new JButton("이미지 등록");
+		스태프목록_이미지등록버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				스태프목록_이미지를화면에수정하는메소드();
+			}
+		});
+		스태프목록_이미지등록버튼.setBounds(270, 272, 97, 23);
+		five.add(스태프목록_이미지등록버튼);
+
+		lblNewLabel_1 = new JLabel("이름");
+		lblNewLabel_1.setBounds(471, 89, 57, 15);
+		five.add(lblNewLabel_1);
+
+		lblNewLabel_2 = new JLabel("나이");
+		lblNewLabel_2.setBounds(471, 132, 57, 15);
+		five.add(lblNewLabel_2);
+
+		lblNewLabel_3 = new JLabel("경력");
+		lblNewLabel_3.setBounds(471, 181, 57, 15);
+		five.add(lblNewLabel_3);
+
+		스태프목록_이름텍스트필드 = new JTextField();
+		스태프목록_이름텍스트필드.setBounds(523, 86, 110, 21);
+		five.add(스태프목록_이름텍스트필드);
+		스태프목록_이름텍스트필드.setColumns(10);
+
+		스태프목록_나이텍스트필드 = new JTextField();
+		스태프목록_나이텍스트필드.setColumns(10);
+		스태프목록_나이텍스트필드.setBounds(523, 129, 110, 21);
+		five.add(스태프목록_나이텍스트필드);
+
+		scrollPane_6 = new JScrollPane();
+		scrollPane_6.setBounds(523, 181, 176, 159);
+		five.add(scrollPane_6);
+
+		스태프목록_경력텍스트박스 = new JTextArea();
+		scrollPane_6.setViewportView(스태프목록_경력텍스트박스);
+		스태프목록_경력텍스트박스.setLineWrap(true);
+
+		스태프목록_스태프목록콤보박스 = new JComboBox();
+		스태프목록_스태프목록콤보박스.setBounds(779, 24, 123, 21);
+		five.add(스태프목록_스태프목록콤보박스);
+		스태프목록_스태프목록콤보박스목록만드는메소드();
+		스태프목록_스태프목록콤보박스.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String selectedItem = (String) 스태프목록_스태프목록콤보박스.getSelectedItem();
+				스태프목록_스태프목록콤보박스에서선택한이름 = selectedItem;
+				System.out.println(스태프목록_스태프목록콤보박스에서선택한이름);
+				스태프목록_스태프정보콤보박스의이름으로스태프의모든정보를리스트에저장하는메소드(스태프목록_스태프목록콤보박스에서선택한이름);
+				스태프목록_콤보박스에서선택한이름으로스태프정보의모든텍스트필드에추가하는메소드(staffList);
+				스태프목록_콤보박스선택시담당선수리스트만드는메소드(스태프목록_스태프목록콤보박스에서선택한이름);
+				스태프목록_콤보박스에서선택한스태프이름으로스태프의담당선수텍스트필드에추가하는메소드(playerList);
+			}
+		});
+
+		JLabel lblNewLabel_5 = new JLabel("직책");
+		lblNewLabel_5.setBounds(703, 89, 57, 15);
+		five.add(lblNewLabel_5);
+
+		스태프목록_직책텍스트필드 = new JTextField();
+		스태프목록_직책텍스트필드.setColumns(10);
+		스태프목록_직책텍스트필드.setBounds(759, 86, 110, 21);
+		five.add(스태프목록_직책텍스트필드);
+
+		JButton 스태프목록_수정버튼 = new JButton("수정");
+		스태프목록_수정버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				스태프목록_스태프수정메소드(staffList);
+				스태프목록_스태프목록콤보박스목록만드는메소드();
+			}
+		});
+		스태프목록_수정버튼.setBounds(772, 359, 97, 23);
+		five.add(스태프목록_수정버튼);
+
+		JButton 스태프목록_삭제버튼 = new JButton("삭제");
+		스태프목록_삭제버튼.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
+
+				if (choice == JOptionPane.YES_OPTION) {
+					스태프목록_스태프삭제메소드(staffList);
+					System.out.println("삭제되었습니다.");
+					스태프목록_스태프목록콤보박스목록만드는메소드();
+				} else {
+					System.out.println("삭제가 취소되었습니다.");
+				}
+			}
+		});
+		스태프목록_삭제버튼.setBounds(630, 359, 97, 23);
+		five.add(스태프목록_삭제버튼);
+
+		JLabel lblNewLabel_6 = new JLabel("스태프 목록");
+		lblNewLabel_6.setBounds(686, 27, 81, 15);
+		five.add(lblNewLabel_6);
+
+		lblNewLabel_16 = new JLabel("담당 선수");
+		lblNewLabel_16.setBounds(703, 132, 57, 15);
+		five.add(lblNewLabel_16);
+
+		scrollPane_7 = new JScrollPane();
+		scrollPane_7.setBounds(743, 170, 176, 159);
+		five.add(scrollPane_7);
+
+		스태프목록_담당선수텍스트박스 = new JTextArea();
+		scrollPane_7.setViewportView(스태프목록_담당선수텍스트박스);
+		스태프목록_담당선수텍스트박스.setLineWrap(true);
+
 		// ====================================================================
 
 		four = new JPanel();
@@ -2101,7 +2525,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		four.add(lblNewLabel_15);
 		three.setLayout(null);
 
-		// =======================================================================
+		// ======================================================================
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);

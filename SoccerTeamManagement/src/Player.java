@@ -14,6 +14,14 @@ public class Player {
 	public Player() {
 		
 	}
+	
+	
+
+	public Player(String name) {
+		this.name = name;
+	}
+
+
 
 	public Player(int backNumber, String name, double height, double weight, int age, String position, String coach,
 			String doctor, Image image) {
