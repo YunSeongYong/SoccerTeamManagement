@@ -1,6 +1,8 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -12,6 +14,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 
@@ -19,7 +25,7 @@ public class PersonalSchedule extends JFrame {
 	public Player player;
 	private JTextField startTxt;
 	private JTextField endTxt;
-	private JTextField contentTxt;
+	private JTextArea contentTxt;
 	public PlayerTab playerTab;
 
 	public PersonalSchedule() {
@@ -49,10 +55,11 @@ public class PersonalSchedule extends JFrame {
 		lblNewLabel_2.setBounds(39, 64, 35, 15);
 		getContentPane().add(lblNewLabel_2);
 
-		contentTxt = new JTextField();
+		contentTxt = new JTextArea();
 		contentTxt.setBounds(39, 89, 341, 129);
 		getContentPane().add(contentTxt);
 		contentTxt.setColumns(10);
+		contentTxt.setLineWrap(true);
 
 		JButton registerBtn = new JButton("등록");
 		registerBtn.setBounds(185, 228, 66, 23);
@@ -61,16 +68,28 @@ public class PersonalSchedule extends JFrame {
 		registerBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int number = player.getBackNumber();
-				System.out.println(number);
-
 				String selectedDate = playerTab.comboBox.getSelectedItem().toString();
-				System.out.println(selectedDate);
-
-				registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(),
-						"선수");
-				addRecord();
-				dispose();
+				String startTime = startTxt.getText();
+				String endTime = endTxt.getText();
+				String content = contentTxt.getText();
+				
+				if (startTime.equals("") || content.equals("")) {
+					JOptionPane.showMessageDialog(null, "시작 시간과 내용을 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else if (!timeFormat(startTime) || !timeFormat(endTime)) {
+					JOptionPane.showMessageDialog(null, "시간을 정확히 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+				} else if (startTime != "" && content != "" && timeFormat(startTime) && timeFormat(endTime)) {
+					LocalTime startTimeParse = LocalTime.parse(startTxt.getText());
+					LocalTime endTimeParse = LocalTime.parse(endTxt.getText());
+					if (startTimeParse.isAfter(endTimeParse) || startTimeParse.equals(endTimeParse) || !timeFormat(startTime) || !timeFormat(endTime)) {
+						JOptionPane.showMessageDialog(null, "시간을 정확히 입력해주세요", "확인", JOptionPane.WARNING_MESSAGE);
+					} else {
+						int number = player.getBackNumber();
+						registerSchedule(number, selectedDate, startTxt.getText(), endTxt.getText(), contentTxt.getText(),
+								"선수");
+						addRecord();
+						dispose();
+					}
+				}
 			}
 		});
 
@@ -107,6 +126,16 @@ public class PersonalSchedule extends JFrame {
 			DBUtil.close(conn);
 		}
 	}
+	
+	// 24시간 시간 입력 정규표현식
+	private static boolean timeFormat (String input) {
+		Pattern p = Pattern.compile("^([01][0-9]|2[0-3]):([0-5][0-9])$");
+
+		Matcher m = p.matcher(input);
+
+		return m.matches();
+	}
+
 
 	public void addRecord() {
 		JTable table = playerTab.table;
