@@ -256,7 +256,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/축구장-배경12.jpg")));
+		lblNewLabel_3.setIcon(new ImageIcon(PlayerTab.class.getResource("/image/선수일정등록-배경-3-1.jpg")));
 		lblNewLabel_3.setBounds(0, 0, 979, 447);
 		one.add(lblNewLabel_3);
 
