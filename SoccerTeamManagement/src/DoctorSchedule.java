@@ -52,6 +52,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 	public DoctorSchedule() {
 		super();
 		staff = new Staff();
+		System.out.println("의사 이름" + staff.getName());
 		JPanel one, two, three;
 		pane = new JTabbedPane();
 
@@ -96,10 +97,10 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = table_1.getSelectedRow();
-				System.out.println(row);
+				System.out.println("선택된 행수" + row);
 				TableModel data = table_1.getModel();
 				int number = (Integer) data.getValueAt(row, 1);
-				System.out.println(number);
+				System.out.println("선택된 번호" + number);
 
 				insertDoctorComment(number, textArea.getText());
 
@@ -165,7 +166,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				LocalDate startDate = LocalDate.parse(startComboBox.getSelectedItem().toString());
 				Period period = Period.between(startDate, currentDate);
 				int datePeriod = period.getDays();
-				System.out.println(datePeriod);
+				System.out.println("기간" + datePeriod);
 
 				for (int i = 0; i <= datePeriod; i++) {
 					endComboBox.addItem(startDate.plusDays(i));
@@ -191,7 +192,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		two.add(nameComboBox);
 
 		addPlayer(staff.getName());
-		nameComboBox.setSelectedIndex(0);
+//		nameComboBox.setSelectedIndex(0);
 
 		btnNewButton_1 = new JButton("조회");
 		btnNewButton_1.setBounds(553, 31, 97, 23);
@@ -301,7 +302,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 	// 담당 선수 콤보박스 만드는 메소드
 	public void addPlayer(String doctorName) {
-		List<Player> list = new ArrayList<>();
+//		List<Player> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -317,6 +318,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			while (rs.next()) {
 				int backNumber = rs.getInt(1);
 				String name = rs.getString(2);
+				System.out.println("등번호" + backNumber);
+				System.out.println("이름" + name);
 
 				nameComboBox.addItem(backNumber + ". " + name);
 			}

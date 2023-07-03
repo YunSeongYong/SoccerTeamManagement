@@ -2,7 +2,7 @@ import java.awt.Image;
 
 public class Staff {
 	private int number;
-	private String name;
+	private static String name;
 	private int age;
 	private String role;
 	private String career;

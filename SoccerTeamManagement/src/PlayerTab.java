@@ -19,6 +19,7 @@ import javax.swing.JButton;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTabbedPane;
@@ -207,7 +208,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				removeRecord(row);
 				
-				System.out.println(table.getRowCount());
+				// 버튼 비활성화!!
 				if (table.getRowCount() == 0) {
 					updateBtn.setEnabled(false);
 					deleteBtn.setEnabled(false);
@@ -282,6 +283,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				// 버튼 비활성화!!!
 				LocalDate startDate = LocalDate.parse(comboBox.getSelectedItem().toString());
 				Period period = Period.between(currentDate, startDate);
 				int datePeriod = period.getDays();
@@ -341,6 +343,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				insertCondition(player);
+				
+				JOptionPane.showMessageDialog(null, "저장되었습니다.", "확인", JOptionPane.INFORMATION_MESSAGE);
+				textArea.setText(null);
+				
 			}
 		});
 
