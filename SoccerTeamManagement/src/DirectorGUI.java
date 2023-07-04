@@ -41,7 +41,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
-
+/////////////////////////////////
 public class DirectorGUI extends JFrame implements ChangeListener {
 	JTabbedPane pane;
 	JLabel lbl;
@@ -760,13 +760,13 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			while (rs.next()) {
 				int number = rs.getInt("number");
 				String name1 = rs.getString("name");
-				int age = rs.getInt("age");
+				String birthdate = rs.getString("birthdate");
 				String role = rs.getString("role");
 				String career = rs.getString("career");
 				Blob imagePath = rs.getBlob("image");
 				Image image = ImageIO.read(imagePath.getBinaryStream());
 
-				staffList.add(new Staff(number, name1, age, role, career, image));
+				staffList.add(new Staff(number, name1, birthdate, role, career, image));
 				System.out.println(staffList);
 			}
 
@@ -817,7 +817,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			Staff staff = staffList.get(0); // 첫 번째 Player 객체 가져오기
 
 			스태프목록_이름텍스트필드.setText(staff.getName());
-			스태프목록_나이텍스트필드.setText(String.valueOf(staff.getAge()));
+			스태프목록_나이텍스트필드.setText(staff.getBirthdate());
 			스태프목록_직책텍스트필드.setText(staff.getRole());
 			스태프목록_경력텍스트박스.setText(staff.getCareer());
 			스태프목록_담당선수텍스트박스.setText("");
