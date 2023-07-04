@@ -278,7 +278,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.getColumnModel().getColumn(3).setMinWidth(70);
 		table.getColumnModel().getColumn(3).setWidth(70);
 		table.setRowHeight(20);
-
+		
 		// Create a custom TableCellRenderer to center the text
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -433,6 +433,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		conditionCommentTable.getColumnModel().getColumn(2).setWidth(50);
 		conditionCommentTable.setRowHeight(20);
 
+		conditionCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		conditionCommentTable.setForeground(new Color(22, 47, 136));
+		conditionCommentTable.setBackground(new Color(255, 255, 255));
+
+		for (int i = 0; i < conditionCommentTable.getColumnCount(); i++) {
+			conditionCommentTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
 		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(),
 				dateComboBox.getSelectedItem().toString());
 		insertConditionCommentTabel(conditionCommentList, conditionCommentTable);
@@ -447,32 +455,41 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(scrolledTable_2);
 
 		// 의사 코멘트 테이블
-		
-		DefaultTableModel mod3 = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "코멘트"}) {
+
+		DefaultTableModel mod3 = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "코멘트" }) {
 			public boolean isCellEditable(int rowIndex, int mColIndex) {
 				return false;
 			}
 		};
-		
+
 		doctorCommentTable = new JTable(mod3);
 		doctorCommentTable.getTableHeader().setReorderingAllowed(false);
 		doctorCommentTable.getTableHeader().setResizingAllowed(false);
-		
+
 		doctorCommentTable.getColumnModel().getColumn(0).setMaxWidth(70);
 		doctorCommentTable.getColumnModel().getColumn(0).setMinWidth(70);
 		doctorCommentTable.getColumnModel().getColumn(0).setWidth(70);
 		doctorCommentTable.setRowHeight(20);
 
-		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
-				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
+		doctorCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		doctorCommentTable.setForeground(new Color(22, 47, 136));
+		doctorCommentTable.setBackground(new Color(255, 255, 255));
+		
+		for (int i = 0; i < doctorCommentTable.getColumnCount(); i++) {
+			doctorCommentTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 
-		DefaultTableCellRenderer centerRenderer1 = new DefaultTableCellRenderer();
-		centerRenderer1.setHorizontalAlignment(JLabel.CENTER);
+		// Create a custom TableCellRenderer to center the text
+		DefaultTableCellRenderer centerRenderer3 = new DefaultTableCellRenderer();
+		centerRenderer3.setHorizontalAlignment(JLabel.CENTER);
 
 		// Apply the custom renderer to each column of the table
 		for (int i = 0; i < table.getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer3);
 		}
+
+		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
+				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
 
 		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
 				sql2);
