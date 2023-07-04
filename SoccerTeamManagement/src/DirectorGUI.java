@@ -34,6 +34,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 import java.awt.event.ItemListener;
@@ -129,8 +130,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JPanel 스태프목록_이미지등록창;
 	private JButton 스태프목록_이미지등록버튼;
 	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
-	private JLabel lblNewLabel_3;
 	private JTextField 스태프목록_이름텍스트필드;
 	private JTextField 스태프목록_나이텍스트필드;
 	private JScrollPane scrollPane_6;
@@ -138,7 +137,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JTextField 스태프목록_직책텍스트필드;
 	private JComboBox 스태프목록_스태프목록콤보박스;
 	private String 스태프목록_스태프목록콤보박스에서선택한이름;
-	private JLabel lblNewLabel_16;
 	private JScrollPane scrollPane_7;
 	private JTextArea 스태프목록_담당선수텍스트박스;
 	private JButton 중복확인버튼;
@@ -153,6 +151,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private String date;
 	private String starttime;
 	private JButton 공동일정등록_저장버튼;
+	private JLabel lblNewLabel_11;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -247,7 +246,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			// 이미지 아이콘 설정
 			ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-			selectedImage = imageIcon.getImage().getScaledInstance(101, 101, Image.SCALE_SMOOTH);
+			selectedImage = imageIcon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
 
 			// 기존에 생성한 JLabel이 있을 경우 수정, 없을 경우 새로 생성
 			if (lblNewLabel == null) {
@@ -2648,47 +2647,56 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		five.setBackground(Color.WHITE);
 		pane.addTab("스태프 목록", five);
 		five.setLayout(null);
+		
+				스태프목록_이름텍스트필드 = new JTextField();
+				스태프목록_이름텍스트필드.setOpaque(false);
+				스태프목록_이름텍스트필드.setBorder(null);
+				스태프목록_이름텍스트필드.setBounds(189, 292, 110, 21);
+				five.add(스태프목록_이름텍스트필드);
+				스태프목록_이름텍스트필드.setColumns(10);
 
 		스태프목록_이미지등록창 = new JPanel();
-		스태프목록_이미지등록창.setBounds(245, 72, 152, 190);
+		스태프목록_이미지등록창.setOpaque(false);
+		스태프목록_이미지등록창.setBounds(157, 170, 171, 143);
 		five.add(스태프목록_이미지등록창);
 
-		스태프목록_이미지등록버튼 = new JButton("이미지 등록");
+		스태프목록_이미지등록버튼 = new JButton("");
+		스태프목록_이미지등록버튼.setOpaque(false);
+		스태프목록_이미지등록버튼.setContentAreaFilled(false);
+		스태프목록_이미지등록버튼.setBorderPainted(false);
+		스태프목록_이미지등록버튼.setFocusPainted(false);
 		스태프목록_이미지등록버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				스태프목록_이미지를화면에수정하는메소드();
 			}
 		});
-		스태프목록_이미지등록버튼.setBounds(270, 272, 97, 23);
+		스태프목록_이미지등록버튼.setBounds(197, 343, 100, 35);
 		five.add(스태프목록_이미지등록버튼);
 
-		lblNewLabel_1 = new JLabel("이름");
-		lblNewLabel_1.setBounds(471, 89, 57, 15);
-		five.add(lblNewLabel_1);
-
-		lblNewLabel_2 = new JLabel("나이");
-		lblNewLabel_2.setBounds(471, 132, 57, 15);
-		five.add(lblNewLabel_2);
-
-		lblNewLabel_3 = new JLabel("경력");
-		lblNewLabel_3.setBounds(471, 181, 57, 15);
-		five.add(lblNewLabel_3);
-
-		스태프목록_이름텍스트필드 = new JTextField();
-		스태프목록_이름텍스트필드.setBounds(523, 86, 110, 21);
-		five.add(스태프목록_이름텍스트필드);
-		스태프목록_이름텍스트필드.setColumns(10);
-
 		스태프목록_나이텍스트필드 = new JTextField();
+		스태프목록_나이텍스트필드.setForeground(new Color(255, 255, 255));
+		스태프목록_나이텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		스태프목록_나이텍스트필드.setOpaque(false);
+		스태프목록_나이텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
 		스태프목록_나이텍스트필드.setColumns(10);
-		스태프목록_나이텍스트필드.setBounds(523, 129, 110, 21);
+		스태프목록_나이텍스트필드.setBounds(588, 129, 142, 21);
 		five.add(스태프목록_나이텍스트필드);
 
 		scrollPane_6 = new JScrollPane();
-		scrollPane_6.setBounds(523, 181, 176, 159);
+		scrollPane_6.setOpaque(false);
+		scrollPane_6.getViewport().setOpaque(false);
+				
+		scrollPane_6.setBorder(new LineBorder(new Color(31, 49, 107)));
+		scrollPane_6.getVerticalScrollBar().setOpaque(false);
+		scrollPane_6.getHorizontalScrollBar().setOpaque(false);
+		scrollPane_6.setBounds(480, 310, 250, 50);
 		five.add(scrollPane_6);
 
 		스태프목록_경력텍스트박스 = new JTextArea();
+		스태프목록_경력텍스트박스.setForeground(Color.WHITE);
+		스태프목록_경력텍스트박스.setOpaque(false); // Set the textArea as transparent
+		scrollPane_6.setViewportView(스태프목록_경력텍스트박스);
+		스태프목록_경력텍스트박스.setLineWrap(true);
 		scrollPane_6.setViewportView(스태프목록_경력텍스트박스);
 		스태프목록_경력텍스트박스.setLineWrap(true);
 
@@ -2710,16 +2718,20 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			}
 		});
 
-		JLabel lblNewLabel_5 = new JLabel("직책");
-		lblNewLabel_5.setBounds(703, 89, 57, 15);
-		five.add(lblNewLabel_5);
-
 		스태프목록_직책텍스트필드 = new JTextField();
+		스태프목록_직책텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		스태프목록_직책텍스트필드.setForeground(new Color(255, 255, 255));
+		스태프목록_직책텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+		스태프목록_직책텍스트필드.setOpaque(false); 
 		스태프목록_직책텍스트필드.setColumns(10);
-		스태프목록_직책텍스트필드.setBounds(759, 86, 110, 21);
+		스태프목록_직책텍스트필드.setBounds(588, 160, 142, 21);
 		five.add(스태프목록_직책텍스트필드);
 
-		JButton 스태프목록_수정버튼 = new JButton("수정");
+		JButton 스태프목록_수정버튼 = new JButton("");
+		스태프목록_수정버튼.setOpaque(false);
+		스태프목록_수정버튼.setContentAreaFilled(false);
+		스태프목록_수정버튼.setBorderPainted(false);
+		스태프목록_수정버튼.setFocusPainted(false);
 		스태프목록_수정버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				스태프목록_스태프수정메소드(staffList);
@@ -2728,10 +2740,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				  JOptionPane.showMessageDialog(null, "수정되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		스태프목록_수정버튼.setBounds(772, 359, 97, 23);
+		스태프목록_수정버튼.setBounds(797, 179, 97, 34);
 		five.add(스태프목록_수정버튼);
 
-		JButton 스태프목록_삭제버튼 = new JButton("삭제");
+		JButton 스태프목록_삭제버튼 = new JButton("");
+		스태프목록_삭제버튼.setOpaque(false);
+		스태프목록_삭제버튼.setContentAreaFilled(false);
+		스태프목록_삭제버튼.setBorderPainted(false);
+		스태프목록_삭제버튼.setFocusPainted(false);
 		스태프목록_삭제버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
@@ -2745,25 +2761,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				}
 			}
 		});
-		스태프목록_삭제버튼.setBounds(630, 359, 97, 23);
+		스태프목록_삭제버튼.setBounds(797, 286, 97, 34);
 		five.add(스태프목록_삭제버튼);
 
 		JLabel lblNewLabel_6 = new JLabel("스태프 목록");
+		lblNewLabel_6.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		lblNewLabel_6.setForeground(new Color(255, 255, 255));
 		lblNewLabel_6.setBounds(686, 27, 81, 15);
 		five.add(lblNewLabel_6);
 
-		lblNewLabel_16 = new JLabel("담당 선수");
-		lblNewLabel_16.setBounds(703, 132, 57, 15);
-		five.add(lblNewLabel_16);
-
 		scrollPane_7 = new JScrollPane();
-		scrollPane_7.setBounds(743, 170, 176, 159);
+		scrollPane_7.setOpaque(false);
+		scrollPane_7.getViewport().setOpaque(false);
+		scrollPane_7.setBorder(new LineBorder(new Color(31, 49, 107)));
+		scrollPane_7.getVerticalScrollBar().setOpaque(false);
+		scrollPane_7.getHorizontalScrollBar().setOpaque(false);
+		scrollPane_7.setBounds(480, 225, 250, 50);
 		five.add(scrollPane_7);
 
 		스태프목록_담당선수텍스트박스 = new JTextArea();
+		스태프목록_담당선수텍스트박스.setForeground(new Color(31, 49, 107));
+		스태프목록_담당선수텍스트박스.setOpaque(false); // Set the textArea as transparent
+		scrollPane_7.setViewportView(스태프목록_담당선수텍스트박스);
+		스태프목록_담당선수텍스트박스.setLineWrap(true);
 		scrollPane_7.setViewportView(스태프목록_담당선수텍스트박스);
 		스태프목록_담당선수텍스트박스.setLineWrap(true);
 		스태프목록_담당선수텍스트박스.setEditable(false);
+		
+		lblNewLabel_11 = new JLabel("New label");
+		lblNewLabel_11.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프-정보-수정3.jpg")));
+		lblNewLabel_11.setBounds(0, 0, 979, 431);
+		five.add(lblNewLabel_11);
 
 		// ====================================================================
 
