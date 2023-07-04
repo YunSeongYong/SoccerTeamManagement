@@ -41,7 +41,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
-/////////////////////////////////
+
 public class DirectorGUI extends JFrame implements ChangeListener {
 	JTabbedPane pane;
 	JLabel lbl;
@@ -2196,6 +2196,65 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 								컨디션창.setVisible(true);
 							}
 						});
+						
+								일정창 = new JPanel();
+								일정창.setBounds(164, 82, 815, 351);
+								three.add(일정창);
+								일정창.setLayout(null);
+								
+										일정창_저장버튼 = new JButton("");
+										일정창_저장버튼.setOpaque(false);
+										일정창_저장버튼.setContentAreaFilled(false);
+										일정창_저장버튼.setBorderPainted(false);
+										일정창_저장버튼.setFocusPainted(false);
+										일정창_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼1.jpg")));
+										일정창_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼2.jpg")));
+										일정창_저장버튼.addActionListener(new ActionListener() {
+											public void actionPerformed(ActionEvent arg0) {
+												String comment = 선수목록_일정_감독코멘트박스.getText();
+												선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
+												선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
+														selectedStartTimes);
+												선수목록_일정_감독코멘트박스.setText("");
+											}
+										});
+										일정창_저장버튼.setBounds(664, 280, 76, 38);
+										일정창.add(일정창_저장버튼);
+										
+												scrolledTable = new JScrollPane((Component) null);
+												scrolledTable.setBounds(81, 63, 659, 180);
+												일정창.add(scrolledTable);
+												scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+												
+														table = new JTable(new DefaultTableModel(new Object[][] {},
+																new String[] { "일 시", "시작 시간", "종료 시간", "내 용", "승인 여부" })) {
+														};
+														scrolledTable.setViewportView(table);
+														
+																JScrollPane scrollPane_8 = new JScrollPane();
+																scrollPane_8.setOpaque(false);
+																scrollPane_8.getViewport().setOpaque(false);
+																		
+																scrollPane_8.setViewportBorder(null);
+																scrollPane_8.getVerticalScrollBar().setOpaque(false);
+																scrollPane_8.getHorizontalScrollBar().setOpaque(false);
+																scrollPane_8.setBounds(81, 270, 459, 48);
+																일정창.add(scrollPane_8);
+																
+																		선수목록_일정_감독코멘트박스 = new JTextArea();
+																		선수목록_일정_감독코멘트박스.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																		선수목록_일정_감독코멘트박스.setForeground(Color.WHITE);
+																		선수목록_일정_감독코멘트박스.setOpaque(false); // Set the textArea as transparent
+																		scrollPane_8.setViewportView(선수목록_일정_감독코멘트박스);
+																		선수목록_일정_감독코멘트박스.setLineWrap(true);
+																		scrollPane_8.setViewportView(선수목록_일정_감독코멘트박스);
+																		선수목록_일정_감독코멘트박스.setLineWrap(true);
+																		일정창.setVisible(false);
+																				
+																				JLabel lblNewLabel_10 = new JLabel("New label");
+																				lblNewLabel_10.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록화면-일정-배경1.jpg")));
+																				lblNewLabel_10.setBounds(0, 0, 815, 351);
+																				일정창.add(lblNewLabel_10);
 						컨디션버튼.setBounds(0, 222, 120, 46);
 						three.add(컨디션버튼);
 		개인정보버튼.setBounds(0, 104, 120, 46);
@@ -2221,7 +2280,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.add(일정버튼);
 
 		날짜콤보박스 = new JComboBox();
-		날짜콤보박스.setBounds(424, 26, 127, 21);
+		날짜콤보박스.setBounds(424, 26, 94, 21);
 		three.add(날짜콤보박스);
 
 		LocalDate currentDate = LocalDate.now();
@@ -2244,9 +2303,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				// 선택한 날짜와 현재 날짜 비교
 				if (selectedDate.isBefore(currentDate)) {
 					// 선택한 날짜가 현재 날짜보다 이전인 경우
-					일정창_저장버튼.setEnabled(false); // 저장 버튼 비활성화
+					일정창_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼1.jpg")));
+					일정창_저장버튼.setEnabled(true); // 저장 버튼 비활성화
+					
 					선수목록_컨디션_저장버튼.setEnabled(false);
 				} else {
+					일정창_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼2.jpg")));
 					일정창_저장버튼.setEnabled(true); // 저장 버튼 활성화
 					선수목록_컨디션_저장버튼.setEnabled(true);
 				}
@@ -2265,7 +2327,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		선수정보콤보박스 = new JComboBox();
 		
-		선수정보콤보박스.setBounds(756, 26, 117, 21);
+		선수정보콤보박스.setBounds(756, 26, 87, 21);
 		three.add(선수정보콤보박스);
 		선수목록_선수정보콤보박스목록만드는메소드();
 
@@ -2294,6 +2356,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		선수정보콤보박스.setVisible(false);
 
 		날짜라벨 = new JLabel("날짜");
+		날짜라벨.setHorizontalAlignment(SwingConstants.RIGHT);
 		날짜라벨.setForeground(Color.WHITE);
 		날짜라벨.setBounds(372, 29, 44, 15);
 		three.add(날짜라벨);
@@ -2418,7 +2481,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		이미지등록수정창 = new JPanel();
 		
-		이미지등록수정창.setBounds(105, 72, 192, 178);
+		이미지등록수정창.setBounds(105, 75, 192, 178);
 		이미지등록수정창.setOpaque(false);
 		개인정보창.add(이미지등록수정창);
 
@@ -2681,7 +2744,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 												three.add(lblNewLabel_2);
 												
 														컨디션창 = new JPanel();
-														컨디션창.setBounds(192, 57, 787, 376);
+														컨디션창.setBounds(164, 82, 815, 351);
 														three.add(컨디션창);
 														컨디션창.setLayout(null);
 														
@@ -2735,43 +2798,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 																																		선수목록_의사소견_의사소견라벨_1.setHorizontalAlignment(SwingConstants.CENTER);
 																																		선수목록_의사소견_의사소견라벨_1.setBounds(176, 203, 82, 15);
 																																		컨디션창.add(선수목록_의사소견_의사소견라벨_1);
-																																		
-																																				일정창 = new JPanel();
-																																				일정창.setBounds(192, 57, 787, 376);
-																																				three.add(일정창);
-																																				일정창.setLayout(null);
-																																				
-																																						일정창_저장버튼 = new JButton("저장");
-																																						일정창_저장버튼.addActionListener(new ActionListener() {
-																																							public void actionPerformed(ActionEvent arg0) {
-																																								String comment = 선수목록_일정_감독코멘트박스.getText();
-																																								선수목록_일정_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment, selectedStartTimes);
-																																								선수목록_일정_저장버튼을눌렀을때체크되어있는값의데이터를받아와서playerschedule의confirm열의값에거절삽입하기(일정창_선수정보콤보박스에서선택한등번호, selectedDates,
-																																										selectedStartTimes);
-																																								선수목록_일정_감독코멘트박스.setText("");
-																																							}
-																																						});
-																																						일정창_저장버튼.setBounds(626, 293, 135, 73);
-																																						일정창.add(일정창_저장버튼);
-																																						
-																																								scrolledTable = new JScrollPane((Component) null);
-																																								scrolledTable.setBounds(23, 21, 617, 263);
-																																								일정창.add(scrolledTable);
-																																								scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-																																								
-																																										table = new JTable(new DefaultTableModel(new Object[][] {},
-																																												new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
-																																										};
-																																										scrolledTable.setViewportView(table);
-																																										
-																																												JScrollPane scrollPane_8 = new JScrollPane();
-																																												scrollPane_8.setBounds(110, 293, 445, 62);
-																																												일정창.add(scrollPane_8);
-																																												
-																																														선수목록_일정_감독코멘트박스 = new JTextArea();
-																																														scrollPane_8.setViewportView(선수목록_일정_감독코멘트박스);
-																																														일정창.setVisible(false);
-																																														선수목록_일정_감독코멘트박스.setLineWrap(true);
 																																		컨디션창.setVisible(false);
 
 		// ======================================================================
