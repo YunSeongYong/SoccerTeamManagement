@@ -2801,7 +2801,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		four.setLayout(null);
 
 		공동일정등록_날짜콤보박스 = new JComboBox();
-		공동일정등록_날짜콤보박스.setBounds(729, 38, 137, 21);
+		공동일정등록_날짜콤보박스.setBounds(764, 39, 94, 21);
 		four.add(공동일정등록_날짜콤보박스);
 
 		LocalDate currentDate1 = LocalDate.now();
@@ -2833,49 +2833,82 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		});
 
 		JLabel 공동일정등록_날짜라벨 = new JLabel("날짜");
-		공동일정등록_날짜라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		공동일정등록_날짜라벨.setBounds(660, 41, 57, 15);
+		공동일정등록_날짜라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_날짜라벨.setForeground(Color.WHITE);
+		공동일정등록_날짜라벨.setHorizontalAlignment(SwingConstants.RIGHT);
+		공동일정등록_날짜라벨.setBounds(695, 42, 57, 15);
 		four.add(공동일정등록_날짜라벨);
 
 		JLabel 공동일정등록_내용라벨 = new JLabel("내용");
-		공동일정등록_내용라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		공동일정등록_내용라벨.setBounds(219, 189, 57, 15);
+		공동일정등록_내용라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_내용라벨.setForeground(Color.WHITE);
+		공동일정등록_내용라벨.setHorizontalAlignment(SwingConstants.RIGHT);
+		공동일정등록_내용라벨.setBounds(147, 189, 57, 15);
 		four.add(공동일정등록_내용라벨);
 
 		JLabel lblNewLabel_14 = new JLabel("감독님께서 직접 일정을 등록할 수 있습니다");
+		lblNewLabel_14.setForeground(Color.YELLOW);
 		lblNewLabel_14.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_14.setBounds(262, 25, 393, 15);
+		lblNewLabel_14.setBounds(304, 66, 393, 15);
 		four.add(lblNewLabel_14);
 
 		JScrollPane scrollPane_5 = new JScrollPane();
-		scrollPane_5.setBounds(292, 172, 264, 55);
+		scrollPane_5.setOpaque(false);
+		scrollPane_5.getViewport().setOpaque(false);
+				
+		scrollPane_5.setBorder(new LineBorder(new Color(31, 49, 107)));
+		scrollPane_5.getVerticalScrollBar().setOpaque(false);
+		scrollPane_5.getHorizontalScrollBar().setOpaque(false);
+		scrollPane_5.setBounds(216, 172, 554, 144);
 		four.add(scrollPane_5);
 
 		공동일정등록_내용텍스트박스 = new JTextArea();
+		공동일정등록_내용텍스트박스.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_내용텍스트박스.setForeground(Color.WHITE);
+		공동일정등록_내용텍스트박스.setOpaque(false); // Set the textArea as transparent
+		scrollPane_5.setViewportView(공동일정등록_내용텍스트박스);
+		공동일정등록_내용텍스트박스.setLineWrap(true);
 		공동일정등록_내용텍스트박스.setLineWrap(true);
 		scrollPane_5.setViewportView(공동일정등록_내용텍스트박스);
 
 		JLabel 공동일정등록_시작시간라벨 = new JLabel("시작시간");
-		공동일정등록_시작시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		공동일정등록_시작시간라벨.setBounds(219, 113, 71, 15);
+		공동일정등록_시작시간라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_시작시간라벨.setForeground(Color.WHITE);
+		공동일정등록_시작시간라벨.setHorizontalAlignment(SwingConstants.RIGHT);
+		공동일정등록_시작시간라벨.setBounds(132, 138, 71, 15);
 		four.add(공동일정등록_시작시간라벨);
 
 		JLabel 공동일정등록_장소라벨 = new JLabel("장소");
+		공동일정등록_장소라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_장소라벨.setForeground(Color.WHITE);
 		공동일정등록_장소라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		공동일정등록_장소라벨.setBounds(241, 278, 57, 15);
+		공동일정등록_장소라벨.setBounds(603, 135, 57, 15);
 		four.add(공동일정등록_장소라벨);
 
 		공동일정등록_시작시간텍스트필드 = new JTextField();
-		공동일정등록_시작시간텍스트필드.setBounds(292, 110, 116, 21);
+		공동일정등록_시작시간텍스트필드.setForeground(Color.WHITE);
+		공동일정등록_시작시간텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_시작시간텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+		공동일정등록_시작시간텍스트필드.setOpaque(false);
+		공동일정등록_시작시간텍스트필드.setBounds(216, 135, 116, 21);
 		four.add(공동일정등록_시작시간텍스트필드);
 		공동일정등록_시작시간텍스트필드.setColumns(10);
 
 		공동일정등록_장소텍스트필드 = new JTextField();
-		공동일정등록_장소텍스트필드.setBounds(314, 275, 116, 21);
+		공동일정등록_장소텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_장소텍스트필드.setForeground(Color.WHITE);
+		공동일정등록_장소텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+		공동일정등록_장소텍스트필드.setOpaque(false);
+		공동일정등록_장소텍스트필드.setBounds(654, 132, 116, 21);
 		four.add(공동일정등록_장소텍스트필드);
 		공동일정등록_장소텍스트필드.setColumns(10);
 
-		공동일정등록_저장버튼 = new JButton("저장");
+		공동일정등록_저장버튼 = new JButton("");
+		공동일정등록_저장버튼.setOpaque(false);
+		공동일정등록_저장버튼.setContentAreaFilled(false);
+		공동일정등록_저장버튼.setBorderPainted(false);
+		공동일정등록_저장버튼.setFocusPainted(false);
+		공동일정등록_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼2.jpg")));
 		공동일정등록_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String 시작시간 = 공동일정등록_시작시간텍스트필드.getText();
@@ -2887,23 +2920,35 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				 JOptionPane.showMessageDialog(null, "저장되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		공동일정등록_저장버튼.setBounds(665, 293, 105, 34);
+		공동일정등록_저장버튼.setBounds(829, 360, 71, 34);
 		four.add(공동일정등록_저장버튼);
 
-		JLabel 공동일정등록_끝나는시간라벨 = new JLabel("끝나는 시간");
+		JLabel 공동일정등록_끝나는시간라벨 = new JLabel("종료 시간");
+		공동일정등록_끝나는시간라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_끝나는시간라벨.setForeground(Color.WHITE);
 		공동일정등록_끝나는시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		공동일정등록_끝나는시간라벨.setBounds(477, 113, 79, 15);
+		공동일정등록_끝나는시간라벨.setBounds(373, 138, 79, 15);
 		four.add(공동일정등록_끝나는시간라벨);
 
 		공동일정등록_끝나는시간텍스트필드 = new JTextField();
+		공동일정등록_끝나는시간텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		공동일정등록_끝나는시간텍스트필드.setForeground(Color.WHITE);
+		공동일정등록_끝나는시간텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+		공동일정등록_끝나는시간텍스트필드.setOpaque(false);
 		공동일정등록_끝나는시간텍스트필드.setColumns(10);
-		공동일정등록_끝나는시간텍스트필드.setBounds(555, 110, 116, 21);
+		공동일정등록_끝나는시간텍스트필드.setBounds(464, 132, 116, 21);
 		four.add(공동일정등록_끝나는시간텍스트필드);
 
-		lblNewLabel_15 = new JLabel("(끝나는 시간은 굳이 넣지 않아도 됩니다)");
+		lblNewLabel_15 = new JLabel("종료 시간은 넣지 않아도 됩니다)");
+		lblNewLabel_15.setForeground(Color.GRAY);
 		lblNewLabel_15.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_15.setBounds(487, 138, 246, 15);
+		lblNewLabel_15.setBounds(383, 105, 246, 15);
 		four.add(lblNewLabel_15);
+		
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/코치-예약하기-배경.jpg")));
+		lblNewLabel_3.setBounds(0, 0, 979, 431);
+		four.add(lblNewLabel_3);
 		three.setLayout(null);
 				
 												
