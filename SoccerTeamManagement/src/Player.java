@@ -5,7 +5,7 @@ public class Player {
 	private String name;
 	private double height;
 	private double weight;
-	private int age;
+	private String age;
 	private String position;
 	private String coach;
 	private String doctor;
@@ -25,7 +25,7 @@ public class Player {
 
 
 
-	public Player(int backNumber, String name, double height, double weight, int age, String position, String coach,
+	public Player(int backNumber, String name, double height, double weight, String age, String position, String coach,
 			String doctor, Image image, int no) {
 		this.backNumber = backNumber;
 		this.name = name;
@@ -75,11 +75,11 @@ public class Player {
 		this.weight = weight;
 	}
 
-	public int getAge() {
+	public String getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(String age) {
 		this.age = age;
 	}
 
@@ -122,12 +122,13 @@ public class Player {
 				+ image + "]";
 	}
 
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + age;
-		result = prime * result + backNumber;
+		result = prime * result + ((age == null) ? 0 : age.hashCode());
 		result = prime * result + ((coach == null) ? 0 : coach.hashCode());
 		result = prime * result + ((doctor == null) ? 0 : doctor.hashCode());
 		long temp;
@@ -135,11 +136,14 @@ public class Player {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + no;
 		result = prime * result + ((position == null) ? 0 : position.hashCode());
 		temp = Double.doubleToLongBits(weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -148,9 +152,10 @@ public class Player {
 		if (!(obj instanceof Player))
 			return false;
 		Player other = (Player) obj;
-		if (age != other.age)
-			return false;
-		if (backNumber != other.backNumber)
+		if (age == null) {
+			if (other.age != null)
+				return false;
+		} else if (!age.equals(other.age))
 			return false;
 		if (coach == null) {
 			if (other.coach != null)
@@ -174,6 +179,8 @@ public class Player {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (no != other.no)
+			return false;
 		if (position == null) {
 			if (other.position != null)
 				return false;
@@ -183,4 +190,6 @@ public class Player {
 			return false;
 		return true;
 	}
+
+	
 }
