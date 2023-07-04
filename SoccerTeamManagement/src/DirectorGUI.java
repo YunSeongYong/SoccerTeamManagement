@@ -184,7 +184,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("insert into staff(number, name, age, role, career) values (?, ?, ?, ?, ?)");
+			stmt = conn.prepareStatement("insert into staff(number, name, birthdate, role, career) values (?, ?, ?, ?, ?)");
 			String role = textField_2.getText();
 			if (role.equals("코치")) {
 				stmt.setInt(1, countStaff("코치") + 200);
@@ -192,7 +192,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				stmt.setInt(1, countStaff("의사") + 300);
 			}
 			stmt.setString(2, textField.getText());
-			stmt.setInt(3, Integer.valueOf(textField_1.getText()));
+			stmt.setString(3, textField_1.getText());
 			stmt.setString(4, textField_2.getText());
 			stmt.setString(5, 스태프등록_경력텍스트필드.getText());
 
