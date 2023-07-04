@@ -39,6 +39,21 @@ public class Player {
 		this.no = no;
 	}
 	
+	public Player(int backnumber, String name, double height, double weight, String age, String position,
+			String coach, String doctor, Image image) {
+		this.backNumber = backNumber;
+		this.name = name;
+		this.height = height;
+		this.weight = weight;
+		this.age = age;
+		this.position = position;
+		this.coach = coach;
+		this.doctor = doctor;
+		this.image = image;
+	}
+
+
+
 	public int getNo() {
 		return no;
 	}

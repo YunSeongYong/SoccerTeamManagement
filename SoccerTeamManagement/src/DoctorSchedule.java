@@ -32,6 +32,7 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.ImageIcon;
@@ -84,8 +85,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
-				//List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
-				//insertAppointmentTabel(appointmentList, table_1);
+				List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
+				insertAppointmentTabel(appointmentList, table_1);
 
 //				// 저장 버튼 비활성화
 				btnNewButton.setEnabled(false);
@@ -94,8 +95,13 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			}
 		});
 
-		btnNewButton = new JButton("저장");
-		btnNewButton.setBounds(717, 478, 97, 23);
+		btnNewButton = new JButton("");
+		btnNewButton.setBounds(736, 368, 62, 23);
+		btnNewButton.setOpaque(false);
+		btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setFocusPainted(false);
+		
 		one.add(btnNewButton);
 		btnNewButton.setEnabled(false);
 
@@ -112,19 +118,49 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 					JOptionPane.showMessageDialog(null, "저장되었습니다", "확인", JOptionPane.INFORMATION_MESSAGE);
 					textArea.setText(null);
 				}
-				
 
 			}
 		});
 
 		// 스크롤 팬 + 테이블
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(58, 143, 515, 307);
+		scrollPane.setBounds(58, 100, 515, 250);
 		one.add(scrollPane);
 
-		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uC2DC\uAC04", "\uB4F1\uBC88\uD638", "\uC774\uB984", "\uC99D\uC0C1" }));
+		DefaultTableModel mod = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "등번호", "이름", "증상" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+
+		table_1 = new JTable(mod);
+		table_1.getTableHeader().setReorderingAllowed(false);
+		table_1.getTableHeader().setResizingAllowed(false);
+
+		table_1.getColumnModel().getColumn(0).setMaxWidth(70);
+		table_1.getColumnModel().getColumn(0).setMinWidth(70);
+		table_1.getColumnModel().getColumn(0).setWidth(70);
+		table_1.getColumnModel().getColumn(1).setMaxWidth(50);
+		table_1.getColumnModel().getColumn(1).setMinWidth(50);
+		table_1.getColumnModel().getColumn(1).setWidth(50);
+		table_1.getColumnModel().getColumn(2).setMaxWidth(70);
+		table_1.getColumnModel().getColumn(2).setMinWidth(70);
+		table_1.getColumnModel().getColumn(2).setWidth(70);
+		table_1.setRowHeight(20);
+		
+		table_1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table_1.setForeground(new Color(22, 47, 136));
+		table_1.setBackground(new Color(255, 255, 255));
+		
+		// Create a custom TableCellRenderer to center the text
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < table_1.getColumnCount(); i++) {
+			table_1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
 		scrollPane.setViewportView(table_1);
 
 		// 버튼 활성화, 비활성화 index.equals(currentDate.toString())
@@ -147,23 +183,36 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		insertAppointmentTabel(appointmentList, table_1);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(617, 143, 300, 312);
+		scrollPane_1.setBounds(617, 100, 300, 250);
+		scrollPane_1.setViewportBorder(null);
+		scrollPane_1.getVerticalScrollBar().setOpaque(false);
+		scrollPane_1.getHorizontalScrollBar().setOpaque(false);
+		scrollPane_1.setOpaque(false);
+		scrollPane_1.getViewport().setOpaque(false);
 		one.add(scrollPane_1);
 
 		textArea = new JTextArea();
+		textArea.setFont(new Font("맑은 고딕", Font.BOLD, 17));
+		textArea.setForeground(Color.WHITE);
+		textArea.setOpaque(false);
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
 		textArea.setEnabled(false);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/의사일정-배경-1.jpg")));
+		lblNewLabel.setBounds(0, 0, 979, 428);
+		one.add(lblNewLabel);
 
 		two = new JPanel();
 		pane.addTab("병력보기", two);
 		two.setLayout(null);
 
 		JComboBox startComboBox = new JComboBox();
-		startComboBox.setBounds(35, 32, 145, 21);
+		startComboBox.setBounds(323, 135, 90, 21);
 		two.add(startComboBox);
 
-		for (int i = 30; i >= 0; i--) {
+		for (int i = 29; i >= 0; i--) {
 			startComboBox.addItem(currentDate.minusDays(i));
 		}
 		startComboBox.setSelectedIndex(0);
@@ -178,9 +227,11 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 				LocalDate startDate = LocalDate.parse(startComboBox.getSelectedItem().toString());
 				Period period = Period.between(startDate, currentDate);
+				
+				System.out.println(startDate.toString());
 				int datePeriod = period.getDays();
 				System.out.println("기간" + datePeriod);
-				
+
 				endComboBox.removeAllItems();
 
 				for (int i = 0; i <= datePeriod; i++) {
@@ -190,7 +241,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		endComboBox = new JComboBox();
-		endComboBox.setBounds(204, 32, 150, 21);
+		endComboBox.setBounds(441, 135, 90, 21);
 		two.add(endComboBox);
 		endComboBox.setEnabled(false);
 
@@ -203,14 +254,18 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		nameComboBox = new JComboBox();
-		nameComboBox.setBounds(378, 32, 150, 21);
+		nameComboBox.setBounds(558, 135, 90, 21);
 		two.add(nameComboBox);
 
 		addPlayer(staff.getName());
 		nameComboBox.setSelectedIndex(0);
 
-		btnNewButton_1 = new JButton("조회");
-		btnNewButton_1.setBounds(553, 31, 97, 23);
+		btnNewButton_1 = new JButton("");
+		btnNewButton_1.setBounds(677, 85, 63, 23);
+		btnNewButton_1.setOpaque(false);
+		btnNewButton_1.setContentAreaFilled(false);
+		btnNewButton_1.setBorderPainted(false);
+		btnNewButton_1.setFocusPainted(false);
 		two.add(btnNewButton_1);
 		btnNewButton_1.setEnabled(false);
 
@@ -228,17 +283,47 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(181, 116, 545, 344);
+		scrollPane_2.setBounds(203, 165, 570, 230);
 		two.add(scrollPane_2);
+		
+		DefaultTableModel mod2 = new DefaultTableModel(new Object[][] {}, new String[] { "날짜", "내용" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
 
-		table_2 = new JTable();
-		table_2.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "\uB0A0\uC9DC", "\uB0B4\uC6A9" }));
+		table_2 = new JTable(mod2);
+		table_2.getTableHeader().setReorderingAllowed(false);
+		table_2.getTableHeader().setResizingAllowed(false);
+
+		table_2.getColumnModel().getColumn(0).setMaxWidth(100);
+		table_2.getColumnModel().getColumn(0).setMinWidth(100);
+		table_2.getColumnModel().getColumn(0).setWidth(100);
+		table_2.setRowHeight(20);
+		
+		table_2.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table_2.setForeground(new Color(22, 47, 136));
+		table_2.setBackground(new Color(255, 255, 255));
+		
+		for (int i = 0; i < table_2.getColumnCount(); i++) {
+			table_2.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
 		scrollPane_2.setViewportView(table_2);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/병력관리-배경3.jpg")));
+		lblNewLabel_2.setBounds(0, 0, 979, 428);
+		two.add(lblNewLabel_2);
 
 		pane.setSelectedIndex(0);
 		pane.addChangeListener(this);
 
 		this.getContentPane().add("Center", pane);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon(DoctorSchedule.class.getResource("/image/선수위-배경.jpg")));
+		getContentPane().add(lblNewLabel_1, BorderLayout.NORTH);
 		this.setSize(1000, 600);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
