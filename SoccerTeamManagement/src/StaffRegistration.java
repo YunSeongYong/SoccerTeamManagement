@@ -125,6 +125,7 @@ public class StaffRegistration extends JFrame {
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_4;
 	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
 
 	public StaffRegistration() {
 		JPanel one, two;
@@ -709,12 +710,14 @@ public class StaffRegistration extends JFrame {
 		two.setLayout(null);
 
 		JLabel dayLabel = new JLabel("날짜");
+		dayLabel.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		dayLabel.setForeground(new Color(255, 255, 255));
 		dayLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		dayLabel.setBounds(71, 10, 47, 15);
+		dayLabel.setBounds(251, 64, 47, 15);
 		two.add(dayLabel);
 
 		daycomboBox = new JComboBox();
-		daycomboBox.setBounds(130, 7, 97, 21);
+		daycomboBox.setBounds(300, 61, 97, 21);
 		two.add(daycomboBox);
 
 		LocalDate currentDate2 = LocalDate.now();
@@ -724,20 +727,25 @@ public class StaffRegistration extends JFrame {
 		daycomboBox.setSelectedIndex(0);
 
 		JLabel doctorLbl = new JLabel("의사");
+		doctorLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		doctorLbl.setForeground(new Color(255, 255, 255));
 		doctorLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		doctorLbl.setBounds(239, 10, 57, 15);
+		doctorLbl.setBounds(418, 64, 57, 15);
 		two.add(doctorLbl);
 
 		doctorcomboBox = new JComboBox();
-		doctorcomboBox.setBounds(291, 7, 97, 21);
+		doctorcomboBox.setBounds(470, 61, 97, 21);
 		two.add(doctorcomboBox);
 
 		viewDoctor();
 
-		JButton deleteBtn = new JButton("삭제");
-		JButton changeBtn = new JButton("수정");
-		JButton viewButton = new JButton("조회");
-		viewButton.setBounds(417, 6, 97, 23);
+		JButton deleteBtn = new JButton("");
+		deleteBtn.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/삭제버튼-코치.jpg")));
+		JButton changeBtn = new JButton("");
+		changeBtn.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/수정버튼-코치.jpg")));
+		JButton viewButton = new JButton("");
+		viewButton.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/코치-조회.jpg")));
+		viewButton.setBounds(609, 61, 62, 25);
 		two.add(viewButton);
 		viewButton.addActionListener(new ActionListener() {
 			@Override
@@ -755,7 +763,7 @@ public class StaffRegistration extends JFrame {
 
 		JScrollPane scrolledTable = new JScrollPane((Component) null);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable.setBounds(71, 55, 803, 221);
+		scrolledTable.setBounds(140, 100, 700, 170);
 		two.add(scrolledTable);
 
 		table1 = new JTable();
@@ -765,7 +773,7 @@ public class StaffRegistration extends JFrame {
 
 		// JTable 모델을 생성하고 컬럼 이름을 설정합니다.
 		DefaultTableModel tableModel = new DefaultTableModel(new Object[][] {},
-				new String[] { "등번호", "선수 이름", "시간", "증상" }) {
+				new String[] { "등 번호", "선수 이름", "시 간", "증 상" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 
@@ -800,17 +808,18 @@ public class StaffRegistration extends JFrame {
 			}
 		});
 
-		JLabel reservationLbl = new JLabel("예약하기");
-		reservationLbl.setBounds(71, 305, 57, 15);
-		two.add(reservationLbl);
-
 		JLabel backnumLbl = new JLabel("등번호");
-		backnumLbl.setBounds(71, 336, 57, 15);
+		backnumLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		backnumLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		backnumLbl.setForeground(new Color(255, 255, 255));
+		backnumLbl.setBounds(71, 312, 57, 15);
 		two.add(backnumLbl);
 
 		backnumTf = new JTextField();
+		backnumTf.setBorder(new LineBorder(new Color(31, 49, 107)));
+		backnumTf.setOpaque(false);
 		backnumTf.setColumns(10);
-		backnumTf.setBounds(123, 333, 116, 21);
+		backnumTf.setBounds(127, 309, 116, 21);
 		two.add(backnumTf);
 
 		backnumTf.addActionListener(new ActionListener() {
@@ -826,12 +835,17 @@ public class StaffRegistration extends JFrame {
 		});
 
 		JLabel playerNameLbl = new JLabel("선수 이름");
-		playerNameLbl.setBounds(251, 336, 57, 15);
+		playerNameLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		playerNameLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		playerNameLbl.setForeground(new Color(255, 255, 255));
+		playerNameLbl.setBounds(271, 312, 75, 15);
 		two.add(playerNameLbl);
 
 		nameTf = new JTextField();
+		nameTf.setBorder(new LineBorder(new Color(31, 49, 107)));
+		nameTf.setOpaque(false);
 		nameTf.setColumns(10);
-		nameTf.setBounds(320, 333, 116, 21);
+		nameTf.setBounds(352, 309, 116, 21);
 		two.add(nameTf);
 
 		nameTf.addActionListener(new ActionListener() {
@@ -846,25 +860,34 @@ public class StaffRegistration extends JFrame {
 		});
 
 		JLabel symptomLbl = new JLabel("증상");
-		symptomLbl.setBounds(82, 384, 29, 15);
+		symptomLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		symptomLbl.setForeground(new Color(255, 255, 255));
+		symptomLbl.setBounds(86, 368, 29, 15);
 		two.add(symptomLbl);
 
 		sickTf = new JTextField();
+		sickTf.setBorder(new LineBorder(new Color(31, 49, 107)));
+		sickTf.setOpaque(false); 
 		sickTf.setColumns(10);
-		sickTf.setBounds(123, 381, 283, 21);
+		sickTf.setBounds(127, 365, 539, 21);
 		two.add(sickTf);
 
 		JLabel timeLbl = new JLabel("시간");
-		timeLbl.setBounds(448, 336, 35, 15);
+		timeLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
+		timeLbl.setForeground(new Color(255, 255, 255));
+		timeLbl.setBounds(499, 312, 35, 15);
 		two.add(timeLbl);
 
 		timeTf = new JTextField();
+		timeTf.setBorder(new LineBorder(new Color(31, 49, 107)));
+		timeTf.setOpaque(false); 
 		timeTf.setColumns(10);
-		timeTf.setBounds(495, 333, 116, 21);
+		timeTf.setBounds(546, 309, 116, 21);
 		two.add(timeTf);
 
-		reservationBtn = new JButton("예약");
-		reservationBtn.setBounds(815, 332, 97, 23);
+		reservationBtn = new JButton("");
+		reservationBtn.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/코츠-예약버튼.jpg")));
+		reservationBtn.setBounds(743, 301, 62, 25);
 		two.add(reservationBtn);
 
 		reservationBtn.addActionListener(new ActionListener() {
@@ -874,7 +897,7 @@ public class StaffRegistration extends JFrame {
 			}
 		});
 
-		deleteBtn.setBounds(815, 398, 97, 23);
+		deleteBtn.setBounds(743, 378, 62, 25);
 		two.add(deleteBtn);
 
 		deleteBtn.addActionListener(new ActionListener() {
@@ -896,12 +919,19 @@ public class StaffRegistration extends JFrame {
 			}
 		});
 
-		changeBtn.setBounds(815, 365, 97, 23);
+		changeBtn.setBounds(743, 339, 62, 25);
 		two.add(changeBtn);
 
 		hintLbl = new JLabel("등번호 확인 시 선수이름창에서 엔터를 누르세요");
-		hintLbl.setBounds(71, 359, 283, 15);
+		hintLbl.setFont(new Font("나눔고딕", Font.BOLD, 12));
+		hintLbl.setForeground(new Color(192, 192, 192));
+		hintLbl.setBounds(71, 280, 345, 15);
 		two.add(hintLbl);
+		
+		lblNewLabel_6 = new JLabel("New label");
+		lblNewLabel_6.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/코치-예약하기-배경.jpg")));
+		lblNewLabel_6.setBounds(0, 0, 979, 428);
+		two.add(lblNewLabel_6);
 		hintLbl.setVisible(false);
 		changeBtn.addActionListener(new ActionListener() {
 			@Override
