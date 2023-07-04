@@ -411,7 +411,9 @@ public class StaffRegistration extends JFrame {
 		선수정보콤보박스 = new JComboBox();
 		선수정보콤보박스.setBounds(756, 26, 117, 21);
 		one.add(선수정보콤보박스);
-		선수목록_선수정보콤보박스목록만드는메소드();
+//		선수목록_선수정보콤보박스목록만드는메소드();
+		Staff staff = new Staff();
+		addPlayer(staff.getName());
 
 		선수정보콤보박스.addActionListener(new ActionListener() {
 			@Override
@@ -1211,28 +1213,58 @@ public class StaffRegistration extends JFrame {
 		}
 	}
 
-	public void 선수목록_선수정보콤보박스목록만드는메소드() {
-
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-		선수정보콤보박스.setModel(model);
-
+//	public void 선수목록_선수정보콤보박스목록만드는메소드() {
+//
+//		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+//		선수정보콤보박스.setModel(model);
+//
+//		Connection conn = null;
+//		try {
+//			conn = DBUtil.getConnection();
+//			String sql = "SELECT backnumber, name FROM players";
+//			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+//				try (ResultSet rs = stmt.executeQuery()) {
+//					while (rs.next()) {
+//						int backnumber = rs.getInt("backnumber");
+//						String name = rs.getString("name");
+//						String item = backnumber + " - " + name;
+//						선수정보콤보박스.addItem(item);
+//					}
+//				}
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	public void addPlayer(String coachName) {
 		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT backnumber, name FROM players";
-			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-				try (ResultSet rs = stmt.executeQuery()) {
-					while (rs.next()) {
-						int backnumber = rs.getInt("backnumber");
-						String name = rs.getString("name");
-						String item = backnumber + " - " + name;
-						선수정보콤보박스.addItem(item);
-					}
-				}
+			String sql = "SELECT backnumber, name FROM players WHERE coach = ?";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, coachName);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int backNumber = rs.getInt(1);
+				String name = rs.getString(2);
+				System.out.println("등번호" + backNumber);
+				System.out.println("이름" + name);
+
+				선수정보콤보박스.addItem(backNumber + " - " + name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(stmt);
+			DBUtil.close(conn);
+		} 
 	}
 
 	public List<Player> 선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {

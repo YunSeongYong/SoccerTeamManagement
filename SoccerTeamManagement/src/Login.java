@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import dbutil.DBUtil;
@@ -19,7 +20,7 @@ public class Login {
 
 	private JFrame frame;
 	private JTextField textField;
-	private JTextField textField_1;
+	private JPasswordField textField_1;
 	private JLabel lblNewLabel_2;
 	private JLabel lblNewLabel_3;
 	public Player player;
@@ -49,13 +50,14 @@ public class Login {
 		frame.setBounds(100, 100, 1000, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 
 		textField = new JTextField();
 		textField.setBounds(280, 337, 135, 33);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
-		textField_1 = new JTextField();
+		textField_1 = new JPasswordField();
 		textField_1.setBounds(506, 337, 139, 33);
 		frame.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
@@ -99,6 +101,8 @@ public class Login {
 						
 						new DoctorSchedule();
 					} else if (role.equals("코치")) {
+						String name = checkName(checkNumber(id));
+						staff.setName(name);
 						new StaffRegistration();
 					}
 					frame.dispose();
