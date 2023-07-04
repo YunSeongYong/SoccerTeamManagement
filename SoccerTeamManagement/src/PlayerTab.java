@@ -251,12 +251,13 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		one.add(scrolledTable);
 
 		// table 수정 못하게
-		DefaultTableModel mod = new DefaultTableModel(new Object[][] {}, new String[] {"시작 시간", "종료 시간", "내용", "승인여부"}) {
+		DefaultTableModel mod = new DefaultTableModel(new Object[][] {},
+				new String[] { "시작 시간", "종료 시간", "내용", "승인여부" }) {
 			public boolean isCellEditable(int rowIndex, int mColIndex) {
 				return false;
 			}
 		};
-		
+
 		table = new JTable(mod);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(false);
@@ -268,14 +269,14 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.setForeground(new Color(22, 47, 136));
 		table.setBackground(new Color(255, 255, 255));
 		table.getColumnModel().getColumn(0).setMaxWidth(70);
-        table.getColumnModel().getColumn(0).setMinWidth(70);
-        table.getColumnModel().getColumn(0).setWidth(70);
-        table.getColumnModel().getColumn(1).setMaxWidth(70);
-        table.getColumnModel().getColumn(1).setMinWidth(70);
-        table.getColumnModel().getColumn(1).setWidth(70);
-        table.getColumnModel().getColumn(3).setMaxWidth(70);
-        table.getColumnModel().getColumn(3).setMinWidth(70);
-        table.getColumnModel().getColumn(3).setWidth(70);
+		table.getColumnModel().getColumn(0).setMinWidth(70);
+		table.getColumnModel().getColumn(0).setWidth(70);
+		table.getColumnModel().getColumn(1).setMaxWidth(70);
+		table.getColumnModel().getColumn(1).setMinWidth(70);
+		table.getColumnModel().getColumn(1).setWidth(70);
+		table.getColumnModel().getColumn(3).setMaxWidth(70);
+		table.getColumnModel().getColumn(3).setMinWidth(70);
+		table.getColumnModel().getColumn(3).setWidth(70);
 		table.setRowHeight(20);
 
 		// Create a custom TableCellRenderer to center the text
@@ -414,11 +415,23 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(scrolledTable_1);
 
 		// 컨디션 코멘트 테이블
-		conditionCommentTable = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8", "\uC791\uC131\uC790" }));
+		DefaultTableModel mod2 = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "코멘트", "작성자" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
 
-//		String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
-//				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+		conditionCommentTable = new JTable(mod2);
+		conditionCommentTable.getTableHeader().setReorderingAllowed(false);
+		conditionCommentTable.getTableHeader().setResizingAllowed(false);
+
+		conditionCommentTable.getColumnModel().getColumn(0).setMaxWidth(70);
+		conditionCommentTable.getColumnModel().getColumn(0).setMinWidth(70);
+		conditionCommentTable.getColumnModel().getColumn(0).setWidth(70);
+		conditionCommentTable.getColumnModel().getColumn(2).setMaxWidth(50);
+		conditionCommentTable.getColumnModel().getColumn(2).setMinWidth(50);
+		conditionCommentTable.getColumnModel().getColumn(2).setWidth(50);
+		conditionCommentTable.setRowHeight(20);
 
 		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(),
 				dateComboBox.getSelectedItem().toString());
@@ -434,8 +447,21 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		two.add(scrolledTable_2);
 
 		// 의사 코멘트 테이블
-		doctorCommentTable = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uAC04", "\uCF54\uBA58\uD2B8" }));
+		
+		DefaultTableModel mod3 = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "코멘트"}) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+		
+		doctorCommentTable = new JTable(mod3);
+		doctorCommentTable.getTableHeader().setReorderingAllowed(false);
+		doctorCommentTable.getTableHeader().setResizingAllowed(false);
+		
+		doctorCommentTable.getColumnModel().getColumn(0).setMaxWidth(70);
+		doctorCommentTable.getColumnModel().getColumn(0).setMinWidth(70);
+		doctorCommentTable.getColumnModel().getColumn(0).setWidth(70);
+		doctorCommentTable.setRowHeight(20);
 
 		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";

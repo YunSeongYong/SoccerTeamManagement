@@ -107,7 +107,6 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 					JOptionPane.showMessageDialog(null, "저장되었습니다", "확인", JOptionPane.INFORMATION_MESSAGE);
 					textArea.setText(null);
 				}
-				
 
 			}
 		});
@@ -117,9 +116,27 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		scrollPane.setBounds(58, 143, 515, 307);
 		one.add(scrollPane);
 
-		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uC2DC\uAC04", "\uB4F1\uBC88\uD638", "\uC774\uB984", "\uC99D\uC0C1" }));
+		DefaultTableModel mod = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "등번호", "이름", "증상" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+
+		table_1 = new JTable(mod);
+		table_1.getTableHeader().setReorderingAllowed(false);
+		table_1.getTableHeader().setResizingAllowed(false);
+
+		table_1.getColumnModel().getColumn(0).setMaxWidth(70);
+		table_1.getColumnModel().getColumn(0).setMinWidth(70);
+		table_1.getColumnModel().getColumn(0).setWidth(70);
+		table_1.getColumnModel().getColumn(1).setMaxWidth(50);
+		table_1.getColumnModel().getColumn(1).setMinWidth(50);
+		table_1.getColumnModel().getColumn(1).setWidth(50);
+		table_1.getColumnModel().getColumn(2).setMaxWidth(70);
+		table_1.getColumnModel().getColumn(2).setMinWidth(70);
+		table_1.getColumnModel().getColumn(2).setWidth(70);
+		table_1.setRowHeight(20);
+
 		scrollPane.setViewportView(table_1);
 
 		// 버튼 활성화, 비활성화 index.equals(currentDate.toString())
@@ -158,7 +175,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		startComboBox.setBounds(35, 32, 145, 21);
 		two.add(startComboBox);
 
-		for (int i = 30; i >= 0; i--) {
+		for (int i = 29; i >= 0; i--) {
 			startComboBox.addItem(currentDate.minusDays(i));
 		}
 		startComboBox.setSelectedIndex(0);
@@ -173,9 +190,11 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 				LocalDate startDate = LocalDate.parse(startComboBox.getSelectedItem().toString());
 				Period period = Period.between(startDate, currentDate);
+				
+				System.out.println(startDate.toString());
 				int datePeriod = period.getDays();
 				System.out.println("기간" + datePeriod);
-				
+
 				endComboBox.removeAllItems();
 
 				for (int i = 0; i <= datePeriod; i++) {
@@ -225,9 +244,22 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(181, 116, 545, 344);
 		two.add(scrollPane_2);
+		
+		DefaultTableModel mod2 = new DefaultTableModel(new Object[][] {}, new String[] { "날짜", "내용" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
 
-		table_2 = new JTable();
-		table_2.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "\uB0A0\uC9DC", "\uB0B4\uC6A9" }));
+		table_2 = new JTable(mod2);
+		table_2.getTableHeader().setReorderingAllowed(false);
+		table_2.getTableHeader().setResizingAllowed(false);
+
+		table_2.getColumnModel().getColumn(0).setMaxWidth(100);
+		table_2.getColumnModel().getColumn(0).setMinWidth(100);
+		table_2.getColumnModel().getColumn(0).setWidth(100);
+		table_2.setRowHeight(20);
+
 		scrollPane_2.setViewportView(table_2);
 
 		pane.setSelectedIndex(0);
