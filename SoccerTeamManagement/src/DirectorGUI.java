@@ -1658,6 +1658,37 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public List<Player> 스태프목록_콤보박스선택시담당선수리스트만드는메소드(String name) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    playerList = new ArrayList<>();
+
+	    try {
+	        conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
+	        String sql = "SELECT name FROM players WHERE coach = ? OR doctor = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setString(1, name);
+	        stmt.setString(2, name);
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            String playerName = rs.getString("name");
+	            playerList.add(new Player(playerName));
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 사용한 자원을 닫아주어야 합니다.
+	        DBUtil.close(rs);
+	        DBUtil.close(stmt);
+	        DBUtil.close(conn);
+	    }
+	    return playerList;
+	}
+
+	
+	public List<Player> 스태프목록_콤보박스선택시의사담당선수리스트만드는메소드(String name) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1665,7 +1696,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection(); // 연결 객체를 conn 변수에 할당
-			String sql = "SELECT name FROM players where coach = ?";
+			String sql = "SELECT name FROM players where doctor = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, name);
 			rs = stmt.executeQuery();
