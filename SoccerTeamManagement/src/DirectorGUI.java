@@ -152,6 +152,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JButton 선수목록_컨디션_저장버튼;
 	private String date;
 	private String starttime;
+	private JButton 공동일정등록_저장버튼;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -2766,11 +2767,21 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				LocalDate selectedDate = (LocalDate) 공동일정등록_날짜콤보박스.getSelectedItem();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				공동일정등록_콤보박스에서선택한날짜 = selectedDate.format(formatter);
+			    LocalDate selectedDate = (LocalDate) 공동일정등록_날짜콤보박스.getSelectedItem();
+			    LocalDate currentDate = LocalDate.now();
 
-				System.out.println("콤보박스에서 선택한 날짜 출력 : " + 공동일정등록_콤보박스에서선택한날짜);
+			    if (selectedDate.isBefore(currentDate)) {
+			        // 선택한 날짜가 현재 날짜보다 이전인 경우 버튼을 비활성화
+			        공동일정등록_저장버튼.setEnabled(false);
+			    } else {
+			        // 선택한 날짜가 현재 날짜보다 이후인 경우 버튼을 활성화
+			        공동일정등록_저장버튼.setEnabled(true);
+			    }
+
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    공동일정등록_콤보박스에서선택한날짜 = selectedDate.format(formatter);
+
+			    System.out.println("콤보박스에서 선택한 날짜 출력 : " + 공동일정등록_콤보박스에서선택한날짜);
 			}
 		});
 
@@ -2816,7 +2827,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		four.add(공동일정등록_장소텍스트필드);
 		공동일정등록_장소텍스트필드.setColumns(10);
 
-		JButton 공동일정등록_저장버튼 = new JButton("저장");
+		공동일정등록_저장버튼 = new JButton("저장");
 		공동일정등록_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String 시작시간 = 공동일정등록_시작시간텍스트필드.getText();

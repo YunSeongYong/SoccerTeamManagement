@@ -150,6 +150,109 @@ public class StaffRegistration extends JFrame {
 			}
 		});
 		one.setLayout(null);
+				
+						일정창 = new JPanel();
+						일정창.setBounds(164, 82, 815, 351);
+						one.add(일정창);
+						일정창.setLayout(null);
+						
+								scrolledTable = new JScrollPane((Component) null);
+								scrolledTable.setBounds(39, 24, 617, 187);
+								일정창.add(scrolledTable);
+								scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+								
+										scheduleTable = new JTable(
+												new DefaultTableModel(new Object[][] {}, new String[] { "시작시간", "끝나는시간", "일정", "승인여부" })) {
+										};
+										scrolledTable.setViewportView(scheduleTable);
+										scheduleTable.addMouseListener(new MouseAdapter() {
+	         
+
+											@Override
+	         public void mouseClicked(MouseEvent e) {
+	        	 삭제버튼.setEnabled(true);
+	            수정버튼.setEnabled(true);
+	            저장버튼.setEnabled(false);
+	            int selectedRow = scheduleTable.getSelectedRow();
+	            if (selectedRow >= 0) {
+	               DefaultTableModel model = (DefaultTableModel) scheduleTable.getModel();
+	               String starttime = (String) model.getValueAt(selectedRow, 0);
+	               String content = (String) model.getValueAt(selectedRow, 2);
+	               
+	               시간텍스트 = starttime;
+	               System.out.println(시간텍스트);
+	               시간텍스트필드.setText(starttime);
+	               일정텍스트필드.setText(content);
+	               
+	            }
+	         }
+	      });
+										
+										
+										
+
+										저장버튼 = new JButton("저장");
+										저장버튼.setBounds(678, 277, 97, 23);
+										일정창.add(저장버튼);
+										저장버튼.addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												선수일정추가();
+											}
+										});
+										
+
+										수정버튼 = new JButton("수정");
+										수정버튼.setBounds(678, 302, 97, 23);
+										일정창.add(수정버튼);
+										수정버튼.addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												선수일정수정();
+
+											}
+										});
+										
+												삭제버튼 = new JButton("삭제");
+												삭제버튼.setBounds(678, 330, 97, 23);
+												일정창.add(삭제버튼);
+												삭제버튼.addActionListener(new ActionListener() {
+	         @Override
+	         public void actionPerformed(ActionEvent e) {
+	            int selectedRow = scheduleTable.getSelectedRow(); // 선택한 행의 인덱스 가져오기
+	            if (selectedRow != -1) { // 선택한 행이 있는 경우
+	               DefaultTableModel tableModel = (DefaultTableModel) scheduleTable.getModel();
+	               String date = 날짜콤보박스.getSelectedItem().toString();
+	               String starttime = tableModel.getValueAt(selectedRow, 0).toString();
+
+	               // 삭제 메소드 호출
+	               선수일정삭제(date, starttime);
+
+	               // 테이블에서 선택한 행 삭제
+	               tableModel.removeRow(selectedRow);
+	            }
+	         }
+	      });
+												JLabel 시간라벨 = new JLabel("시간");
+												시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
+												시간라벨.setBounds(39, 255, 42, 15);
+												일정창.add(시간라벨);
+												
+														시간텍스트필드 = new JTextField();
+														시간텍스트필드.setBounds(93, 252, 116, 21);
+														일정창.add(시간텍스트필드);
+														시간텍스트필드.setColumns(10);
+														
+																JLabel 일정라벨 = new JLabel("일정");
+																일정라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																일정라벨.setBounds(39, 306, 42, 15);
+																일정창.add(일정라벨);
+																
+																		일정텍스트필드 = new JTextField();
+																		일정텍스트필드.setBounds(93, 303, 426, 21);
+																		일정창.add(일정텍스트필드);
+																		일정텍스트필드.setColumns(10);
+																		일정창.setVisible(false);
 		
 				의사소견창 = new JPanel();
 				의사소견창.setBounds(164, 82, 815, 351);
@@ -224,109 +327,6 @@ public class StaffRegistration extends JFrame {
 																														scrollPane_2.setViewportView(컨디션의사소견_감독코멘트텍스트박스);
 																														의사소견창.setVisible(false);
 																														컨디션의사소견_감독코멘트텍스트박스.setEnabled(false);
-
-		일정창 = new JPanel();
-		일정창.setBounds(164, 82, 815, 351);
-		one.add(일정창);
-		일정창.setLayout(null);
-
-		scrolledTable = new JScrollPane((Component) null);
-		scrolledTable.setBounds(39, 24, 617, 187);
-		일정창.add(scrolledTable);
-		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		scheduleTable = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "시작시간", "끝나는시간", "일정", "승인여부" })) {
-		};
-		scrolledTable.setViewportView(scheduleTable);
-		scheduleTable.addMouseListener(new MouseAdapter() {
-	         
-
-			@Override
-	         public void mouseClicked(MouseEvent e) {
-	        	 삭제버튼.setEnabled(true);
-	            수정버튼.setEnabled(true);
-	            저장버튼.setEnabled(false);
-	            int selectedRow = scheduleTable.getSelectedRow();
-	            if (selectedRow >= 0) {
-	               DefaultTableModel model = (DefaultTableModel) scheduleTable.getModel();
-	               String starttime = (String) model.getValueAt(selectedRow, 0);
-	               String content = (String) model.getValueAt(selectedRow, 2);
-	               
-	               시간텍스트 = starttime;
-	               System.out.println(시간텍스트);
-	               시간텍스트필드.setText(starttime);
-	               일정텍스트필드.setText(content);
-	               
-	            }
-	         }
-	      });
-		
-		
-		
-
-		저장버튼 = new JButton("저장");
-		저장버튼.setBounds(678, 277, 97, 23);
-		일정창.add(저장버튼);
-		저장버튼.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				선수일정추가();
-			}
-		});
-		
-
-		수정버튼 = new JButton("수정");
-		수정버튼.setBounds(678, 302, 97, 23);
-		일정창.add(수정버튼);
-		수정버튼.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				선수일정수정();
-
-			}
-		});
-
-		삭제버튼 = new JButton("삭제");
-		삭제버튼.setBounds(678, 330, 97, 23);
-		일정창.add(삭제버튼);
-		삭제버튼.addActionListener(new ActionListener() {
-	         @Override
-	         public void actionPerformed(ActionEvent e) {
-	            int selectedRow = scheduleTable.getSelectedRow(); // 선택한 행의 인덱스 가져오기
-	            if (selectedRow != -1) { // 선택한 행이 있는 경우
-	               DefaultTableModel tableModel = (DefaultTableModel) scheduleTable.getModel();
-	               String date = 날짜콤보박스.getSelectedItem().toString();
-	               String starttime = tableModel.getValueAt(selectedRow, 0).toString();
-
-	               // 삭제 메소드 호출
-	               선수일정삭제(date, starttime);
-
-	               // 테이블에서 선택한 행 삭제
-	               tableModel.removeRow(selectedRow);
-	            }
-	         }
-	      });
-		JLabel 시간라벨 = new JLabel("시간");
-		시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		시간라벨.setBounds(39, 255, 42, 15);
-		일정창.add(시간라벨);
-
-		시간텍스트필드 = new JTextField();
-		시간텍스트필드.setBounds(93, 252, 116, 21);
-		일정창.add(시간텍스트필드);
-		시간텍스트필드.setColumns(10);
-
-		JLabel 일정라벨 = new JLabel("일정");
-		일정라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		일정라벨.setBounds(39, 306, 42, 15);
-		일정창.add(일정라벨);
-
-		일정텍스트필드 = new JTextField();
-		일정텍스트필드.setBounds(93, 303, 426, 21);
-		일정창.add(일정텍스트필드);
-		일정텍스트필드.setColumns(10);
-		일정창.setVisible(false);
 		one.add(개인정보버튼);
 
 		JButton 일정버튼 = new JButton("");
