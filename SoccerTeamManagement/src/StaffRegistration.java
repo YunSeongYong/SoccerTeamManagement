@@ -150,6 +150,80 @@ public class StaffRegistration extends JFrame {
 			}
 		});
 		one.setLayout(null);
+		
+				의사소견창 = new JPanel();
+				의사소견창.setBounds(164, 82, 815, 351);
+				one.add(의사소견창);
+				의사소견창.setLayout(null);
+				
+						lblNewLabel_4 = new JLabel("");
+						lblNewLabel_4.setBounds(69, 196, 57, 15);
+						의사소견창.add(lblNewLabel_4);
+						
+								컨디션의사소견_의사소견라벨 = new JLabel("의사소견");
+								컨디션의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
+								컨디션의사소견_의사소견라벨.setBounds(132, 152, 82, 15);
+								의사소견창.add(컨디션의사소견_의사소견라벨);
+								
+										scrollPane_3 = new JScrollPane();
+										scrollPane_3.setBounds(69, 177, 217, 156);
+										의사소견창.add(scrollPane_3);
+										
+												컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
+												컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.BLACK);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
+												scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setEnabled(false);
+												
+														scrolledTable_2 = new JScrollPane((Component) null);
+														scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+														scrolledTable_2.setBounds(84, 18, 616, 124);
+														의사소견창.add(scrolledTable_2);
+														
+																conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
+																		new String[] { "number", "playername", "playercondition", "when" }));
+																scrolledTable_2.setViewportView(conditionTable2);
+																
+																		scrollPane_4 = new JScrollPane();
+																		scrollPane_4.setBounds(567, 177, 185, 156);
+																		의사소견창.add(scrollPane_4);
+																		
+																				선수목록_의사소견_코치코멘트텍스트박스 = new JTextArea();
+																				선수목록_의사소견_코치코멘트텍스트박스.setLineWrap(true);
+																				scrollPane_4.setViewportView(선수목록_의사소견_코치코멘트텍스트박스);
+																				
+																						컨디션의사소견_의사소견_코치코멘트라벨 = new JLabel("코치 코멘트");
+																						컨디션의사소견_의사소견_코치코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																						컨디션의사소견_의사소견_코치코멘트라벨.setBounds(602, 152, 123, 15);
+																						의사소견창.add(컨디션의사소견_의사소견_코치코멘트라벨);
+																						
+																								선수목록_의사소견_저장버튼 = new JButton("저장");
+																								선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
+																									public void actionPerformed(ActionEvent arg0) {
+
+																										String comment = 선수목록_의사소견_코치코멘트텍스트박스.getText();
+																										선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+																										JOptionPane.showMessageDialog(null, "저장되었습니다");
+																									}
+																								});
+																								선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
+																								의사소견창.add(선수목록_의사소견_저장버튼);
+																								
+																										컨디션의사소견_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
+																										컨디션의사소견_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																										컨디션의사소견_의사소견_감독코멘트라벨.setBounds(359, 152, 123, 15);
+																										의사소견창.add(컨디션의사소견_의사소견_감독코멘트라벨);
+																										
+																												JScrollPane scrollPane_2 = new JScrollPane();
+																												scrollPane_2.setBounds(336, 177, 185, 156);
+																												의사소견창.add(scrollPane_2);
+																												
+																														컨디션의사소견_감독코멘트텍스트박스 = new JTextArea();
+																														컨디션의사소견_감독코멘트텍스트박스.setForeground(Color.BLACK);
+																														컨디션의사소견_감독코멘트텍스트박스.setLineWrap(true);
+																														scrollPane_2.setViewportView(컨디션의사소견_감독코멘트텍스트박스);
+																														의사소견창.setVisible(false);
+																														컨디션의사소견_감독코멘트텍스트박스.setEnabled(false);
 
 		일정창 = new JPanel();
 		일정창.setBounds(164, 82, 815, 351);
@@ -253,81 +327,7 @@ public class StaffRegistration extends JFrame {
 		일정창.add(일정텍스트필드);
 		일정텍스트필드.setColumns(10);
 		일정창.setVisible(false);
-
-		의사소견창 = new JPanel();
-		의사소견창.setBounds(164, 82, 815, 351);
-		one.add(의사소견창);
-		의사소견창.setLayout(null);
-
-		lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setBounds(69, 196, 57, 15);
-		의사소견창.add(lblNewLabel_4);
-
-		컨디션의사소견_의사소견라벨 = new JLabel("의사소견");
-		컨디션의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		컨디션의사소견_의사소견라벨.setBounds(132, 152, 82, 15);
-		의사소견창.add(컨디션의사소견_의사소견라벨);
-
-		scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(69, 177, 217, 156);
-		의사소견창.add(scrollPane_3);
-
-		컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
-		컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.BLACK);
-		컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
-		scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
-		컨디션의사소견_의사소견_의사소견텍스트박스.setEnabled(false);
-
-		scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable_2.setBounds(84, 18, 616, 124);
-		의사소견창.add(scrolledTable_2);
-
-		conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "number", "playername", "playercondition", "when" }));
-		scrolledTable_2.setViewportView(conditionTable2);
-
-		scrollPane_4 = new JScrollPane();
-		scrollPane_4.setBounds(567, 177, 185, 156);
-		의사소견창.add(scrollPane_4);
-
-		선수목록_의사소견_코치코멘트텍스트박스 = new JTextArea();
-		선수목록_의사소견_코치코멘트텍스트박스.setLineWrap(true);
-		scrollPane_4.setViewportView(선수목록_의사소견_코치코멘트텍스트박스);
-
-		컨디션의사소견_의사소견_코치코멘트라벨 = new JLabel("코치 코멘트");
-		컨디션의사소견_의사소견_코치코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		컨디션의사소견_의사소견_코치코멘트라벨.setBounds(602, 152, 123, 15);
-		의사소견창.add(컨디션의사소견_의사소견_코치코멘트라벨);
-
-		선수목록_의사소견_저장버튼 = new JButton("저장");
-		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				String comment = 선수목록_의사소견_코치코멘트텍스트박스.getText();
-				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-				JOptionPane.showMessageDialog(null, "저장되었습니다");
-			}
-		});
-		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
-		의사소견창.add(선수목록_의사소견_저장버튼);
-
-		컨디션의사소견_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
-		컨디션의사소견_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		컨디션의사소견_의사소견_감독코멘트라벨.setBounds(359, 152, 123, 15);
-		의사소견창.add(컨디션의사소견_의사소견_감독코멘트라벨);
-
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(336, 177, 185, 156);
-		의사소견창.add(scrollPane_2);
-
-		컨디션의사소견_감독코멘트텍스트박스 = new JTextArea();
-		컨디션의사소견_감독코멘트텍스트박스.setForeground(Color.BLACK);
-		컨디션의사소견_감독코멘트텍스트박스.setLineWrap(true);
-		scrollPane_2.setViewportView(컨디션의사소견_감독코멘트텍스트박스);
-		의사소견창.setVisible(false);
 		one.add(개인정보버튼);
-		컨디션의사소견_감독코멘트텍스트박스.setEnabled(false);
 
 		JButton 일정버튼 = new JButton("");
 		일정버튼.setOpaque(false);
@@ -433,6 +433,11 @@ public class StaffRegistration extends JFrame {
 				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 			}
 
 		});
@@ -1577,7 +1582,6 @@ public class StaffRegistration extends JFrame {
 			// 체크박스 컬럼 추가
 
 		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
 
 	}
@@ -2024,9 +2028,7 @@ public class StaffRegistration extends JFrame {
 	}
 
 	public void 선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
-		System.out.println("메소드 실행");
-		System.out.println("콤보박스 등번호 출력: " + 일정창_선수정보콤보박스에서선택한등번호);
-		System.out.println("콤보박스 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
+		 try {
 		DefaultTableModel model = (DefaultTableModel) conditionTable2.getModel();
 		model.setRowCount(0);
 
@@ -2040,6 +2042,8 @@ public class StaffRegistration extends JFrame {
 				}
 			}
 		}
+	}catch (NullPointerException ex) {
+    }
 	}
 
 	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<DoctorAppointment> doctorAppointmentList) {
