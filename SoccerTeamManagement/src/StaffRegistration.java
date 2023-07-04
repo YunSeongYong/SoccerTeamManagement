@@ -154,6 +154,97 @@ public class StaffRegistration extends JFrame {
 		});
 		one.setLayout(null);
 
+		개인정보창 = new JPanel();
+		개인정보창.setBounds(192, 57, 787, 376);
+		one.add(개인정보창);
+		개인정보창.setLayout(null);
+		개인정보창.setBackground(Color.WHITE);
+		개인정보창.setVisible(false);
+
+		이름수정라벨 = new JLabel("이름");
+		이름수정라벨.setBounds(544, 55, 52, 15);
+		개인정보창.add(이름수정라벨);
+
+		신장수정라벨 = new JLabel("신장");
+		신장수정라벨.setBounds(267, 106, 62, 15);
+		개인정보창.add(신장수정라벨);
+
+		몸무게수정라벨 = new JLabel("몸무게");
+		몸무게수정라벨.setBounds(532, 106, 64, 15);
+		개인정보창.add(몸무게수정라벨);
+
+		나이수정라벨 = new JLabel("나이");
+		나이수정라벨.setBounds(267, 166, 62, 15);
+		개인정보창.add(나이수정라벨);
+
+		포지션수정라벨 = new JLabel("포지션");
+		포지션수정라벨.setBounds(532, 166, 81, 15);
+		개인정보창.add(포지션수정라벨);
+
+		담당코치수정라벨 = new JLabel("담당 코치");
+		담당코치수정라벨.setBounds(267, 218, 81, 15);
+		개인정보창.add(담당코치수정라벨);
+
+		담당의사수정라벨 = new JLabel("담당 의사");
+		담당의사수정라벨.setBounds(523, 218, 90, 15);
+		개인정보창.add(담당의사수정라벨);
+
+		이름수정텍스트필드 = new JTextField();
+		이름수정텍스트필드.setColumns(10);
+		이름수정텍스트필드.setBounds(623, 52, 116, 21);
+		개인정보창.add(이름수정텍스트필드);
+		이름수정텍스트필드.setEditable(false);
+
+		신장수정텍스트필드 = new JTextField();
+		신장수정텍스트필드.setColumns(10);
+		신장수정텍스트필드.setBounds(341, 103, 116, 21);
+		개인정보창.add(신장수정텍스트필드);
+		신장수정텍스트필드.setEditable(false);
+
+		몸무게수정텍스트필드 = new JTextField();
+		몸무게수정텍스트필드.setColumns(10);
+		몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
+		개인정보창.add(몸무게수정텍스트필드);
+		몸무게수정텍스트필드.setEditable(false);
+
+		나이수정텍스트필드 = new JTextField();
+		나이수정텍스트필드.setColumns(10);
+		나이수정텍스트필드.setBounds(341, 163, 116, 21);
+		개인정보창.add(나이수정텍스트필드);
+		나이수정텍스트필드.setEditable(false);
+
+		포지션수정텍스트필드 = new JTextField();
+		포지션수정텍스트필드.setColumns(10);
+		포지션수정텍스트필드.setBounds(625, 163, 116, 21);
+		개인정보창.add(포지션수정텍스트필드);
+		포지션수정텍스트필드.setEditable(false);
+
+		담당코치수정텍스트필드 = new JTextField();
+		담당코치수정텍스트필드.setColumns(10);
+		담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
+		개인정보창.add(담당코치수정텍스트필드);
+		담당코치수정텍스트필드.setEditable(false);
+
+		담당의사수정텍스트필드 = new JTextField();
+		담당의사수정텍스트필드.setColumns(10);
+		담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
+		개인정보창.add(담당의사수정텍스트필드);
+		담당의사수정텍스트필드.setEditable(false);
+
+		등번호수정라벨 = new JLabel("등번호");
+		등번호수정라벨.setBounds(267, 55, 64, 15);
+		개인정보창.add(등번호수정라벨);
+
+		등번호수정텍스트필드 = new JTextField();
+		등번호수정텍스트필드.setColumns(10);
+		등번호수정텍스트필드.setBounds(341, 52, 116, 21);
+		개인정보창.add(등번호수정텍스트필드);
+		등번호수정텍스트필드.setEditable(false);
+
+		이미지등록수정창 = new JPanel();
+		이미지등록수정창.setBounds(26, 55, 164, 207);
+		개인정보창.add(이미지등록수정창);
+
 		일정창 = new JPanel();
 		일정창.setBounds(192, 57, 787, 376);
 		one.add(일정창);
@@ -169,30 +260,26 @@ public class StaffRegistration extends JFrame {
 		};
 		scrolledTable.setViewportView(scheduleTable);
 		scheduleTable.addMouseListener(new MouseAdapter() {
-	         
 
 			@Override
-	         public void mouseClicked(MouseEvent e) {
-	        	 삭제버튼.setEnabled(true);
-	            수정버튼.setEnabled(true);
-	            저장버튼.setEnabled(false);
-	            int selectedRow = scheduleTable.getSelectedRow();
-	            if (selectedRow >= 0) {
-	               DefaultTableModel model = (DefaultTableModel) scheduleTable.getModel();
-	               String starttime = (String) model.getValueAt(selectedRow, 0);
-	               String content = (String) model.getValueAt(selectedRow, 2);
-	               
-	               시간텍스트 = starttime;
-	               System.out.println(시간텍스트);
-	               시간텍스트필드.setText(starttime);
-	               일정텍스트필드.setText(content);
-	               
-	            }
-	         }
-	      });
-		
-		
-		
+			public void mouseClicked(MouseEvent e) {
+				삭제버튼.setEnabled(true);
+				수정버튼.setEnabled(true);
+				저장버튼.setEnabled(false);
+				int selectedRow = scheduleTable.getSelectedRow();
+				if (selectedRow >= 0) {
+					DefaultTableModel model = (DefaultTableModel) scheduleTable.getModel();
+					String starttime = (String) model.getValueAt(selectedRow, 0);
+					String content = (String) model.getValueAt(selectedRow, 2);
+
+					시간텍스트 = starttime;
+					System.out.println(시간텍스트);
+					시간텍스트필드.setText(starttime);
+					일정텍스트필드.setText(content);
+
+				}
+			}
+		});
 
 		저장버튼 = new JButton("저장");
 		저장버튼.setBounds(678, 277, 97, 23);
@@ -203,7 +290,6 @@ public class StaffRegistration extends JFrame {
 				선수일정추가();
 			}
 		});
-		
 
 		수정버튼 = new JButton("수정");
 		수정버튼.setBounds(678, 302, 97, 23);
@@ -220,22 +306,22 @@ public class StaffRegistration extends JFrame {
 		삭제버튼.setBounds(678, 330, 97, 23);
 		일정창.add(삭제버튼);
 		삭제버튼.addActionListener(new ActionListener() {
-	         @Override
-	         public void actionPerformed(ActionEvent e) {
-	            int selectedRow = scheduleTable.getSelectedRow(); // 선택한 행의 인덱스 가져오기
-	            if (selectedRow != -1) { // 선택한 행이 있는 경우
-	               DefaultTableModel tableModel = (DefaultTableModel) scheduleTable.getModel();
-	               String date = 날짜콤보박스.getSelectedItem().toString();
-	               String starttime = tableModel.getValueAt(selectedRow, 0).toString();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = scheduleTable.getSelectedRow(); // 선택한 행의 인덱스 가져오기
+				if (selectedRow != -1) { // 선택한 행이 있는 경우
+					DefaultTableModel tableModel = (DefaultTableModel) scheduleTable.getModel();
+					String date = 날짜콤보박스.getSelectedItem().toString();
+					String starttime = tableModel.getValueAt(selectedRow, 0).toString();
 
-	               // 삭제 메소드 호출
-	               선수일정삭제(date, starttime);
+					// 삭제 메소드 호출
+					선수일정삭제(date, starttime);
 
-	               // 테이블에서 선택한 행 삭제
-	               tableModel.removeRow(selectedRow);
-	            }
-	         }
-	      });
+					// 테이블에서 선택한 행 삭제
+					tableModel.removeRow(selectedRow);
+				}
+			}
+		});
 		JLabel 시간라벨 = new JLabel("시간");
 		시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
 		시간라벨.setBounds(39, 255, 42, 15);
@@ -497,97 +583,6 @@ public class StaffRegistration extends JFrame {
 		one.add(선수정보라벨);
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
-
-		개인정보창 = new JPanel();
-		개인정보창.setBounds(192, 57, 787, 376);
-		one.add(개인정보창);
-		개인정보창.setLayout(null);
-		개인정보창.setBackground(Color.WHITE);
-		개인정보창.setVisible(false);
-
-		이름수정라벨 = new JLabel("이름");
-		이름수정라벨.setBounds(544, 55, 52, 15);
-		개인정보창.add(이름수정라벨);
-
-		신장수정라벨 = new JLabel("신장");
-		신장수정라벨.setBounds(267, 106, 62, 15);
-		개인정보창.add(신장수정라벨);
-
-		몸무게수정라벨 = new JLabel("몸무게");
-		몸무게수정라벨.setBounds(532, 106, 64, 15);
-		개인정보창.add(몸무게수정라벨);
-
-		나이수정라벨 = new JLabel("나이");
-		나이수정라벨.setBounds(267, 166, 62, 15);
-		개인정보창.add(나이수정라벨);
-
-		포지션수정라벨 = new JLabel("포지션");
-		포지션수정라벨.setBounds(532, 166, 81, 15);
-		개인정보창.add(포지션수정라벨);
-
-		담당코치수정라벨 = new JLabel("담당 코치");
-		담당코치수정라벨.setBounds(267, 218, 81, 15);
-		개인정보창.add(담당코치수정라벨);
-
-		담당의사수정라벨 = new JLabel("담당 의사");
-		담당의사수정라벨.setBounds(523, 218, 90, 15);
-		개인정보창.add(담당의사수정라벨);
-
-		이름수정텍스트필드 = new JTextField();
-		이름수정텍스트필드.setColumns(10);
-		이름수정텍스트필드.setBounds(623, 52, 116, 21);
-		개인정보창.add(이름수정텍스트필드);
-		이름수정텍스트필드.setEditable(false);
-
-		신장수정텍스트필드 = new JTextField();
-		신장수정텍스트필드.setColumns(10);
-		신장수정텍스트필드.setBounds(341, 103, 116, 21);
-		개인정보창.add(신장수정텍스트필드);
-		신장수정텍스트필드.setEditable(false);
-
-		몸무게수정텍스트필드 = new JTextField();
-		몸무게수정텍스트필드.setColumns(10);
-		몸무게수정텍스트필드.setBounds(623, 103, 116, 21);
-		개인정보창.add(몸무게수정텍스트필드);
-		몸무게수정텍스트필드.setEditable(false);
-
-		나이수정텍스트필드 = new JTextField();
-		나이수정텍스트필드.setColumns(10);
-		나이수정텍스트필드.setBounds(341, 163, 116, 21);
-		개인정보창.add(나이수정텍스트필드);
-		나이수정텍스트필드.setEditable(false);
-
-		포지션수정텍스트필드 = new JTextField();
-		포지션수정텍스트필드.setColumns(10);
-		포지션수정텍스트필드.setBounds(625, 163, 116, 21);
-		개인정보창.add(포지션수정텍스트필드);
-		포지션수정텍스트필드.setEditable(false);
-
-		담당코치수정텍스트필드 = new JTextField();
-		담당코치수정텍스트필드.setColumns(10);
-		담당코치수정텍스트필드.setBounds(341, 215, 116, 21);
-		개인정보창.add(담당코치수정텍스트필드);
-		담당코치수정텍스트필드.setEditable(false);
-
-		담당의사수정텍스트필드 = new JTextField();
-		담당의사수정텍스트필드.setColumns(10);
-		담당의사수정텍스트필드.setBounds(623, 215, 116, 21);
-		개인정보창.add(담당의사수정텍스트필드);
-		담당의사수정텍스트필드.setEditable(false);
-
-		등번호수정라벨 = new JLabel("등번호");
-		등번호수정라벨.setBounds(267, 55, 64, 15);
-		개인정보창.add(등번호수정라벨);
-
-		등번호수정텍스트필드 = new JTextField();
-		등번호수정텍스트필드.setColumns(10);
-		등번호수정텍스트필드.setBounds(341, 52, 116, 21);
-		개인정보창.add(등번호수정텍스트필드);
-		등번호수정텍스트필드.setEditable(false);
-
-		이미지등록수정창 = new JPanel();
-		이미지등록수정창.setBounds(26, 55, 164, 207);
-		개인정보창.add(이미지등록수정창);
 
 		// ===========================================================================================================================================================
 
@@ -1236,7 +1231,7 @@ public class StaffRegistration extends JFrame {
 //			e.printStackTrace();
 //		}
 //	}
-	
+
 	public void addPlayer(String coachName) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -1264,7 +1259,7 @@ public class StaffRegistration extends JFrame {
 			DBUtil.close(rs);
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
-		} 
+		}
 	}
 
 	public List<Player> 선수목록_개인정보_선수정보콤보박스의등번호로선수정보의모든정보를리스트에저장하는메소드(int backnumber) {
@@ -1923,7 +1918,8 @@ public class StaffRegistration extends JFrame {
 
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("UPDATE playerschedule SET starttime = ?, content = ? WHERE `date` = ? AND starttime = ?;");
+			stmt = conn.prepareStatement(
+					"UPDATE playerschedule SET starttime = ?, content = ? WHERE `date` = ? AND starttime = ?;");
 			stmt.setString(1, 시간텍스트필드.getText());
 			stmt.setString(2, 일정텍스트필드.getText());
 			stmt.setString(3, selectedDate);
