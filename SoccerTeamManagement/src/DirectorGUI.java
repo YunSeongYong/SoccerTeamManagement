@@ -1118,6 +1118,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		textField.setText("");
 		textField_5.setText("");
 		textField_4.setText("");
+		스태프등록_경력텍스트필드.setText("");
 		panel.removeAll();
 		panel.revalidate();
 		panel.repaint();
@@ -1905,6 +1906,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 							선수목록_선수정보콤보박스목록만드는메소드();
 							사용가능유무라벨.setText("중복 확인 버튼을 누르세요");
 							사용가능유무라벨.setForeground(Color.WHITE);
+							identityChecked = false;
 							JOptionPane.showMessageDialog(null, "저장되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
 						} catch (java.sql.SQLIntegrityConstraintViolationException ex) {
 							JOptionPane.showMessageDialog(null, "이미 존재하는 선수입니다", "경고", JOptionPane.WARNING_MESSAGE);
@@ -2128,6 +2130,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 						선수목록_선수정보콤보박스목록만드는메소드();
 						lblNewLabel_7.setText("중복 확인 버튼을 누르세요");
 						lblNewLabel_7.setForeground(Color.WHITE);
+						identityChecked2 = false;
 
 					} catch (java.lang.NumberFormatException ex) {
 						JOptionPane.showMessageDialog(null, "값을 올바르게 넣어주세요", "경고", JOptionPane.WARNING_MESSAGE);
