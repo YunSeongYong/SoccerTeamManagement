@@ -45,6 +45,7 @@ import javax.swing.table.TableModel;
 
 import dbutil.DBUtil;
 import java.awt.Font;
+import javax.swing.JToolBar;
 
 public class StaffRegistration extends JFrame {
 	private JTextField backnumTf;
@@ -122,6 +123,7 @@ public class StaffRegistration extends JFrame {
 	private JButton 수정버튼;
 	private JButton 삭제버튼;
 	private String 시간텍스트;
+	private JLabel lblNewLabel_2;
 
 	public StaffRegistration() {
 		JPanel one, two;
@@ -265,11 +267,12 @@ public class StaffRegistration extends JFrame {
 						
 								컨디션의사소견_의사소견라벨 = new JLabel("의사소견");
 								컨디션의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-								컨디션의사소견_의사소견라벨.setBounds(132, 152, 82, 15);
+								컨디션의사소견_의사소견라벨.setBounds(159, 152, 82, 15);
 								의사소견창.add(컨디션의사소견_의사소견라벨);
 								
 										scrollPane_3 = new JScrollPane();
-										scrollPane_3.setBounds(69, 177, 217, 156);
+										scrollPane_3.setBounds(105, 177, 185, 156);
+										
 										의사소견창.add(scrollPane_3);
 										
 												컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
@@ -284,7 +287,7 @@ public class StaffRegistration extends JFrame {
 														의사소견창.add(scrolledTable_2);
 														
 																conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
-																		new String[] { "number", "playername", "playercondition", "when" }));
+																		new String[] { "등 번호", "선수명", "선수 컨디션", "시간" }));
 																scrolledTable_2.setViewportView(conditionTable2);
 																
 																		scrollPane_4 = new JScrollPane();
@@ -414,7 +417,7 @@ public class StaffRegistration extends JFrame {
 		날짜콤보박스.setVisible(false);
 
 		선수정보콤보박스 = new JComboBox();
-		선수정보콤보박스.setBounds(756, 26, 117, 21);
+		선수정보콤보박스.setBounds(756, 26, 87, 21);
 		one.add(선수정보콤보박스);
 //		선수목록_선수정보콤보박스목록만드는메소드();
 		Staff staff = new Staff();
@@ -433,11 +436,6 @@ public class StaffRegistration extends JFrame {
 				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 			}
 
 		});
@@ -496,6 +494,11 @@ public class StaffRegistration extends JFrame {
 		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_13.setBounds(49, 338, 355, 15);
 		컨디션창.add(lblNewLabel_13);
+		
+		lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수목록화면-일정-배경1.jpg")));
+		lblNewLabel_2.setBounds(0, 0, 815, 341);
+		컨디션창.add(lblNewLabel_2);
 		컨디션창.setVisible(false);
 
 		날짜라벨 = new JLabel("날짜");
@@ -1582,6 +1585,7 @@ public class StaffRegistration extends JFrame {
 			// 체크박스 컬럼 추가
 
 		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
 
 	}
@@ -2028,7 +2032,9 @@ public class StaffRegistration extends JFrame {
 	}
 
 	public void 선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
-		 try {
+		System.out.println("메소드 실행");
+		System.out.println("콤보박스 등번호 출력: " + 일정창_선수정보콤보박스에서선택한등번호);
+		System.out.println("콤보박스 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
 		DefaultTableModel model = (DefaultTableModel) conditionTable2.getModel();
 		model.setRowCount(0);
 
@@ -2042,8 +2048,6 @@ public class StaffRegistration extends JFrame {
 				}
 			}
 		}
-	}catch (NullPointerException ex) {
-    }
 	}
 
 	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<DoctorAppointment> doctorAppointmentList) {
