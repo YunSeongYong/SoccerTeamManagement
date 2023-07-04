@@ -34,6 +34,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.ImageIcon;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 public class DoctorSchedule extends JFrame implements ChangeListener {
 	private JTabbedPane pane;
@@ -56,6 +60,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		System.out.println("의사 이름" + staff.getName());
 		JPanel one, two, three;
 		pane = new JTabbedPane();
+		pane.setBounds(0, 85, 984, 476);
 
 		one = new JPanel();
 		pane.addTab("예약목록", one);
@@ -63,7 +68,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 
 		// 날짜 콤보 박스
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(810, 32, 145, 27);
+		comboBox.setBounds(826, 73, 91, 27);
 		one.add(comboBox);
 
 		LocalDate currentDate = LocalDate.now();
@@ -79,8 +84,8 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
-				List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
-				insertAppointmentTabel(appointmentList, table_1);
+				//List<DoctorAppointment> appointmentList = makeAppointmentList(staff.getName(), index);
+				//insertAppointmentTabel(appointmentList, table_1);
 
 //				// 저장 버튼 비활성화
 				btnNewButton.setEnabled(false);

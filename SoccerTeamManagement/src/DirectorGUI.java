@@ -239,6 +239,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			
 			DBUtil.close(stmt);
 			DBUtil.close(conn);
 		}
@@ -1286,7 +1287,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	}
 
 	public void 선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(List<Schedule> scheduleList) {
-//		try {
+		try {
 		List<Schedule> filteredList = new ArrayList<>();
 
 		for (Schedule schedule : scheduleList) {
@@ -1313,10 +1314,10 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		table.getColumnModel().getColumn(tableModel.getColumnCount() - 1)
 				.setCellEditor(table.getDefaultEditor(Boolean.class));
 
-//		 } 
-//		catch (NullPointerException e) {
-//			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
-//		}
+		 } 
+		catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
+		}
 
 	}
 
@@ -2243,13 +2244,11 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				}
 
 				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
-				선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 				
 
 			}
@@ -2276,11 +2275,9 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 					선수목록_일정_콤보박스에서선택한등번호로일정창의테이블에추가하는메소드(scheduleList);
 					선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
 					선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
-					선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-					선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
-					선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
 					선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 					선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+					
 				}
 			}
 
