@@ -99,7 +99,6 @@ public class StaffRegistration extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JTextArea 선수목록_컨디션_코멘트텍스트박스;
 	private JLabel 코멘트작성라벨;
-	private JLabel 컨디션의사소견_의사소견라벨;
 	private JScrollPane scrollPane_3;
 	private JTextArea 컨디션의사소견_의사소견_의사소견텍스트박스;
 	private JScrollPane scrolledTable_2;
@@ -124,6 +123,8 @@ public class StaffRegistration extends JFrame {
 	private JButton 삭제버튼;
 	private String 시간텍스트;
 	private JLabel lblNewLabel_2;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
 
 	public StaffRegistration() {
 		JPanel one, two;
@@ -157,29 +158,42 @@ public class StaffRegistration extends JFrame {
 										의사소견창.setBounds(164, 82, 815, 351);
 										one.add(의사소견창);
 										의사소견창.setLayout(null);
+																
+																lblNewLabel_5 = new JLabel("의사 소견");
+																lblNewLabel_5.setFont(new Font("나눔고딕", Font.BOLD, 15));
+																lblNewLabel_5.setForeground(new Color(255, 255, 255));
+																lblNewLabel_5.setBounds(143, 160, 69, 15);
+																의사소견창.add(lblNewLabel_5);
 														
 																scrolledTable_2 = new JScrollPane((Component) null);
 																scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-																scrolledTable_2.setBounds(84, 18, 616, 124);
+																scrolledTable_2.setBounds(100, 18, 616, 124);
 																의사소견창.add(scrolledTable_2);
 																
 																		conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
 																				new String[] { "등 번호", "선수명", "선수 컨디션", "시 간" }));
 																		scrolledTable_2.setViewportView(conditionTable2);
-												
-														컨디션의사소견_의사소견라벨 = new JLabel("의사소견");
-														컨디션의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-														
-								컨디션의사소견_의사소견라벨.setBounds(159, 152, 82, 15);
-								의사소견창.add(컨디션의사소견_의사소견라벨);
 								
 										scrollPane_3 = new JScrollPane();
-										scrollPane_3.setBounds(105, 177, 185, 156);
+										scrollPane_3.setOpaque(false);
+										scrollPane_3.getViewport().setOpaque(false);
+												
+										scrollPane_3.setViewportBorder(null);
+										scrollPane_3.getVerticalScrollBar().setOpaque(false);
+										scrollPane_3.getHorizontalScrollBar().setOpaque(false);
+
+
+										scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
+										
+										scrollPane_3.setBounds(85, 185, 185, 130);
 										
 										의사소견창.add(scrollPane_3);
 										
 												컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
-												컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.BLACK);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.WHITE);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setOpaque(false); // Set the textArea as transparent
+												scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
 												컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
 												scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
 												컨디션의사소견_의사소견_의사소견텍스트박스.setEnabled(false);
@@ -188,31 +202,31 @@ public class StaffRegistration extends JFrame {
 														scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 														scrolledTable_2.setBounds(84, 18, 616, 124);
 														의사소견창.add(scrolledTable_2);
-														
-								컨디션의사소견_의사소견라벨.setBounds(132, 152, 82, 15);
-								의사소견창.add(컨디션의사소견_의사소견라벨);
-								
-										scrollPane_3 = new JScrollPane();
-										scrollPane_3.setBounds(69, 177, 217, 156);
-										의사소견창.add(scrollPane_3);
-										
-												컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
-												컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.BLACK);
-												컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
-												scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
-												컨디션의사소견_의사소견_의사소견텍스트박스.setEnabled(false);
 																
 																		scrollPane_4 = new JScrollPane();
-																		scrollPane_4.setBounds(567, 177, 185, 156);
+																		
+																		scrollPane_4.setOpaque(false);
+																		scrollPane_4.getViewport().setOpaque(false);
+																				
+																		scrollPane_4.setViewportBorder(null);
+																		scrollPane_4.getVerticalScrollBar().setOpaque(false);
+																		scrollPane_4.getHorizontalScrollBar().setOpaque(false);
+																		scrollPane_4.setBounds(530, 185, 185, 130);
 																		의사소견창.add(scrollPane_4);
 																		
 																				선수목록_의사소견_코치코멘트텍스트박스 = new JTextArea();
 																				선수목록_의사소견_코치코멘트텍스트박스.setLineWrap(true);
+																				선수목록_의사소견_코치코멘트텍스트박스.setForeground(Color.WHITE);
+																				선수목록_의사소견_코치코멘트텍스트박스.setOpaque(false); // Set the textArea as transparent
+																				scrollPane_4.setViewportView(선수목록_의사소견_코치코멘트텍스트박스);
+																				선수목록_의사소견_코치코멘트텍스트박스.setLineWrap(true);
 																				scrollPane_4.setViewportView(선수목록_의사소견_코치코멘트텍스트박스);
 																				
 																						컨디션의사소견_의사소견_코치코멘트라벨 = new JLabel("코치 코멘트");
+																						컨디션의사소견_의사소견_코치코멘트라벨.setForeground(new Color(255, 255, 255));
+																						컨디션의사소견_의사소견_코치코멘트라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
 																						컨디션의사소견_의사소견_코치코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-																						컨디션의사소견_의사소견_코치코멘트라벨.setBounds(602, 152, 123, 15);
+																						컨디션의사소견_의사소견_코치코멘트라벨.setBounds(562, 160, 123, 15);
 																						의사소견창.add(컨디션의사소견_의사소견_코치코멘트라벨);
 																						
 																								선수목록_의사소견_저장버튼 = new JButton("저장");
@@ -228,20 +242,37 @@ public class StaffRegistration extends JFrame {
 																								의사소견창.add(선수목록_의사소견_저장버튼);
 																								
 																										컨디션의사소견_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
+																										컨디션의사소견_의사소견_감독코멘트라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+																										컨디션의사소견_의사소견_감독코멘트라벨.setForeground(new Color(255, 255, 255));
 																										컨디션의사소견_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-																										컨디션의사소견_의사소견_감독코멘트라벨.setBounds(359, 152, 123, 15);
+																										컨디션의사소견_의사소견_감독코멘트라벨.setBounds(336, 160, 123, 15);
 																										의사소견창.add(컨디션의사소견_의사소견_감독코멘트라벨);
 																										
 																												JScrollPane scrollPane_2 = new JScrollPane();
-																												scrollPane_2.setBounds(336, 177, 185, 156);
+																												scrollPane_2.setOpaque(false);
+																												scrollPane_2.getViewport().setOpaque(false);
+																														
+																												scrollPane_2.setViewportBorder(null);
+																												scrollPane_2.getVerticalScrollBar().setOpaque(false);
+																												scrollPane_2.getHorizontalScrollBar().setOpaque(false);
+																												scrollPane_2.setBounds(306, 185, 185, 130);
 																												의사소견창.add(scrollPane_2);
 																												
 																														컨디션의사소견_감독코멘트텍스트박스 = new JTextArea();
+																														컨디션의사소견_감독코멘트텍스트박스.setForeground(Color.WHITE);
+																														컨디션의사소견_감독코멘트텍스트박스.setOpaque(false); // Set the textArea as transparent
+																														scrollPane_2.setViewportView(컨디션의사소견_감독코멘트텍스트박스);
+																														컨디션의사소견_감독코멘트텍스트박스.setLineWrap(true);
 																														컨디션의사소견_감독코멘트텍스트박스.setForeground(Color.BLACK);
 																														컨디션의사소견_감독코멘트텍스트박스.setLineWrap(true);
 																														scrollPane_2.setViewportView(컨디션의사소견_감독코멘트텍스트박스);
 																														의사소견창.setVisible(false);
 																														컨디션의사소견_감독코멘트텍스트박스.setEnabled(false);
+																														
+																														lblNewLabel_4 = new JLabel("New label");
+																														lblNewLabel_4.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수목록화면-일정-배경1.jpg")));
+																														lblNewLabel_4.setBounds(0, 0, 815, 351);
+																														의사소견창.add(lblNewLabel_4);
 						
 								개인정보창 = new JPanel();
 								개인정보창.setBounds(164, 82, 840, 376);
