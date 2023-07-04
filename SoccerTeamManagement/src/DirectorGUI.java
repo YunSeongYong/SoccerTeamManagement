@@ -2716,6 +2716,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				스태프목록_스태프수정메소드(staffList);
 				스태프목록_스태프목록콤보박스목록만드는메소드();
+				스태프목록_스태프정보의모든텍스트필드값제거메소드();
+				  JOptionPane.showMessageDialog(null, "수정되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		스태프목록_수정버튼.setBounds(772, 359, 97, 23);
