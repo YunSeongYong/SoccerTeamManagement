@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -67,7 +67,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		player = new Player();
 
 		JTextPane commentTp = new JTextPane();
-		commentTp.setForeground(new Color(255, 62, 82));
+		commentTp.setForeground(new Color(255, 255, 255));
 		commentTp.setOpaque(false);
 		commentTp.setFont(new Font("맑은 고딕", Font.BOLD, 15));
 		commentTp.setBackground(new Color(204, 204, 204));
@@ -88,8 +88,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		commonScheduleTp.setFont(new Font("맑은 고딕", Font.BOLD, 17));
 		commonScheduleTp.setOpaque(false);
 		List<CommonSchedule> scTodayList = viewCommonSchedule(currentDate.toString());
-
-		String csStr = printCommonSchedule(scTodayList);
+		String csStr = "";
+		for (int i = 0; i < scTodayList.size(); i++) {
+			csStr += printCommonSchedule(scTodayList.get(i)) + "\n";
+		}
 
 		commonScheduleTp.setText(csStr);
 		commonScheduleTp.setEditable(false);
@@ -122,7 +124,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				List<CommonSchedule> csList = viewCommonSchedule(index);
 
-				String csStr = printCommonSchedule(csList);
+				String csStr = "";
+				for (int i = 0; i < csList.size(); i++) {
+					csStr += printCommonSchedule(csList.get(i));
+				}
 				commonScheduleTp.setText(csStr);
 
 				String scheduleSql = "SELECT SUBSTRING(datetime, 12, 5), schedulecomment FROM comment \r\n"
@@ -130,7 +135,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 				List<Comment> cmtList = viewComment(player.getBackNumber(), index, scheduleSql);
 
-				String coStr = printComment(cmtList);
+				String coStr = "";
+				for (int i = 0; i < cmtList.size(); i++) {
+					coStr += printComment(cmtList.get(i));
+				}
 				commentTp.setText(coStr);
 
 				List<Schedule> scList = viewPersonalSchedule(player.getBackNumber(), index);
@@ -160,7 +168,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		List<Comment> scCommentList = viewComment(player.getBackNumber(), comboBox.getSelectedItem().toString(),
 				scheduleSql);
 
-		String coStr = printComment(scCommentList);
+//		String coStr = printComment(scCommentList);
 		commentTp.setEditable(false);
 
 		JScrollPane scrollPane = new JScrollPane(commentTp);
@@ -262,10 +270,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(false);
 
-//		table = new JTable(new DefaultTableModel(new Object[][] {}, new String[] { "\uC2DC\uC791 \uC2DC\uAC04",
-//				"\uC885\uB8CC \uC2DC\uAC04", "\uB0B4\uC6A9", "\uC2B9\uC778\uC5EC\uBD80" }));
 		table.setFillsViewportHeight(true);
-		table.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table.setFont(new Font("맑은 고딕", Font.BOLD, 11));
 		table.setForeground(new Color(22, 47, 136));
 		table.setBackground(new Color(255, 255, 255));
 		table.getColumnModel().getColumn(0).setMaxWidth(70);
@@ -278,7 +284,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		table.getColumnModel().getColumn(3).setMinWidth(70);
 		table.getColumnModel().getColumn(3).setWidth(70);
 		table.setRowHeight(20);
-		
+
 		// Create a custom TableCellRenderer to center the text
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -385,17 +391,16 @@ public class PlayerTab extends JFrame implements ChangeListener {
 				JComboBox<String> jcb = (JComboBox) e.getSource();
 				String index = String.valueOf(jcb.getSelectedItem());
 
-				String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment FROM comment \r\n"
-						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
+				List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(), index);
+				insertConditionCommentTabel(conditionCommentList, conditionCommentTable);
 
-				List<Comment> conditionCommentList = viewComment(player.getBackNumber(), index, sql);
-				insertCommentTabel(conditionCommentList, conditionCommentTable);
-
-				String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
+				String sql2 = "SELECT SUBSTRING(datetime, 12, 8), doctorcomment FROM comment \r\n"
 						+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
 
 				List<Comment> doctorCommentList = viewComment(player.getBackNumber(), index, sql2);
 				insertCommentTabel(doctorCommentList, doctorCommentTable);
+				
+				
 
 				if (!index.equals(currentDate.toString())) {
 					saveBtn.setEnabled(false);
@@ -433,7 +438,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		conditionCommentTable.getColumnModel().getColumn(2).setWidth(50);
 		conditionCommentTable.setRowHeight(20);
 
-		conditionCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		conditionCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 11));
 		conditionCommentTable.setForeground(new Color(22, 47, 136));
 		conditionCommentTable.setBackground(new Color(255, 255, 255));
 
@@ -444,6 +449,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		List<Comment> conditionCommentList = viewConditionComment(player.getBackNumber(),
 				dateComboBox.getSelectedItem().toString());
 		insertConditionCommentTabel(conditionCommentList, conditionCommentTable);
+		System.out.println(conditionCommentList.toString());
 
 		conditionCommentTable.setBounds(0, 0, 457, 1);
 		scrolledTable_1.setViewportView(conditionCommentTable);
@@ -471,10 +477,10 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		doctorCommentTable.getColumnModel().getColumn(0).setWidth(70);
 		doctorCommentTable.setRowHeight(20);
 
-		doctorCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		doctorCommentTable.setFont(new Font("맑은 고딕", Font.BOLD, 11));
 		doctorCommentTable.setForeground(new Color(22, 47, 136));
 		doctorCommentTable.setBackground(new Color(255, 255, 255));
-		
+
 		for (int i = 0; i < doctorCommentTable.getColumnCount(); i++) {
 			doctorCommentTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 		}
@@ -488,7 +494,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 			table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer3);
 		}
 
-		String sql2 = "SELECT SUBSTRING(datetime, 12, 5), doctorcomment FROM comment \r\n"
+		String sql2 = "SELECT SUBSTRING(datetime, 12, 8), doctorcomment FROM comment \r\n"
 				+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT doctorcomment IS NULL;";
 
 		List<Comment> doctorCommentList = viewComment(player.getBackNumber(), dateComboBox.getSelectedItem().toString(),
@@ -516,6 +522,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		setBounds(100, 100, 1000, 600);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 	}
 
 	private String[][] change(List<Schedule> scList) {
@@ -529,11 +536,6 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		String msg = pane.getTitleAt(index); // index 위에 탭 문자열을 가져옴
 		pane.setSelectedIndex(index); // 현재 선택한 탭으로 화면 출력 변경
 	}
-
-	// 일정 코멘트 리스트를 JTextPane에 넣기
-//	private static void insertTextPane(List<Comment> list) {
-//		
-//	}
 
 	// 공동일정 리스트 생성 메소드
 	private static List<CommonSchedule> viewCommonSchedule(String date) {
@@ -774,7 +776,7 @@ public class PlayerTab extends JFrame implements ChangeListener {
 
 		try {
 			conn = DBUtil.getConnection();
-			String sql = "SELECT SUBSTRING(datetime, 12, 5), conditioncomment, who FROM comment\r\n"
+			String sql = "SELECT SUBSTRING(datetime, 12, 8), conditioncomment, who FROM comment\r\n"
 					+ "WHERE SUBSTRING(datetime, 1, 10) = ? AND number = ? AND NOT conditioncomment IS NULL;";
 
 			stmt = conn.prepareStatement(sql);
@@ -814,21 +816,17 @@ public class PlayerTab extends JFrame implements ChangeListener {
 	}
 
 	// 공동일정 보여주는 메소드
-	private static String printCommonSchedule(List<CommonSchedule> list) {
+	private static String printCommonSchedule(CommonSchedule cs) {
 		String str = "";
-		for (CommonSchedule cs : list) {
-			str = cs.getDate() + " " + cs.getStartTime() + "~" + cs.getEndTime() + "\n장소 : " + cs.getLocation()
-					+ "\n내용 : " + cs.getContent() + "\n";
-		}
+		str = cs.getStartTime().substring(0, 5) + "~" + cs.getEndTime().substring(0, 5) + "\n장소 : " + cs.getLocation()
+				+ "\n내용 : " + cs.getContent() + "\n";
 		return str;
 	}
 
 	// 일정 코멘트 보여주는 메소드
-	private static String printComment(List<Comment> list) {
+	private static String printComment(Comment comment) {
 		String str = "";
-		for (Comment comment : list) {
 			str = comment.getDatetime() + " : " + comment.getConditioncomment() + "\n";
-		}
 		return str;
 	}
 

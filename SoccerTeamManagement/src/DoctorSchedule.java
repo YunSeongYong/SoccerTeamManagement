@@ -148,7 +148,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		table_1.getColumnModel().getColumn(2).setWidth(70);
 		table_1.setRowHeight(20);
 		
-		table_1.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table_1.setFont(new Font("맑은 고딕", Font.BOLD, 11));
 		table_1.setForeground(new Color(22, 47, 136));
 		table_1.setBackground(new Color(255, 255, 255));
 		
@@ -273,7 +273,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String str = nameComboBox.getSelectedItem().toString();
-				String backNumber = str.substring(0, str.indexOf("."));
+				String backNumber = str.substring(0, str.indexOf(" "));
 				String startDate = startComboBox.getSelectedItem().toString();
 				String endDate = endComboBox.getSelectedItem().toString();
 
@@ -301,7 +301,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		table_2.getColumnModel().getColumn(0).setWidth(100);
 		table_2.setRowHeight(20);
 		
-		table_2.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		table_2.setFont(new Font("맑은 고딕", Font.BOLD, 11));
 		table_2.setForeground(new Color(22, 47, 136));
 		table_2.setBackground(new Color(255, 255, 255));
 		
@@ -327,6 +327,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		this.setSize(1000, 600);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 
 	}
 
@@ -421,7 +422,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 				System.out.println("등번호" + backNumber);
 				System.out.println("이름" + name);
 
-				nameComboBox.addItem(backNumber + ". " + name);
+				nameComboBox.addItem(backNumber + " - " + name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
