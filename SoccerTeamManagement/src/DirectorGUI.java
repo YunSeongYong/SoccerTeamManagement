@@ -139,6 +139,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 	private JLabel 선수정보라벨;
 	private String 체크박스에서선택된date;
 	private String 체크박스에서선택된starttime;
+	private JLabel lblNewLabel_9_1;
 
 	private static int countStaff(String role) {
 		Connection conn = null;
@@ -1717,283 +1718,6 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		날짜라벨.setVisible(false);
 		선수정보라벨.setVisible(false);
 
-		개인정보창 = new JPanel();
-		개인정보창.setBounds(164, 82, 840, 376);
-		three.add(개인정보창);
-		개인정보창.setLayout(null);
-		개인정보창.setBackground(Color.WHITE);
-
-		이름수정텍스트필드 = new JTextField();
-		이름수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
-		이름수정텍스트필드.setForeground(Color.WHITE);
-		이름수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		이름수정텍스트필드.setOpaque(false);
-		이름수정텍스트필드.setBorder(null);
-		이름수정텍스트필드.setColumns(10);
-		이름수정텍스트필드.setBounds(145, 220, 116, 21);
-		개인정보창.add(이름수정텍스트필드);
-
-		신장수정텍스트필드 = new JTextField();
-		신장수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		신장수정텍스트필드.setForeground(Color.WHITE);
-		신장수정텍스트필드.setOpaque(false);
-		신장수정텍스트필드.setBorder(null);
-		신장수정텍스트필드.setColumns(10);
-		신장수정텍스트필드.setBounds(473, 119, 116, 21);
-		개인정보창.add(신장수정텍스트필드);
-
-		몸무게수정텍스트필드 = new JTextField();
-		몸무게수정텍스트필드.setForeground(Color.WHITE);
-		몸무게수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		몸무게수정텍스트필드.setOpaque(false);
-		몸무게수정텍스트필드.setBorder(null);
-		몸무게수정텍스트필드.setColumns(10);
-		몸무게수정텍스트필드.setBounds(473, 151, 116, 21);
-		개인정보창.add(몸무게수정텍스트필드);
-
-		나이수정텍스트필드 = new JTextField();
-		나이수정텍스트필드.setForeground(Color.WHITE);
-		나이수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		나이수정텍스트필드.setOpaque(false);
-		나이수정텍스트필드.setBorder(null);
-		나이수정텍스트필드.setColumns(10);
-		나이수정텍스트필드.setBounds(473, 86, 116, 21);
-		개인정보창.add(나이수정텍스트필드);
-
-		포지션수정텍스트필드 = new JTextField();
-		포지션수정텍스트필드.setForeground(Color.WHITE);
-		포지션수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		포지션수정텍스트필드.setOpaque(false);
-		포지션수정텍스트필드.setBorder(null);
-		포지션수정텍스트필드.setColumns(10);
-		포지션수정텍스트필드.setBounds(473, 183, 116, 21);
-		개인정보창.add(포지션수정텍스트필드);
-
-		담당코치수정텍스트필드 = new JTextField();
-		담당코치수정텍스트필드.setHorizontalAlignment(SwingConstants.LEFT);
-		담당코치수정텍스트필드.setForeground(Color.WHITE);
-		담당코치수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		담당코치수정텍스트필드.setOpaque(false);
-		담당코치수정텍스트필드.setBorder(null);
-		담당코치수정텍스트필드.setColumns(10);
-		담당코치수정텍스트필드.setBounds(473, 215, 164, 21);
-		개인정보창.add(담당코치수정텍스트필드);
-
-		담당의사수정텍스트필드 = new JTextField();
-		담당의사수정텍스트필드.setForeground(Color.WHITE);
-		담당의사수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		담당의사수정텍스트필드.setOpaque(false);
-		담당의사수정텍스트필드.setBorder(null);
-		담당의사수정텍스트필드.setColumns(10);
-		담당의사수정텍스트필드.setBounds(473, 245, 164, 21);
-		개인정보창.add(담당의사수정텍스트필드);
-
-		이미지수정버튼 = new JButton("");
-		이미지수정버튼.setOpaque(false);
-		이미지수정버튼.setContentAreaFilled(false);
-		이미지수정버튼.setBorderPainted(false);
-		이미지수정버튼.setFocusPainted(false);
-		이미지수정버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				선수목록_개인정보_이미지를화면에수정하는메소드();
-			}
-		});
-		이미지수정버튼.setBounds(155, 263, 97, 42);
-		개인정보창.add(이미지수정버튼);
-
-		수정버튼 = new JButton("");
-		수정버튼.setOpaque(false);
-		수정버튼.setContentAreaFilled(false);
-		수정버튼.setBorderPainted(false);
-		수정버튼.setFocusPainted(false);
-		수정버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				선수목록_개인정보_선수수정메소드(playerList);
-				선수목록_선수정보콤보박스목록만드는메소드();
-			}
-		});
-		수정버튼.setBounds(632, 118, 79, 34);
-		개인정보창.add(수정버튼);
-
-		등번호수정텍스트필드 = new JTextField();
-		등번호수정텍스트필드.setOpaque(false);
-		등번호수정텍스트필드.setBorder(null);
-		등번호수정텍스트필드.setForeground(Color.WHITE);
-		등번호수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		등번호수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
-		등번호수정텍스트필드.setColumns(10);
-		등번호수정텍스트필드.setBounds(117, 56, 24, 25);
-		개인정보창.add(등번호수정텍스트필드);
-
-		이미지등록수정창 = new JPanel();
-		
-		이미지등록수정창.setBounds(104, 65, 192, 207);
-		이미지등록수정창.setOpaque(false);
-		개인정보창.add(이미지등록수정창);
-
-		JButton 선수삭제버튼 = new JButton("");
-		선수삭제버튼.setOpaque(false);
-		선수삭제버튼.setContentAreaFilled(false);
-		선수삭제버튼.setBorderPainted(false);
-		선수삭제버튼.setFocusPainted(false);
-		선수삭제버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
-
-				if (choice == JOptionPane.YES_OPTION) {
-					선수목록_개인정보_선수삭제메소드(playerList);
-					System.out.println("삭제되었습니다.");
-					선수목록_선수정보콤보박스목록만드는메소드();
-				} else {
-					System.out.println("삭제가 취소되었습니다.");
-				}
-			}
-		});
-		선수삭제버튼.setBounds(632, 216, 78, 32);
-		개인정보창.add(선수삭제버튼);
-		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록화면-안쪽디자인-8.jpg")));
-		lblNewLabel_1.setBounds(0, 0, 842, 351);
-		개인정보창.add(lblNewLabel_1);
-		개인정보창.setVisible(false);
-
-		의사소견창 = new JPanel();
-		의사소견창.setBounds(192, 57, 787, 376);
-		three.add(의사소견창);
-		의사소견창.setLayout(null);
-
-		scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(32, 177, 206, 149);
-		의사소견창.add(scrollPane_2);
-
-		선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
-		scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
-
-		lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setBounds(69, 196, 57, 15);
-		의사소견창.add(lblNewLabel_4);
-
-		선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
-		선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
-		의사소견창.add(선수목록_의사소견_의사소견라벨);
-
-		scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(310, 177, 217, 156);
-		의사소견창.add(scrollPane_3);
-
-		선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
-		scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
-
-		lblNewLabel_10 = new JLabel("선수 컨디션");
-		lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_10.setBounds(86, 152, 82, 15);
-		의사소견창.add(lblNewLabel_10);
-
-		scrolledTable_2 = new JScrollPane((Component) null);
-		scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable_2.setBounds(84, 18, 616, 124);
-		의사소견창.add(scrolledTable_2);
-
-		doctorAppointmentTable = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04",
-						"\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58" }));
-		scrolledTable_2.setViewportView(doctorAppointmentTable);
-
-		scrollPane_4 = new JScrollPane();
-		scrollPane_4.setBounds(567, 177, 185, 156);
-		의사소견창.add(scrollPane_4);
-
-		선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
-		scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
-
-		선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
-		선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
-		의사소견창.add(선수목록_의사소견_감독코멘트라벨);
-
-		선수목록_의사소견_저장버튼 = new JButton("저장");
-		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
-				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-			}
-		});
-		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
-		의사소견창.add(선수목록_의사소견_저장버튼);
-
-		lblNewLabel_9 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
-		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_9.setBounds(203, 0, 372, 15);
-		의사소견창.add(lblNewLabel_9);
-
-		lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
-		lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_12.setBounds(12, 336, 377, 15);
-		의사소견창.add(lblNewLabel_12);
-		의사소견창.setVisible(false);
-
-		컨디션창 = new JPanel();
-		컨디션창.setBounds(192, 57, 787, 376);
-		three.add(컨디션창);
-		컨디션창.setLayout(null);
-
-		scrolledTable_1 = new JScrollPane((Component) null);
-		scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		scrolledTable_1.setBounds(23, 28, 694, 110);
-		컨디션창.add(scrolledTable_1);
-
-		conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
-				new String[] { "number", "playername", "playercondition", "when" }));
-		scrolledTable_1.setViewportView(conditionTable);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(146, 177, 195, 138);
-		컨디션창.add(scrollPane);
-
-		선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
-		scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
-
-		선수컨디션라벨 = new JLabel("선수 컨디션");
-		선수컨디션라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		선수컨디션라벨.setBounds(194, 152, 96, 15);
-		컨디션창.add(선수컨디션라벨);
-
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(489, 177, 195, 138);
-		컨디션창.add(scrollPane_1);
-
-		선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
-		scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
-
-		코멘트작성라벨 = new JLabel("코멘트 작성");
-		코멘트작성라벨.setHorizontalAlignment(SwingConstants.CENTER);
-		코멘트작성라벨.setBounds(539, 152, 96, 15);
-		컨디션창.add(코멘트작성라벨);
-
-		JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
-		선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String comment = 선수목록_컨디션_코멘트텍스트박스.getText();
-				선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
-			}
-		});
-		선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
-		컨디션창.add(선수목록_컨디션_저장버튼);
-
-		lblNewLabel_11 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
-		lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_11.setBounds(201, 3, 372, 15);
-		컨디션창.add(lblNewLabel_11);
-
-		lblNewLabel_13 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수 컨디션이 나옵니다");
-		lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_13.setBounds(49, 338, 355, 15);
-		컨디션창.add(lblNewLabel_13);
-		컨디션창.setVisible(false);
-
 		// ====================================================================
 
 		four = new JPanel();
@@ -2095,12 +1819,12 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		three.setLayout(null);
 		
 				일정창 = new JPanel();
-				일정창.setBounds(192, 57, 787, 376);
+				일정창.setBounds(192, 82, 787, 351);
 				three.add(일정창);
 				일정창.setLayout(null);
 				
 						일정창_코멘트텍스트필드 = new JTextField();
-						일정창_코멘트텍스트필드.setBounds(65, 291, 513, 77);
+						일정창_코멘트텍스트필드.setBounds(80, 273, 513, 40);
 						일정창.add(일정창_코멘트텍스트필드);
 						일정창_코멘트텍스트필드.setColumns(10);
 						
@@ -2114,23 +1838,305 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 										일정창_코멘트텍스트필드.setText("");
 									}
 								});
-								일정창_저장버튼.setBounds(626, 293, 135, 73);
+								일정창_저장버튼.setBounds(635, 272, 62, 40);
 								일정창.add(일정창_저장버튼);
 								
 										scrolledTable = new JScrollPane((Component) null);
-										scrolledTable.setBounds(23, 21, 617, 263);
+										scrolledTable.setBounds(80, 21, 617, 200);
 										일정창.add(scrolledTable);
 										scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 										
 												table = new JTable(new DefaultTableModel(new Object[][] {},
-														new String[] { "date", "starttime", "endtime", "content", "confirm" })) {
+														new String[] { "일 시", "시작 시간", "종료 시간", "내용", "승인 여부" })) {
 												};
 												scrolledTable.setViewportView(table);
+												
+												JLabel lblNewLabel_3 = new JLabel("");
+												lblNewLabel_3.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록안쪽-배경.jpg")));
+												lblNewLabel_3.setBounds(0, 0, 787, 351);
+												일정창.add(lblNewLabel_3);
 												
 												JLabel lblNewLabel_2 = new JLabel("");
 												lblNewLabel_2.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록-배경1.jpg")));
 												lblNewLabel_2.setBounds(0, 0, 979, 433);
 												three.add(lblNewLabel_2);
+												
+														개인정보창 = new JPanel();
+														개인정보창.setBounds(164, 82, 840, 376);
+														three.add(개인정보창);
+														개인정보창.setLayout(null);
+														개인정보창.setBackground(Color.WHITE);
+														
+																이름수정텍스트필드 = new JTextField();
+																이름수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
+																이름수정텍스트필드.setForeground(Color.WHITE);
+																이름수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+																이름수정텍스트필드.setOpaque(false);
+																이름수정텍스트필드.setBorder(null);
+																이름수정텍스트필드.setColumns(10);
+																이름수정텍스트필드.setBounds(145, 220, 116, 21);
+																개인정보창.add(이름수정텍스트필드);
+																
+																		신장수정텍스트필드 = new JTextField();
+																		신장수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																		신장수정텍스트필드.setForeground(Color.WHITE);
+																		신장수정텍스트필드.setOpaque(false);
+																		신장수정텍스트필드.setBorder(null);
+																		신장수정텍스트필드.setColumns(10);
+																		신장수정텍스트필드.setBounds(473, 119, 116, 21);
+																		개인정보창.add(신장수정텍스트필드);
+																		
+																				몸무게수정텍스트필드 = new JTextField();
+																				몸무게수정텍스트필드.setForeground(Color.WHITE);
+																				몸무게수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																				몸무게수정텍스트필드.setOpaque(false);
+																				몸무게수정텍스트필드.setBorder(null);
+																				몸무게수정텍스트필드.setColumns(10);
+																				몸무게수정텍스트필드.setBounds(473, 151, 116, 21);
+																				개인정보창.add(몸무게수정텍스트필드);
+																				
+																						나이수정텍스트필드 = new JTextField();
+																						나이수정텍스트필드.setForeground(Color.WHITE);
+																						나이수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																						나이수정텍스트필드.setOpaque(false);
+																						나이수정텍스트필드.setBorder(null);
+																						나이수정텍스트필드.setColumns(10);
+																						나이수정텍스트필드.setBounds(473, 86, 116, 21);
+																						개인정보창.add(나이수정텍스트필드);
+																						
+																								포지션수정텍스트필드 = new JTextField();
+																								포지션수정텍스트필드.setForeground(Color.WHITE);
+																								포지션수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																								포지션수정텍스트필드.setOpaque(false);
+																								포지션수정텍스트필드.setBorder(null);
+																								포지션수정텍스트필드.setColumns(10);
+																								포지션수정텍스트필드.setBounds(473, 183, 116, 21);
+																								개인정보창.add(포지션수정텍스트필드);
+																								
+																										담당코치수정텍스트필드 = new JTextField();
+																										담당코치수정텍스트필드.setHorizontalAlignment(SwingConstants.LEFT);
+																										담당코치수정텍스트필드.setForeground(Color.WHITE);
+																										담당코치수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																										담당코치수정텍스트필드.setOpaque(false);
+																										담당코치수정텍스트필드.setBorder(null);
+																										담당코치수정텍스트필드.setColumns(10);
+																										담당코치수정텍스트필드.setBounds(473, 215, 164, 21);
+																										개인정보창.add(담당코치수정텍스트필드);
+																										
+																												담당의사수정텍스트필드 = new JTextField();
+																												담당의사수정텍스트필드.setForeground(Color.WHITE);
+																												담당의사수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+																												담당의사수정텍스트필드.setOpaque(false);
+																												담당의사수정텍스트필드.setBorder(null);
+																												담당의사수정텍스트필드.setColumns(10);
+																												담당의사수정텍스트필드.setBounds(473, 245, 164, 21);
+																												개인정보창.add(담당의사수정텍스트필드);
+																												
+																														이미지수정버튼 = new JButton("");
+																														이미지수정버튼.setOpaque(false);
+																														이미지수정버튼.setContentAreaFilled(false);
+																														이미지수정버튼.setBorderPainted(false);
+																														이미지수정버튼.setFocusPainted(false);
+																														이미지수정버튼.addActionListener(new ActionListener() {
+																															public void actionPerformed(ActionEvent e) {
+																																선수목록_개인정보_이미지를화면에수정하는메소드();
+																															}
+																														});
+																														이미지수정버튼.setBounds(155, 263, 97, 42);
+																														개인정보창.add(이미지수정버튼);
+																														
+																																수정버튼 = new JButton("");
+																																수정버튼.setOpaque(false);
+																																수정버튼.setContentAreaFilled(false);
+																																수정버튼.setBorderPainted(false);
+																																수정버튼.setFocusPainted(false);
+																																수정버튼.addActionListener(new ActionListener() {
+																																	public void actionPerformed(ActionEvent e) {
+																																		선수목록_개인정보_선수수정메소드(playerList);
+																																		선수목록_선수정보콤보박스목록만드는메소드();
+																																	}
+																																});
+																																수정버튼.setBounds(632, 118, 79, 34);
+																																개인정보창.add(수정버튼);
+																																
+																																		등번호수정텍스트필드 = new JTextField();
+																																		등번호수정텍스트필드.setOpaque(false);
+																																		등번호수정텍스트필드.setBorder(null);
+																																		등번호수정텍스트필드.setForeground(Color.WHITE);
+																																		등번호수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+																																		등번호수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
+																																		등번호수정텍스트필드.setColumns(10);
+																																		등번호수정텍스트필드.setBounds(117, 56, 24, 25);
+																																		개인정보창.add(등번호수정텍스트필드);
+																																		
+																																				이미지등록수정창 = new JPanel();
+																																				
+																																				이미지등록수정창.setBounds(104, 65, 192, 207);
+																																				이미지등록수정창.setOpaque(false);
+																																				개인정보창.add(이미지등록수정창);
+																																				
+																																						JButton 선수삭제버튼 = new JButton("");
+																																						선수삭제버튼.setOpaque(false);
+																																						선수삭제버튼.setContentAreaFilled(false);
+																																						선수삭제버튼.setBorderPainted(false);
+																																						선수삭제버튼.setFocusPainted(false);
+																																						선수삭제버튼.addActionListener(new ActionListener() {
+																																							public void actionPerformed(ActionEvent e) {
+																																								int choice = JOptionPane.showConfirmDialog(frame, "정말 삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION);
+
+																																								if (choice == JOptionPane.YES_OPTION) {
+																																									선수목록_개인정보_선수삭제메소드(playerList);
+																																									System.out.println("삭제되었습니다.");
+																																									선수목록_선수정보콤보박스목록만드는메소드();
+																																								} else {
+																																									System.out.println("삭제가 취소되었습니다.");
+																																								}
+																																							}
+																																						});
+																																						선수삭제버튼.setBounds(632, 216, 78, 32);
+																																						개인정보창.add(선수삭제버튼);
+																																						
+																																						JLabel lblNewLabel_1 = new JLabel("");
+																																						lblNewLabel_1.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/선수목록화면-안쪽디자인-8.jpg")));
+																																						lblNewLabel_1.setBounds(0, 0, 842, 351);
+																																						개인정보창.add(lblNewLabel_1);
+																																						
+																																								의사소견창 = new JPanel();
+																																								의사소견창.setBounds(192, 57, 787, 376);
+																																								three.add(의사소견창);
+																																								의사소견창.setLayout(null);
+																																								
+																																										scrollPane_2 = new JScrollPane();
+																																										scrollPane_2.setBounds(32, 177, 206, 149);
+																																										의사소견창.add(scrollPane_2);
+																																										
+																																												선수목록_의사소견_선수컨디션텍스트박스 = new JTextArea();
+																																												scrollPane_2.setViewportView(선수목록_의사소견_선수컨디션텍스트박스);
+																																												
+																																														lblNewLabel_4 = new JLabel("");
+																																														lblNewLabel_4.setBounds(69, 196, 57, 15);
+																																														의사소견창.add(lblNewLabel_4);
+																																														
+																																																선수목록_의사소견_의사소견라벨 = new JLabel("의사소견");
+																																																선수목록_의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																																																선수목록_의사소견_의사소견라벨.setBounds(375, 152, 82, 15);
+																																																의사소견창.add(선수목록_의사소견_의사소견라벨);
+																																																
+																																																		scrollPane_3 = new JScrollPane();
+																																																		scrollPane_3.setBounds(310, 177, 217, 156);
+																																																		의사소견창.add(scrollPane_3);
+																																																		
+																																																				선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
+																																																				scrollPane_3.setViewportView(선수목록_의사소견_의사소견텍스트박스);
+																																																				
+																																																						lblNewLabel_10 = new JLabel("선수 컨디션");
+																																																						lblNewLabel_10.setHorizontalAlignment(SwingConstants.CENTER);
+																																																						lblNewLabel_10.setBounds(86, 152, 82, 15);
+																																																						의사소견창.add(lblNewLabel_10);
+																																																						
+																																																								scrolledTable_2 = new JScrollPane((Component) null);
+																																																								scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+																																																								scrolledTable_2.setBounds(84, 18, 616, 124);
+																																																								의사소견창.add(scrolledTable_2);
+																																																								
+																																																										doctorAppointmentTable = new JTable(new DefaultTableModel(new Object[][] {},
+																																																												new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uB0A0\uC9DC", "\uC2DC\uAC04",
+																																																														"\uCEE8\uB514\uC158", "\uB2F4\uB2F9\uC758\uC0AC", "\uB2F4\uB2F9\uCF54\uCE58" }));
+																																																										scrolledTable_2.setViewportView(doctorAppointmentTable);
+																																																										
+																																																												scrollPane_4 = new JScrollPane();
+																																																												scrollPane_4.setBounds(567, 177, 185, 156);
+																																																												의사소견창.add(scrollPane_4);
+																																																												
+																																																														선수목록_의사소견_감독코멘트텍스트박스 = new JTextArea();
+																																																														scrollPane_4.setViewportView(선수목록_의사소견_감독코멘트텍스트박스);
+																																																														
+																																																																선수목록_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
+																																																																선수목록_의사소견_감독코멘트라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																선수목록_의사소견_감독코멘트라벨.setBounds(602, 152, 123, 15);
+																																																																의사소견창.add(선수목록_의사소견_감독코멘트라벨);
+																																																																
+																																																																		선수목록_의사소견_저장버튼 = new JButton("저장");
+																																																																		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
+																																																																			public void actionPerformed(ActionEvent arg0) {
+
+																																																																				String comment = 선수목록_의사소견_감독코멘트텍스트박스.getText();
+																																																																				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+																																																																			}
+																																																																		});
+																																																																		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
+																																																																		의사소견창.add(선수목록_의사소견_저장버튼);
+																																																																		
+																																																																				lblNewLabel_9_1 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+																																																																				lblNewLabel_9_1.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																				lblNewLabel_9_1.setBounds(203, 0, 372, 15);
+																																																																				의사소견창.add(lblNewLabel_9_1);
+																																																																				
+																																																																						lblNewLabel_12 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수의 컨디션이 나옵니다");
+																																																																						lblNewLabel_12.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																						lblNewLabel_12.setBounds(12, 336, 377, 15);
+																																																																						의사소견창.add(lblNewLabel_12);
+																																																																						
+																																																																								컨디션창 = new JPanel();
+																																																																								컨디션창.setBounds(192, 57, 787, 376);
+																																																																								three.add(컨디션창);
+																																																																								컨디션창.setLayout(null);
+																																																																								
+																																																																										scrolledTable_1 = new JScrollPane((Component) null);
+																																																																										scrolledTable_1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+																																																																										scrolledTable_1.setBounds(23, 28, 694, 110);
+																																																																										컨디션창.add(scrolledTable_1);
+																																																																										
+																																																																												conditionTable = new JTable(new DefaultTableModel(new Object[][] {},
+																																																																														new String[] { "number", "playername", "playercondition", "when" }));
+																																																																												scrolledTable_1.setViewportView(conditionTable);
+																																																																												
+																																																																														JScrollPane scrollPane = new JScrollPane();
+																																																																														scrollPane.setBounds(146, 177, 195, 138);
+																																																																														컨디션창.add(scrollPane);
+																																																																														
+																																																																																선수목록_컨디션_선수컨디션텍스트박스 = new JTextArea();
+																																																																																scrollPane.setViewportView(선수목록_컨디션_선수컨디션텍스트박스);
+																																																																																
+																																																																																		선수컨디션라벨 = new JLabel("선수 컨디션");
+																																																																																		선수컨디션라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																																		선수컨디션라벨.setBounds(194, 152, 96, 15);
+																																																																																		컨디션창.add(선수컨디션라벨);
+																																																																																		
+																																																																																				scrollPane_1 = new JScrollPane();
+																																																																																				scrollPane_1.setBounds(489, 177, 195, 138);
+																																																																																				컨디션창.add(scrollPane_1);
+																																																																																				
+																																																																																						선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
+																																																																																						scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
+																																																																																						
+																																																																																								코멘트작성라벨 = new JLabel("코멘트 작성");
+																																																																																								코멘트작성라벨.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																																								코멘트작성라벨.setBounds(539, 152, 96, 15);
+																																																																																								컨디션창.add(코멘트작성라벨);
+																																																																																								
+																																																																																										JButton 선수목록_컨디션_저장버튼 = new JButton("저장");
+																																																																																										선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
+																																																																																											public void actionPerformed(ActionEvent arg0) {
+																																																																																												String comment = 선수목록_컨디션_코멘트텍스트박스.getText();
+																																																																																												선수목록_컨디션_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
+																																																																																											}
+																																																																																										});
+																																																																																										선수목록_컨디션_저장버튼.setBounds(587, 325, 130, 41);
+																																																																																										컨디션창.add(선수목록_컨디션_저장버튼);
+																																																																																										
+																																																																																												lblNewLabel_11 = new JLabel("선수를 선택하면 해당하는 선수의 전체 목록이 나옵니다");
+																																																																																												lblNewLabel_11.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																																												lblNewLabel_11.setBounds(201, 3, 372, 15);
+																																																																																												컨디션창.add(lblNewLabel_11);
+																																																																																												
+																																																																																														lblNewLabel_13 = new JLabel("날짜를 선택하면 해당하는 날짜의 선수 컨디션이 나옵니다");
+																																																																																														lblNewLabel_13.setHorizontalAlignment(SwingConstants.CENTER);
+																																																																																														lblNewLabel_13.setBounds(49, 338, 355, 15);
+																																																																																														컨디션창.add(lblNewLabel_13);
+																																																																																														컨디션창.setVisible(false);
+																																																																						의사소견창.setVisible(false);
+																																						개인정보창.setVisible(false);
 												일정창.setVisible(false);
 
 		// =======================================================================
