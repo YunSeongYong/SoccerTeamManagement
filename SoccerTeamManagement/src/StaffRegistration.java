@@ -164,6 +164,7 @@ public class StaffRegistration extends JFrame {
 						
 								컨디션의사소견_의사소견라벨 = new JLabel("의사소견");
 								컨디션의사소견_의사소견라벨.setHorizontalAlignment(SwingConstants.CENTER);
+
 								컨디션의사소견_의사소견라벨.setBounds(159, 152, 82, 15);
 								의사소견창.add(컨디션의사소견_의사소견라벨);
 								
@@ -185,6 +186,27 @@ public class StaffRegistration extends JFrame {
 														
 																conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
 																		new String[] { "등 번호", "선수명", "선수 컨디션", "시간" }));
+
+								컨디션의사소견_의사소견라벨.setBounds(132, 152, 82, 15);
+								의사소견창.add(컨디션의사소견_의사소견라벨);
+								
+										scrollPane_3 = new JScrollPane();
+										scrollPane_3.setBounds(69, 177, 217, 156);
+										의사소견창.add(scrollPane_3);
+										
+												컨디션의사소견_의사소견_의사소견텍스트박스 = new JTextArea();
+												컨디션의사소견_의사소견_의사소견텍스트박스.setForeground(Color.BLACK);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setLineWrap(true);
+												scrollPane_3.setViewportView(컨디션의사소견_의사소견_의사소견텍스트박스);
+												컨디션의사소견_의사소견_의사소견텍스트박스.setEnabled(false);
+												
+														scrolledTable_2 = new JScrollPane((Component) null);
+														scrolledTable_2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+														scrolledTable_2.setBounds(84, 18, 616, 124);
+														의사소견창.add(scrolledTable_2);
+														
+																conditionTable2 = new JTable(new DefaultTableModel(new Object[][] {},
+																		new String[] { "number", "playername", "playercondition", "when" }));
 																scrolledTable_2.setViewportView(conditionTable2);
 																
 																		scrollPane_4 = new JScrollPane();
@@ -407,11 +429,6 @@ public class StaffRegistration extends JFrame {
 
 				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
-				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 			}
 		});
 		날짜콤보박스.setVisible(false);
@@ -436,6 +453,16 @@ public class StaffRegistration extends JFrame {
 				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 			}
 
 		});
@@ -1585,7 +1612,6 @@ public class StaffRegistration extends JFrame {
 			// 체크박스 컬럼 추가
 
 		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, "선수를 먼저 선택하세요", "경고", JOptionPane.WARNING_MESSAGE);
 		}
 
 	}
@@ -2032,23 +2058,23 @@ public class StaffRegistration extends JFrame {
 	}
 
 	public void 선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(List<Condition> conditionList) {
-		System.out.println("메소드 실행");
-		System.out.println("콤보박스 등번호 출력: " + 일정창_선수정보콤보박스에서선택한등번호);
-		System.out.println("콤보박스 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
-		DefaultTableModel model = (DefaultTableModel) conditionTable2.getModel();
-		model.setRowCount(0);
+	       try {
+	      DefaultTableModel model = (DefaultTableModel) conditionTable2.getModel();
+	      model.setRowCount(0);
 
-		for (Condition condition : conditionList) {
-			if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
-				// Check if the condition's date matches the selectedDate
-				if (condition.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
-					Object[] rowData = { condition.getNumber(), condition.getPlayerName(),
-							condition.getPlayercondition(), condition.getDate() };
-					model.addRow(rowData);
-				}
-			}
-		}
-	}
+	      for (Condition condition : conditionList) {
+	         if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
+	            // Check if the condition's date matches the selectedDate
+	            if (condition.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
+	               Object[] rowData = { condition.getNumber(), condition.getPlayerName(),
+	                     condition.getPlayercondition(), condition.getDate() };
+	               model.addRow(rowData);
+	            }
+	         }
+	      }
+	   }catch (NullPointerException ex) {
+	    }
+	   }
 
 	public void 선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(List<DoctorAppointment> doctorAppointmentList) {
 		try {

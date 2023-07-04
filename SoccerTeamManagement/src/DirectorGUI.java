@@ -2234,6 +2234,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 														컨디션창.setLayout(null);
 														
 																선수목록_컨디션_저장버튼 = new JButton("");
+																선수목록_컨디션_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼1.jpg")));
 																선수목록_컨디션_저장버튼.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/저장버튼2.jpg")));
 																선수목록_컨디션_저장버튼.addActionListener(new ActionListener() {
 																	public void actionPerformed(ActionEvent arg0) {
@@ -2256,12 +2257,20 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 																				
 																						scrollPane_1 = new JScrollPane();
 																						
+																						scrollPane_1 = new JScrollPane();
+																						scrollPane_1.setOpaque(false);
+																						scrollPane_1.getViewport().setOpaque(false);
 																						
+																						scrollPane_1.setViewportBorder(null);
+																						scrollPane_1.getVerticalScrollBar().setOpaque(false);
+																						scrollPane_1.getHorizontalScrollBar().setOpaque(false);
 																						scrollPane_1.setBounds(430, 210, 195, 110);
 																						컨디션창.add(scrollPane_1);
 																						
 																								선수목록_컨디션_코멘트텍스트박스 = new JTextArea();
 																								선수목록_컨디션_코멘트텍스트박스.setLineWrap(true);
+																								선수목록_컨디션_코멘트텍스트박스.setForeground(Color.WHITE);
+																								선수목록_컨디션_코멘트텍스트박스.setOpaque(false);
 																								scrollPane_1.setViewportView(선수목록_컨디션_코멘트텍스트박스);
 																								
 																										코멘트작성라벨 = new JLabel("감독 코멘트 작성");
