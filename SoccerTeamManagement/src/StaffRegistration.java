@@ -220,12 +220,22 @@ public class StaffRegistration extends JFrame {
 		삭제버튼.setBounds(678, 330, 97, 23);
 		일정창.add(삭제버튼);
 		삭제버튼.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+	         @Override
+	         public void actionPerformed(ActionEvent e) {
+	            int selectedRow = scheduleTable.getSelectedRow(); // 선택한 행의 인덱스 가져오기
+	            if (selectedRow != -1) { // 선택한 행이 있는 경우
+	               DefaultTableModel tableModel = (DefaultTableModel) scheduleTable.getModel();
+	               String date = 날짜콤보박스.getSelectedItem().toString();
+	               String starttime = tableModel.getValueAt(selectedRow, 0).toString();
 
-			}
-		});
+	               // 삭제 메소드 호출
+	               선수일정삭제(date, starttime);
 
+	               // 테이블에서 선택한 행 삭제
+	               tableModel.removeRow(selectedRow);
+	            }
+	         }
+	      });
 		JLabel 시간라벨 = new JLabel("시간");
 		시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
 		시간라벨.setBounds(39, 255, 42, 15);
@@ -1902,7 +1912,7 @@ public class StaffRegistration extends JFrame {
 		PreparedStatement stmt = null;
 		try {
 			conn = DBUtil.getConnection();
-			stmt = conn.prepareStatement("DELETE FROM playerschedule WHERE  date = ? AND = starttime = ?");
+			stmt = conn.prepareStatement("DELETE FROM playerschedule WHERE  date = ? AND starttime = ?");
 			stmt.setString(1, date);
 			stmt.setString(2, starttime);
 
