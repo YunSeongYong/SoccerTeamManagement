@@ -1148,6 +1148,14 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		스태프목록_이미지등록창.revalidate();
 		스태프목록_이미지등록창.repaint();
 	}
+	
+	public void 공동일정등록_모든텍스트필드값제거메소드() {
+		공동일정등록_장소텍스트필드.setText("");
+		공동일정등록_내용텍스트박스.setText("");
+		공동일정등록_끝나는시간텍스트필드.setText("");
+		공동일정등록_시작시간텍스트필드.setText("");
+	}
+
 
 	public List<Schedule> 선수목록_일정_선수정보콤보박스의등번호로선수일정의모든정보를리스트에저장하는메소드(int backnumber) {
 		Connection conn = null;
@@ -2816,6 +2824,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		four.add(scrollPane_5);
 
 		공동일정등록_내용텍스트박스 = new JTextArea();
+		공동일정등록_내용텍스트박스.setLineWrap(true);
 		scrollPane_5.setViewportView(공동일정등록_내용텍스트박스);
 
 		JLabel 공동일정등록_시작시간라벨 = new JLabel("시작시간");
@@ -2846,6 +2855,8 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 				String 내용 = 공동일정등록_내용텍스트박스.getText();
 				String 장소 = 공동일정등록_장소라벨.getText();
 				공동일정목록_공동일정입력하고저장버튼누르면데이터베이스로이동하는메소드(공동일정등록_콤보박스에서선택한날짜, 시작시간, 끝나는시간, 내용, 장소);
+				공동일정등록_모든텍스트필드값제거메소드();
+				 JOptionPane.showMessageDialog(null, "저장되었습니다", "알림", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		공동일정등록_저장버튼.setBounds(665, 293, 105, 34);
