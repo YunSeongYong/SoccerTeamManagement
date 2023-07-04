@@ -40,6 +40,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -159,12 +160,12 @@ public class StaffRegistration extends JFrame {
 						일정창.setLayout(null);
 						
 								scrolledTable = new JScrollPane((Component) null);
-								scrolledTable.setBounds(39, 24, 617, 187);
+								scrolledTable.setBounds(105, 40, 617, 170);
 								일정창.add(scrolledTable);
 								scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 								
 										scheduleTable = new JTable(
-												new DefaultTableModel(new Object[][] {}, new String[] { "시작시간", "끝나는시간", "일정", "승인여부" })) {
+												new DefaultTableModel(new Object[][] {}, new String[] { "시작 시간", "종료 시간", "일 정", "승인 여부" })) {
 										};
 										scrolledTable.setViewportView(scheduleTable);
 										scheduleTable.addMouseListener(new MouseAdapter() {
@@ -193,8 +194,13 @@ public class StaffRegistration extends JFrame {
 										
 										
 
-										저장버튼 = new JButton("저장");
-										저장버튼.setBounds(678, 277, 97, 23);
+										저장버튼 = new JButton("");
+										저장버튼.setOpaque(false);
+										저장버튼.setContentAreaFilled(false);
+										저장버튼.setBorderPainted(false);
+										저장버튼.setFocusPainted(false);
+										저장버튼.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/저장버튼-코치1.jpg")));
+										저장버튼.setBounds(329, 300, 62, 25);
 										일정창.add(저장버튼);
 										저장버튼.addActionListener(new ActionListener() {
 											@Override
@@ -204,8 +210,13 @@ public class StaffRegistration extends JFrame {
 										});
 										
 
-										수정버튼 = new JButton("수정");
-										수정버튼.setBounds(678, 302, 97, 23);
+										수정버튼 = new JButton("");
+										수정버튼.setOpaque(false);
+										수정버튼.setContentAreaFilled(false);
+										수정버튼.setBorderPainted(false);
+										수정버튼.setFocusPainted(false);
+										수정버튼.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/수정버튼-코치.jpg")));
+										수정버튼.setBounds(150, 300, 62, 25);
 										일정창.add(수정버튼);
 										수정버튼.addActionListener(new ActionListener() {
 											@Override
@@ -215,8 +226,13 @@ public class StaffRegistration extends JFrame {
 											}
 										});
 										
-												삭제버튼 = new JButton("삭제");
-												삭제버튼.setBounds(678, 330, 97, 23);
+												삭제버튼 = new JButton("");
+												삭제버튼.setOpaque(false);
+												삭제버튼.setContentAreaFilled(false);
+												삭제버튼.setBorderPainted(false);
+												삭제버튼.setFocusPainted(false);
+												삭제버튼.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/삭제버튼-코치.jpg")));
+												삭제버튼.setBounds(240, 300, 62, 25);
 												일정창.add(삭제버튼);
 												삭제버튼.addActionListener(new ActionListener() {
 	         @Override
@@ -236,24 +252,42 @@ public class StaffRegistration extends JFrame {
 	         }
 	      });
 												JLabel 시간라벨 = new JLabel("시간");
+												시간라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
+												시간라벨.setForeground(Color.WHITE);
 												시간라벨.setHorizontalAlignment(SwingConstants.CENTER);
-												시간라벨.setBounds(39, 255, 42, 15);
+												시간라벨.setBounds(104, 231, 42, 15);
 												일정창.add(시간라벨);
 												
 														시간텍스트필드 = new JTextField();
-														시간텍스트필드.setBounds(93, 252, 116, 21);
+														시간텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+														시간텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+														시간텍스트필드.setOpaque(false);
+														시간텍스트필드.setForeground(new Color(192, 192, 192));
+														
+														시간텍스트필드.setBounds(150, 228, 116, 21);
 														일정창.add(시간텍스트필드);
 														시간텍스트필드.setColumns(10);
 														
 																JLabel 일정라벨 = new JLabel("일정");
+																일정라벨.setForeground(Color.WHITE);
+																일정라벨.setFont(new Font("나눔고딕", Font.BOLD, 15));
 																일정라벨.setHorizontalAlignment(SwingConstants.CENTER);
-																일정라벨.setBounds(39, 306, 42, 15);
+																일정라벨.setBounds(104, 266, 42, 15);
 																일정창.add(일정라벨);
 																
 																		일정텍스트필드 = new JTextField();
-																		일정텍스트필드.setBounds(93, 303, 426, 21);
+																		일정텍스트필드.setForeground(new Color(255, 255, 255));
+																		일정텍스트필드.setFont(new Font("나눔고딕", Font.BOLD, 15));
+																		일정텍스트필드.setBorder(new LineBorder(new Color(31, 49, 107)));
+																		일정텍스트필드.setOpaque(false);
+																		일정텍스트필드.setBounds(150, 263, 572, 21);
 																		일정창.add(일정텍스트필드);
 																		일정텍스트필드.setColumns(10);
+																		
+																		JLabel lblNewLabel_3 = new JLabel("New label");
+																		lblNewLabel_3.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수목록화면-일정-배경1.jpg")));
+																		lblNewLabel_3.setBounds(0, 0, 815, 353);
+																		일정창.add(lblNewLabel_3);
 																		일정창.setVisible(false);
 		
 				의사소견창 = new JPanel();
