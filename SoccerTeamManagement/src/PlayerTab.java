@@ -100,7 +100,8 @@ public class PlayerTab extends JFrame implements ChangeListener {
 		scrollPane2.setBounds(45, 50, 870, 80);
 		scrollPane2.setOpaque(false);
 		scrollPane2.getViewport().setOpaque(false);
-		scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+//		scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane2.getVerticalScrollBar().setValue(scrollPane2.getVerticalScrollBar().getMinimum());
 
 		one.add(scrollPane2);
 		one.setOpaque(true);
