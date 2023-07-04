@@ -239,7 +239,7 @@ public class DoctorSchedule extends JFrame implements ChangeListener {
 		});
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(203, 160, 570, 250);
+		scrollPane_2.setBounds(203, 165, 570, 230);
 		two.add(scrollPane_2);
 
 		table_2 = new JTable();
