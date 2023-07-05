@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -171,8 +172,42 @@ public class StaffRegistration extends JFrame {
 		scrolledTable_2.setBounds(100, 18, 616, 124);
 		의사소견창.add(scrolledTable_2);
 
-		conditionTable2 = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "등 번호", "선수명", "선수 컨디션", "시 간" }));
+		DefaultTableModel mod = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "등번호", "선수명", "컨디션" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
+		};
+
+		conditionTable2 = new JTable(mod);
+		conditionTable2.getTableHeader().setReorderingAllowed(false);
+		conditionTable2.getTableHeader().setResizingAllowed(false);
+
+		conditionTable2.getColumnModel().getColumn(0).setMaxWidth(70);
+		conditionTable2.getColumnModel().getColumn(0).setMinWidth(70);
+		conditionTable2.getColumnModel().getColumn(0).setWidth(70);
+		conditionTable2.getColumnModel().getColumn(1).setMaxWidth(50);
+		conditionTable2.getColumnModel().getColumn(1).setMinWidth(50);
+		conditionTable2.getColumnModel().getColumn(1).setWidth(50);
+		conditionTable2.getColumnModel().getColumn(2).setMaxWidth(70);
+		conditionTable2.getColumnModel().getColumn(2).setMinWidth(70);
+		conditionTable2.getColumnModel().getColumn(2).setWidth(70);
+		conditionTable2.setRowHeight(20);
+
+		conditionTable2.setFont(new Font("맑은 고딕", Font.BOLD, 11));
+		conditionTable2.setForeground(new Color(22, 47, 136));
+		conditionTable2.setBackground(new Color(255, 255, 255));
+
+		// Create a custom TableCellRenderer to center the text
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < conditionTable2.getColumnCount(); i++) {
+			conditionTable2.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
+//		conditionTable2 = new JTable(
+//				new DefaultTableModel(new Object[][] {}, new String[] { "등 번호", "선수명", "선수 컨디션", "시 간" }));
 		scrolledTable_2.setViewportView(conditionTable2);
 
 		scrollPane_3 = new JScrollPane();
@@ -229,7 +264,12 @@ public class StaffRegistration extends JFrame {
 		컨디션의사소견_의사소견_코치코멘트라벨.setBounds(562, 160, 123, 15);
 		의사소견창.add(컨디션의사소견_의사소견_코치코멘트라벨);
 
-		선수목록_의사소견_저장버튼 = new JButton("저장");
+		선수목록_의사소견_저장버튼 = new JButton("");
+		선수목록_의사소견_저장버튼.setOpaque(false);
+		선수목록_의사소견_저장버튼.setContentAreaFilled(false);
+		선수목록_의사소견_저장버튼.setBorderPainted(false);
+		선수목록_의사소견_저장버튼.setFocusPainted(false);
+		선수목록_의사소견_저장버튼.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/저장버튼-코치1.jpg")));
 		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -238,7 +278,7 @@ public class StaffRegistration extends JFrame {
 				JOptionPane.showMessageDialog(null, "저장되었습니다");
 			}
 		});
-		선수목록_의사소견_저장버튼.setBounds(655, 343, 97, 23);
+		선수목록_의사소견_저장버튼.setBounds(731, 291, 57, 23);
 		의사소견창.add(선수목록_의사소견_저장버튼);
 
 		컨디션의사소견_의사소견_감독코멘트라벨 = new JLabel("감독 코멘트");
@@ -274,6 +314,99 @@ public class StaffRegistration extends JFrame {
 		lblNewLabel_4.setBounds(0, 0, 815, 351);
 		의사소견창.add(lblNewLabel_4);
 
+		개인정보창 = new JPanel();
+		개인정보창.setBounds(164, 82, 840, 376);
+		one.add(개인정보창);
+		개인정보창.setLayout(null);
+		개인정보창.setBackground(Color.WHITE);
+		개인정보창.setVisible(false);
+
+		이름수정텍스트필드 = new JTextField();
+		이름수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
+		이름수정텍스트필드.setForeground(Color.WHITE);
+		이름수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		이름수정텍스트필드.setOpaque(false);
+		이름수정텍스트필드.setBorder(null);
+		이름수정텍스트필드.setColumns(10);
+		이름수정텍스트필드.setBounds(145, 220, 116, 21);
+		개인정보창.add(이름수정텍스트필드);
+
+		신장수정텍스트필드 = new JTextField();
+		신장수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		신장수정텍스트필드.setForeground(Color.WHITE);
+		신장수정텍스트필드.setOpaque(false);
+		신장수정텍스트필드.setBorder(null);
+		신장수정텍스트필드.setColumns(10);
+		신장수정텍스트필드.setBounds(473, 119, 116, 21);
+		개인정보창.add(신장수정텍스트필드);
+
+		몸무게수정텍스트필드 = new JTextField();
+		몸무게수정텍스트필드.setForeground(Color.WHITE);
+		몸무게수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		몸무게수정텍스트필드.setOpaque(false);
+		몸무게수정텍스트필드.setBorder(null);
+		몸무게수정텍스트필드.setColumns(10);
+		몸무게수정텍스트필드.setBounds(473, 151, 116, 21);
+		개인정보창.add(몸무게수정텍스트필드);
+
+		나이수정텍스트필드 = new JTextField();
+		나이수정텍스트필드.setForeground(Color.WHITE);
+		나이수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		나이수정텍스트필드.setOpaque(false);
+		나이수정텍스트필드.setBorder(null);
+		나이수정텍스트필드.setColumns(10);
+		나이수정텍스트필드.setBounds(473, 86, 116, 21);
+		개인정보창.add(나이수정텍스트필드);
+
+		포지션수정텍스트필드 = new JTextField();
+		포지션수정텍스트필드.setForeground(Color.WHITE);
+		포지션수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		포지션수정텍스트필드.setOpaque(false);
+		포지션수정텍스트필드.setBorder(null);
+		포지션수정텍스트필드.setColumns(10);
+		포지션수정텍스트필드.setBounds(473, 183, 116, 21);
+		개인정보창.add(포지션수정텍스트필드);
+
+		담당코치수정텍스트필드 = new JTextField();
+		담당코치수정텍스트필드.setHorizontalAlignment(SwingConstants.LEFT);
+		담당코치수정텍스트필드.setForeground(Color.WHITE);
+		담당코치수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		담당코치수정텍스트필드.setOpaque(false);
+		담당코치수정텍스트필드.setBorder(null);
+		담당코치수정텍스트필드.setColumns(10);
+		담당코치수정텍스트필드.setBounds(473, 215, 164, 21);
+		개인정보창.add(담당코치수정텍스트필드);
+
+		담당의사수정텍스트필드 = new JTextField();
+		담당의사수정텍스트필드.setForeground(Color.WHITE);
+		담당의사수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		담당의사수정텍스트필드.setOpaque(false);
+		담당의사수정텍스트필드.setBorder(null);
+		담당의사수정텍스트필드.setColumns(10);
+		담당의사수정텍스트필드.setBounds(473, 245, 164, 21);
+		개인정보창.add(담당의사수정텍스트필드);
+
+		등번호수정텍스트필드 = new JTextField();
+		등번호수정텍스트필드.setOpaque(false);
+		등번호수정텍스트필드.setBorder(null);
+		등번호수정텍스트필드.setForeground(Color.WHITE);
+		등번호수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+		등번호수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
+		등번호수정텍스트필드.setColumns(10);
+		등번호수정텍스트필드.setBounds(117, 56, 24, 25);
+		개인정보창.add(등번호수정텍스트필드);
+
+		이미지등록수정창 = new JPanel();
+
+		이미지등록수정창.setBounds(105, 75, 192, 178);
+		이미지등록수정창.setOpaque(false);
+		개인정보창.add(이미지등록수정창);
+
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수목록화면-선수정보-코치1.jpg")));
+		lblNewLabel_1.setBounds(0, 0, 815, 352);
+		개인정보창.add(lblNewLabel_1);
+
 		일정창 = new JPanel();
 		일정창.setBounds(164, 82, 815, 351);
 		one.add(일정창);
@@ -283,10 +416,41 @@ public class StaffRegistration extends JFrame {
 		scrolledTable.setBounds(105, 40, 617, 170);
 		일정창.add(scrolledTable);
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		scheduleTable = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "시작 시간", "종료 시간", "일 정", "승인 여부" })) {
+		
+		DefaultTableModel mod2 = new DefaultTableModel(new Object[][] {}, new String[] { "시작 시간", "종료 시간", "일 정", "승인여부" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
+				return false;
+			}
 		};
+
+		scheduleTable = new JTable(mod2);
+		scheduleTable.getTableHeader().setReorderingAllowed(false);
+		scheduleTable.getTableHeader().setResizingAllowed(false);
+
+		scheduleTable.getColumnModel().getColumn(0).setMaxWidth(70);
+		scheduleTable.getColumnModel().getColumn(0).setMinWidth(70);
+		scheduleTable.getColumnModel().getColumn(0).setWidth(70);
+		scheduleTable.getColumnModel().getColumn(1).setMaxWidth(70);
+		scheduleTable.getColumnModel().getColumn(1).setMinWidth(70);
+		scheduleTable.getColumnModel().getColumn(1).setWidth(70);
+		scheduleTable.getColumnModel().getColumn(3).setMaxWidth(70);
+		scheduleTable.getColumnModel().getColumn(3).setMinWidth(70);
+		scheduleTable.getColumnModel().getColumn(3).setWidth(70);
+		
+		scheduleTable.setRowHeight(20);
+
+		scheduleTable.setFont(new Font("맑은 고딕", Font.BOLD, 11));
+		scheduleTable.setForeground(new Color(22, 47, 136));
+		scheduleTable.setBackground(new Color(255, 255, 255));
+		
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < scheduleTable.getColumnCount(); i++) {
+			scheduleTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
+//		scheduleTable = new JTable(
+//				new DefaultTableModel(new Object[][] {}, new String[] {  })) {
+//		};
 		scrolledTable.setViewportView(scheduleTable);
 		scheduleTable.addMouseListener(new MouseAdapter() {
 
@@ -405,101 +569,8 @@ public class StaffRegistration extends JFrame {
 		일정창.add(lblNewLabel_3);
 		일정창.setVisible(false);
 
-		개인정보창 = new JPanel();
-		개인정보창.setBounds(164, 82, 840, 376);
-		one.add(개인정보창);
-		개인정보창.setLayout(null);
-		개인정보창.setBackground(Color.WHITE);
-		개인정보창.setVisible(false);
-
-		이름수정텍스트필드 = new JTextField();
-		이름수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
-		이름수정텍스트필드.setForeground(Color.WHITE);
-		이름수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		이름수정텍스트필드.setOpaque(false);
-		이름수정텍스트필드.setBorder(null);
-		이름수정텍스트필드.setColumns(10);
-		이름수정텍스트필드.setBounds(145, 220, 116, 21);
-		개인정보창.add(이름수정텍스트필드);
-
-		신장수정텍스트필드 = new JTextField();
-		신장수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		신장수정텍스트필드.setForeground(Color.WHITE);
-		신장수정텍스트필드.setOpaque(false);
-		신장수정텍스트필드.setBorder(null);
-		신장수정텍스트필드.setColumns(10);
-		신장수정텍스트필드.setBounds(473, 119, 116, 21);
-		개인정보창.add(신장수정텍스트필드);
-
-		몸무게수정텍스트필드 = new JTextField();
-		몸무게수정텍스트필드.setForeground(Color.WHITE);
-		몸무게수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		몸무게수정텍스트필드.setOpaque(false);
-		몸무게수정텍스트필드.setBorder(null);
-		몸무게수정텍스트필드.setColumns(10);
-		몸무게수정텍스트필드.setBounds(473, 151, 116, 21);
-		개인정보창.add(몸무게수정텍스트필드);
-
-		나이수정텍스트필드 = new JTextField();
-		나이수정텍스트필드.setForeground(Color.WHITE);
-		나이수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		나이수정텍스트필드.setOpaque(false);
-		나이수정텍스트필드.setBorder(null);
-		나이수정텍스트필드.setColumns(10);
-		나이수정텍스트필드.setBounds(473, 86, 116, 21);
-		개인정보창.add(나이수정텍스트필드);
-
-		포지션수정텍스트필드 = new JTextField();
-		포지션수정텍스트필드.setForeground(Color.WHITE);
-		포지션수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		포지션수정텍스트필드.setOpaque(false);
-		포지션수정텍스트필드.setBorder(null);
-		포지션수정텍스트필드.setColumns(10);
-		포지션수정텍스트필드.setBounds(473, 183, 116, 21);
-		개인정보창.add(포지션수정텍스트필드);
-
-		담당코치수정텍스트필드 = new JTextField();
-		담당코치수정텍스트필드.setHorizontalAlignment(SwingConstants.LEFT);
-		담당코치수정텍스트필드.setForeground(Color.WHITE);
-		담당코치수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		담당코치수정텍스트필드.setOpaque(false);
-		담당코치수정텍스트필드.setBorder(null);
-		담당코치수정텍스트필드.setColumns(10);
-		담당코치수정텍스트필드.setBounds(473, 215, 164, 21);
-		개인정보창.add(담당코치수정텍스트필드);
-
-		담당의사수정텍스트필드 = new JTextField();
-		담당의사수정텍스트필드.setForeground(Color.WHITE);
-		담당의사수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
-		담당의사수정텍스트필드.setOpaque(false);
-		담당의사수정텍스트필드.setBorder(null);
-		담당의사수정텍스트필드.setColumns(10);
-		담당의사수정텍스트필드.setBounds(473, 245, 164, 21);
-		개인정보창.add(담당의사수정텍스트필드);
-
-		등번호수정텍스트필드 = new JTextField();
-		등번호수정텍스트필드.setOpaque(false);
-		등번호수정텍스트필드.setBorder(null);
-		등번호수정텍스트필드.setForeground(Color.WHITE);
-		등번호수정텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		등번호수정텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
-		등번호수정텍스트필드.setColumns(10);
-		등번호수정텍스트필드.setBounds(117, 56, 24, 25);
-		개인정보창.add(등번호수정텍스트필드);
-
-		이미지등록수정창 = new JPanel();
-
-		이미지등록수정창.setBounds(105, 75, 192, 178);
-		이미지등록수정창.setOpaque(false);
-		개인정보창.add(이미지등록수정창);
-
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/선수목록화면-선수정보-코치1.jpg")));
-		lblNewLabel_1.setBounds(0, 0, 815, 352);
-		개인정보창.add(lblNewLabel_1);
-
-		conditionTable2 = new JTable(
-				new DefaultTableModel(new Object[][] {}, new String[] { "등 번호", "선수명", "선수 컨디션", "시간" }));
+//		conditionTable2 = new JTable(
+//				new DefaultTableModel(new Object[][] {}, new String[] { "등 번호", "선수명", "선수 컨디션", "시간" }));
 		one.add(개인정보버튼);
 
 		JButton 일정버튼 = new JButton("");
@@ -576,18 +647,13 @@ public class StaffRegistration extends JFrame {
 				}
 
 				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
-				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
-				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
-				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 			}
 		});
 		날짜콤보박스.setVisible(false);
 
 		선수정보콤보박스 = new JComboBox();
-		선수정보콤보박스.setBounds(756, 26, 87, 21);
+		선수정보콤보박스.setBounds(756, 26, 102, 21);
 		one.add(선수정보콤보박스);
 //		선수목록_선수정보콤보박스목록만드는메소드();
 		Staff staff = new Staff();
@@ -606,6 +672,11 @@ public class StaffRegistration extends JFrame {
 				선수목록_컨디션_콤보박스에서선수를선택하면해당선수의컨디션리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의의사소견리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
 				선수목록_의사소견_콤보박스에서선수를선택하면해당선수의코멘트리스트에저장되는메소드(일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 				선수목록_컨디션_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(conditionList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의컨디션텍스트에나오게하는메소드(doctorAppointmentList);
 				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
@@ -759,24 +830,54 @@ public class StaffRegistration extends JFrame {
 		scrolledTable.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		scrolledTable.setBounds(140, 100, 700, 170);
 		two.add(scrolledTable);
-
-		table1 = new JTable();
-		table1.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uC2DC\uAC04", "\uC99D\uC0C1" }));
-		scrolledTable.setViewportView(table1);
-
-		// JTable 모델을 생성하고 컬럼 이름을 설정합니다.
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[][] {},
-				new String[] { "등 번호", "선수 이름", "시 간", "증 상" }) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-
+		
+		DefaultTableModel mod3 = new DefaultTableModel(new Object[][] {}, new String[] { "시간", "등번호", "선수 이름", "증상" }) {
+			public boolean isCellEditable(int rowIndex, int mColIndex) {
 				return false;
 			}
 		};
+
+		table1 = new JTable(mod3);
 		table1.getTableHeader().setReorderingAllowed(false);
 		table1.getTableHeader().setResizingAllowed(false);
-		table1.setModel(tableModel);
+
+		table1.getColumnModel().getColumn(0).setMaxWidth(70);
+		table1.getColumnModel().getColumn(0).setMinWidth(70);
+		table1.getColumnModel().getColumn(0).setWidth(70);
+		table1.getColumnModel().getColumn(1).setMaxWidth(50);
+		table1.getColumnModel().getColumn(1).setMinWidth(50);
+		table1.getColumnModel().getColumn(1).setWidth(50);
+		table1.getColumnModel().getColumn(2).setMaxWidth(70);
+		table1.getColumnModel().getColumn(2).setMinWidth(70);
+		table1.getColumnModel().getColumn(2).setWidth(70);
+		table1.setRowHeight(20);
+
+		table1.setFont(new Font("맑은 고딕", Font.BOLD, 11));
+		table1.setForeground(new Color(22, 47, 136));
+		table1.setBackground(new Color(255, 255, 255));
+		
+		// Apply the custom renderer to each column of the table
+		for (int i = 0; i < table1.getColumnCount(); i++) {
+			table1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
+//		table1 = new JTable();
+//		table1.setModel(new DefaultTableModel(new Object[][] {},
+//				new String[] { "\uB4F1\uBC88\uD638", "\uC120\uC218\uC774\uB984", "\uC2DC\uAC04", "\uC99D\uC0C1" }));
+		scrolledTable.setViewportView(table1);
+
+		// JTable 모델을 생성하고 컬럼 이름을 설정합니다.
+//		DefaultTableModel tableModel = new DefaultTableModel(new Object[][] {},
+//				new String[] { "등번호", "선수 이름", "시간", "증상" }) {
+//			@Override
+//			public boolean isCellEditable(int row, int column) {
+//
+//				return false;
+//			}
+//		};
+//		table1.getTableHeader().setReorderingAllowed(false);
+//		table1.getTableHeader().setResizingAllowed(false);
+//		table1.setModel(tableModel);
 
 		deleteBtn.setEnabled(false);
 		changeBtn.setEnabled(false);
@@ -810,7 +911,6 @@ public class StaffRegistration extends JFrame {
 		two.add(backnumLbl);
 
 		backnumTf = new JTextField();
-		backnumTf.setForeground(Color.WHITE);
 		backnumTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		backnumTf.setOpaque(false);
 		backnumTf.setColumns(10);
@@ -837,7 +937,6 @@ public class StaffRegistration extends JFrame {
 		two.add(playerNameLbl);
 
 		nameTf = new JTextField();
-		nameTf.setForeground(Color.WHITE);
 		nameTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		nameTf.setOpaque(false);
 		nameTf.setColumns(10);
@@ -858,11 +957,10 @@ public class StaffRegistration extends JFrame {
 		JLabel symptomLbl = new JLabel("증상");
 		symptomLbl.setFont(new Font("나눔고딕", Font.BOLD, 15));
 		symptomLbl.setForeground(new Color(255, 255, 255));
-		symptomLbl.setBounds(86, 368, 42, 15);
+		symptomLbl.setBounds(80, 368, 35, 15);
 		two.add(symptomLbl);
 
 		sickTf = new JTextField();
-		sickTf.setForeground(Color.WHITE);
 		sickTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		sickTf.setOpaque(false);
 		sickTf.setColumns(10);
@@ -876,7 +974,6 @@ public class StaffRegistration extends JFrame {
 		two.add(timeLbl);
 
 		timeTf = new JTextField();
-		timeTf.setForeground(Color.WHITE);
 		timeTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		timeTf.setOpaque(false);
 		timeTf.setColumns(10);
@@ -950,6 +1047,7 @@ public class StaffRegistration extends JFrame {
 		this.setSize(1000, 600);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 	}
 
 	public static void main(String[] args) {
@@ -994,9 +1092,15 @@ public class StaffRegistration extends JFrame {
 		DefaultTableModel model = (DefaultTableModel) table1.getModel();
 		model.setRowCount(0);
 
+//		for (DoctorAppointment doctorAppointment : doctorList) {
+//			Object[] rowData = { doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
+//					doctorAppointment.getTime(), doctorAppointment.getCondition() };
+//			model.addRow(rowData);
+//		}
+		
 		for (DoctorAppointment doctorAppointment : doctorList) {
-			Object[] rowData = { doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
-					doctorAppointment.getTime(), doctorAppointment.getCondition() };
+			Object[] rowData = { doctorAppointment.getTime(), doctorAppointment.getBacknumber(), doctorAppointment.getPlayerName(),
+					doctorAppointment.getCondition() };
 			model.addRow(rowData);
 		}
 	}
@@ -1993,7 +2097,7 @@ public class StaffRegistration extends JFrame {
 
 			StringBuilder sb = new StringBuilder();
 			for (Comment comment : comment1) {
-				sb.append(comment.getDoctorcomment()).append("\n");
+				sb.append(comment.getSchedulecomment()).append("\n");
 			}
 			컨디션의사소견_감독코멘트텍스트박스.setText(sb.toString());
 
@@ -2155,8 +2259,8 @@ public class StaffRegistration extends JFrame {
 				if (condition.getNumber() == 일정창_선수정보콤보박스에서선택한등번호) {
 					// Check if the condition's date matches the selectedDate
 					if (condition.getDate().startsWith(일정창_콤보박스에서선택한날짜)) {
-						Object[] rowData = { condition.getNumber(), condition.getPlayerName(),
-								condition.getPlayercondition(), condition.getDate() };
+						Object[] rowData = { condition.getDate().toString().substring(11, 19), condition.getNumber(), condition.getPlayerName(),
+								condition.getPlayercondition()  };
 						model.addRow(rowData);
 					}
 				}
