@@ -2709,15 +2709,18 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		five.setLayout(null);
 
 		스태프목록_이름텍스트필드 = new JTextField();
+		스태프목록_이름텍스트필드.setHorizontalAlignment(SwingConstants.CENTER);
+		스태프목록_이름텍스트필드.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+		스태프목록_이름텍스트필드.setForeground(Color.WHITE);
 		스태프목록_이름텍스트필드.setOpaque(false);
 		스태프목록_이름텍스트필드.setBorder(null);
-		스태프목록_이름텍스트필드.setBounds(189, 292, 110, 21);
+		스태프목록_이름텍스트필드.setBounds(158, 292, 171, 26);
 		five.add(스태프목록_이름텍스트필드);
 		스태프목록_이름텍스트필드.setColumns(10);
 
 		스태프목록_이미지등록창 = new JPanel();
 		스태프목록_이미지등록창.setOpaque(false);
-		스태프목록_이미지등록창.setBounds(157, 170, 171, 143);
+		스태프목록_이미지등록창.setBounds(158, 149, 171, 143);
 		five.add(스태프목록_이미지등록창);
 
 		스태프목록_이미지등록버튼 = new JButton("");
