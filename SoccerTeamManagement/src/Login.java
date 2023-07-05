@@ -15,6 +15,7 @@ import dbutil.DBUtil;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class Login {
 
@@ -68,9 +69,10 @@ public class Login {
 		frame.getContentPane().add(btnNewButton);
 
 		lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setBounds(351, 500, 229, 15);
+		lblNewLabel_2.setForeground(Color.WHITE);
+		lblNewLabel_2.setBounds(370, 404, 229, 15);
 		frame.getContentPane().add(lblNewLabel_2);
-		
+
 		lblNewLabel_3 = new JLabel("l");
 		lblNewLabel_3.setIcon(new ImageIcon(Login.class.getResource("/image/메인화면-배경만.jpg")));
 		lblNewLabel_3.setBounds(0, 0, 984, 561);
@@ -81,24 +83,23 @@ public class Login {
 			public void actionPerformed(ActionEvent arg0) {
 				String id = textField.getText();
 				String password = textField_1.getText();
-				
-				
+
 				int check = checkIdentity(id, password);
 
 				if (check == 1) {
 					String role = getRole(textField.getText());
 					lblNewLabel_2.setText(role);
-					
+
 					if (role.equals("감독")) {
 						new DirectorGUI();
 					} else if (role.equals("선수")) {
-						player.setBackNumber(checkBackNumber(id));	
+						player.setBackNumber(checkBackNumber(id));
 						new PlayerTab();
 					} else if (role.equals("의사")) {
 						String name = checkName(checkNumber(id));
 						staff.setName(name);
 						System.out.println(name);
-						
+
 						new DoctorSchedule();
 					} else if (role.equals("코치")) {
 						String name = checkName(checkNumber(id));
@@ -109,8 +110,7 @@ public class Login {
 				} else {
 					lblNewLabel_2.setText("회원정보가 일치하지 않습니다.");
 				}
-				
-				
+
 			}
 		});
 	}
@@ -140,7 +140,7 @@ public class Login {
 		}
 		return null;
 	}
-	
+
 	private static int checkIdentity(String id, String password) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -166,7 +166,7 @@ public class Login {
 		}
 		return 0;
 	}
-	
+
 	// 회원정보 번호 찾기
 	private static int checkNumber(String id) {
 		Connection conn = null;
@@ -192,7 +192,7 @@ public class Login {
 		}
 		return 0;
 	}
-	
+
 	// 등 번호 찾기
 	private static int checkBackNumber(String id) {
 		Connection conn = null;
@@ -218,7 +218,7 @@ public class Login {
 		}
 		return 0;
 	}
-	
+
 	// 회원 정보 번호로 의사 이름 가져오기
 	private static String checkName(int number) {
 		Connection conn = null;
@@ -229,8 +229,8 @@ public class Login {
 			conn = DBUtil.getConnection();
 			String sql = "SELECT name FROM staff WHERE number = ?";
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1,number);
-		
+			stmt.setInt(1, number);
+
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				return rs.getString("name");

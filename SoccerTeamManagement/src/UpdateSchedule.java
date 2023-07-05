@@ -104,6 +104,7 @@ public class UpdateSchedule extends JFrame {
 		setSize(450, 300);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setResizable(false);
 	}
 
 	// 스케줄 업데이트 메소드

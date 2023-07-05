@@ -96,6 +96,7 @@ public class PersonalSchedule extends JFrame {
 		setSize(450, 300);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setResizable(false);
 	}
 
 	// 일정 등록 메소드
