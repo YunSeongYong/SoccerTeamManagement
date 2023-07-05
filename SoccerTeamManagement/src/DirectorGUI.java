@@ -2848,7 +2848,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		스태프목록_담당선수텍스트박스.setEditable(false);
 
 		lblNewLabel_11 = new JLabel("New label");
-		lblNewLabel_11.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프-정보-수정3.jpg")));
+		lblNewLabel_11.setIcon(new ImageIcon(DirectorGUI.class.getResource("/image/스태프-정보-수정4.jpg")));
 		lblNewLabel_11.setBounds(0, 0, 979, 431);
 		five.add(lblNewLabel_11);
 
