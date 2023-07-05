@@ -914,6 +914,7 @@ public class StaffRegistration extends JFrame {
 		two.add(backnumLbl);
 
 		backnumTf = new JTextField();
+		backnumTf.setForeground(Color.WHITE);
 		backnumTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		backnumTf.setOpaque(false);
 		backnumTf.setColumns(10);
@@ -940,6 +941,7 @@ public class StaffRegistration extends JFrame {
 		two.add(playerNameLbl);
 
 		nameTf = new JTextField();
+		nameTf.setForeground(Color.WHITE);
 		nameTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		nameTf.setOpaque(false);
 		nameTf.setColumns(10);
@@ -964,6 +966,7 @@ public class StaffRegistration extends JFrame {
 		two.add(symptomLbl);
 
 		sickTf = new JTextField();
+		sickTf.setForeground(Color.WHITE);
 		sickTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		sickTf.setOpaque(false);
 		sickTf.setColumns(10);
@@ -977,6 +980,7 @@ public class StaffRegistration extends JFrame {
 		two.add(timeLbl);
 
 		timeTf = new JTextField();
+		timeTf.setForeground(Color.WHITE);
 		timeTf.setBorder(new LineBorder(new Color(31, 49, 107)));
 		timeTf.setOpaque(false);
 		timeTf.setColumns(10);
