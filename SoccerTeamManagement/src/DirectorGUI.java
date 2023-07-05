@@ -2839,7 +2839,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		five.add(scrollPane_7);
 
 		스태프목록_담당선수텍스트박스 = new JTextArea();
-		스태프목록_담당선수텍스트박스.setForeground(new Color(31, 49, 107));
+		스태프목록_담당선수텍스트박스.setForeground(Color.WHITE);
 		스태프목록_담당선수텍스트박스.setOpaque(false); // Set the textArea as transparent
 		scrollPane_7.setViewportView(스태프목록_담당선수텍스트박스);
 		스태프목록_담당선수텍스트박스.setLineWrap(true);
