@@ -893,10 +893,16 @@ public class StaffRegistration extends JFrame {
 				int selectedRow = table1.getSelectedRow();
 				if (selectedRow >= 0) {
 					DefaultTableModel model = (DefaultTableModel) table1.getModel();
-					int number = (int) model.getValueAt(selectedRow, 0);
-					String playerName = (String) model.getValueAt(selectedRow, 1);
-					String time = (String) model.getValueAt(selectedRow, 2);
+					
+					String time = (String) model.getValueAt(selectedRow, 0);
+					int number = (int) model.getValueAt(selectedRow, 1);
+					String playerName = (String) model.getValueAt(selectedRow, 2);
 					String condition = (String) model.getValueAt(selectedRow, 3);
+					
+//					int number = (int) model.getValueAt(selectedRow, 0);
+//					String playerName = (String) model.getValueAt(selectedRow, 1);
+//					String time = (String) model.getValueAt(selectedRow, 2);
+//					String condition = (String) model.getValueAt(selectedRow, 3);
 
 					backnumTf.setText(Integer.toString(number));
 					nameTf.setText(playerName);
