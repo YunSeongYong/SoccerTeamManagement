@@ -264,7 +264,12 @@ public class StaffRegistration extends JFrame {
 		컨디션의사소견_의사소견_코치코멘트라벨.setBounds(562, 160, 123, 15);
 		의사소견창.add(컨디션의사소견_의사소견_코치코멘트라벨);
 
-		선수목록_의사소견_저장버튼 = new JButton("저장");
+		선수목록_의사소견_저장버튼 = new JButton("");
+		선수목록_의사소견_저장버튼.setOpaque(false);
+		선수목록_의사소견_저장버튼.setContentAreaFilled(false);
+		선수목록_의사소견_저장버튼.setBorderPainted(false);
+		선수목록_의사소견_저장버튼.setFocusPainted(false);
+		선수목록_의사소견_저장버튼.setIcon(new ImageIcon(StaffRegistration.class.getResource("/image/저장버튼-코치1.jpg")));
 		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -1042,7 +1047,7 @@ public class StaffRegistration extends JFrame {
 		this.setSize(1000, 600);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		this.setResizable(false);
+		this.setResizable(false);
 	}
 
 	public static void main(String[] args) {
