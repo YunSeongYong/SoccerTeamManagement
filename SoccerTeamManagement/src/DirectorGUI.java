@@ -2330,6 +2330,7 @@ public class DirectorGUI extends JFrame implements ChangeListener {
 		컨디션창.add(scrollPane);
 
 		선수목록_의사소견_의사소견텍스트박스 = new JTextArea();
+		선수목록_의사소견_의사소견텍스트박스.setEnabled(false);
 		선수목록_의사소견_의사소견텍스트박스.setForeground(Color.WHITE);
 		선수목록_의사소견_의사소견텍스트박스.setOpaque(false); // Set the textArea as transparent
 		선수목록_의사소견_의사소견텍스트박스.setLineWrap(true);
