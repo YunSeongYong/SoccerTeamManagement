@@ -273,7 +273,7 @@ public class StaffRegistration extends JFrame {
 		선수목록_의사소견_저장버튼.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				String comment = 선수목록_의사소견_코치코멘트텍스트박스.getText();
+				String comment = 컨디션의사소견_감독코멘트텍스트박스.getText();
 				선수목록_의사소견_코멘트입력하고저장버튼누르면데이터베이스로이동하는메소드(일정창_선수정보콤보박스에서선택한등번호, comment);
 				JOptionPane.showMessageDialog(null, "저장되었습니다");
 			}
@@ -649,6 +649,8 @@ public class StaffRegistration extends JFrame {
 				System.out.println("콤보박스에서 선택한 날짜 출력: " + 일정창_콤보박스에서선택한날짜);
 				선수목록_컨디션_컨디션리스트와날짜를바탕으로JTable에목록을띄우는메소드(conditionList);
 				선수목록_일정_날짜와등번호콤보박스선택시일정창의선수일정표시하는메소드(scheduleList);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의의사소견텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
+				선수목록_의사소견_선수와날짜콤보박스를선택했을때해당하는선수의감독코멘트텍스트에나오게하는메소드(commentList, 일정창_선수정보콤보박스에서선택한등번호);
 			}
 		});
 		날짜콤보박스.setVisible(false);
